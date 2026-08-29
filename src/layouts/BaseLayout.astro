@@ -1,0 +1,61 @@
+---
+import '@/styles/global.css';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import StickyMobileCTA from '@/components/StickyMobileCTA.astro';
+import { brand, abs } from '@/data/business';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  jsonLd?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+const { title, description, canonicalPath, jsonLd, ogImage = '/images/og-default.jpg', noindex = false } = Astro.props;
+const canonical = abs(canonicalPath);
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={brand.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={abs(ogImage)} />
+    <meta property="og:locale" content="en_IN" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#5A1A1A" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <link rel="preload" href="/fonts/anek-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/rozha-one.woff2" as="font" type="font/woff2" crossorigin />
+
+    {jsonLd && <script type="application/ld+json" set:html={jsonLd} is:inline />}
+
+    {/* Phase 2: GTM / GA4 tags will be added here for call + WhatsApp conversions. */}
+  </head>
+
+  <body>
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-kumkum focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <StickyMobileCTA />
+    <script src="/scripts/conversions.js" is:inline></script>
+  </body>
+</html>

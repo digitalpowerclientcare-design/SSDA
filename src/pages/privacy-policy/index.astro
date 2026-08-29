@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { brand, contact } from '@/data/business';
+---
+<BaseLayout title={`Privacy Policy | ${brand.name}`} description="How Sri Sai Durga Astrology Centre handles your information." canonicalPath="/privacy-policy/" noindex>
+  <section class="container-page py-14">
+    <div class="mx-auto max-w-2xl">
+      <h1 class="text-[2.2rem]">Privacy Policy</h1>
+      <div class="mt-6 space-y-4 leading-relaxed text-ink-soft">
+        <p>Your privacy matters to us. Any details you share with {brand.name} - such as your name, phone number and birth details - are used only to provide your astrology consultation and to contact you about it. They are never sold or shared with anyone else.</p>
+        <p>This website uses standard analytics to understand how visitors use the site. Calls and WhatsApp messages you initiate are handled directly by our team.</p>
+        <p>To ask about or remove your information, contact us at <a class="text-kumkum underline underline-offset-2" href={`tel:${contact.phoneE164}`}>{contact.phoneDisplay}</a>.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

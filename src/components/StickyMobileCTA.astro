@@ -1,0 +1,16 @@
+---
+import { contact, telLink, whatsappLink } from '@/data/business';
+---
+{/* Highest-ROI element on the site: always-present call + WhatsApp on mobile. */}
+<div class="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 border-t border-gold/40 shadow-[0_-4px_16px_rgba(0,0,0,0.18)] md:hidden">
+  <a href={telLink()} data-cta="call"
+     class="flex items-center justify-center gap-2 bg-kumkum py-3.5 text-[0.98rem] font-semibold text-white">
+    <span aria-hidden="true">☎</span> Call Now
+  </a>
+  <a href={whatsappLink()} data-cta="whatsapp"
+     class="flex items-center justify-center gap-2 bg-wa py-3.5 text-[0.98rem] font-semibold text-[#06371c]">
+    <span aria-hidden="true">✆</span> WhatsApp
+  </a>
+</div>
+{/* spacer so the fixed bar never covers footer content on mobile */}
+<div class="h-14 md:hidden" aria-hidden="true"></div>

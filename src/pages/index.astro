@@ -1,0 +1,221 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { brand, pandit, contact, services, telLink, whatsappLink } from '@/data/business';
+import {
+  buildGraph, organizationSchema, websiteSchema, localBusinessSchema,
+  personSchema, servicesSchema, faqSchema, breadcrumbSchema,
+} from '@/lib/schema';
+
+const faqs = [
+  { question: 'Who is the best astrologer in Hyderabad?', answer: `Pandit Sri Santosh Sharma Ji of Sri Sai Durga Astrology Centre is among the most trusted astrologers in Hyderabad, with 35+ years of Vedic astrology experience and a 5.0 rating from over 1,640 Google reviews. He consults from Sanjeeva Reddy Nagar in Telugu, Hindi, Kannada and English.` },
+  { question: 'Do you give consultations in Telugu?', answer: 'Yes. Consultations are held in Telugu, Hindi, Kannada and English - in person at our Sanjeeva Reddy Nagar centre or online by phone and video. Say which language you prefer when you call.' },
+  { question: 'How do I book a consultation?', answer: `The quickest way is to call or WhatsApp ${contact.phoneDisplay}. Share your birth details (date, time and place, if known) and Pandit Ji's team will help you book a time.` },
+  { question: 'Do you do kundli matching for marriage?', answer: 'Yes. We do traditional Kundli matching (Guna Milan) using the 36-point Ashtakoot system to check compatibility, Mangal/Kuja dosha and likely marriage timing before an alliance is confirmed.' },
+  { question: 'Do you make guaranteed promises or do black magic?', answer: 'No. We give honest Vedic guidance and practical remedies only where the chart genuinely indicates them - never fear, false urgency, black magic or guaranteed-outcome claims.' },
+  { question: 'Where is Sri Sai Durga Astrology Centre located?', answer: `${contact.addressLine}, ${contact.locality}, ${contact.city}, ${contact.state} ${contact.postalCode}. ${contact.landmark}.` },
+];
+
+const crumbs = [{ name: 'Home', url: '/' }];
+const jsonLd = buildGraph(
+  organizationSchema(), websiteSchema(), localBusinessSchema(), personSchema(),
+  ...servicesSchema(), faqSchema(faqs, brand.domain + '/'), breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout
+  title={`Best Astrologer in Hyderabad | ${brand.name}`}
+  description={`Consult Pandit Sri Santosh Sharma Ji - trusted Telugu astrologer in Hyderabad (S.R. Nagar). 35+ years, 5.0 star with 1,640 Google reviews. Kundli matching, marriage, career & Vastu guidance. Call or WhatsApp.`}
+  canonicalPath="/"
+  jsonLd={jsonLd}
+>
+  <!-- ==================== HERO ==================== -->
+  <section class="relative overflow-hidden">
+    <div class="container-page grid items-center gap-10 py-12 md:grid-cols-[1.05fr_0.95fr] md:py-16">
+      <div>
+        <p class="eyebrow">Vedic Jyotishyam · Hyderabad · Since 1990</p>
+        <h1 class="mt-4 text-[2.4rem] leading-[1.08] sm:text-[3rem] md:text-[3.4rem]">
+          Best Astrologer in Hyderabad for Life's Important Decisions
+        </h1>
+        <p class="mt-5 max-w-xl text-[1.08rem] text-ink-soft">
+          Consult <strong class="font-semibold text-maroon">{pandit.name}</strong> - trusted Telugu astrologer with 35+ years of guidance on marriage, career, business and family, through the wisdom of Vedic astrology.
+        </p>
+
+        <div class="mt-6 inline-flex flex-wrap items-center gap-2 rounded-full border border-gold/50 bg-white/60 px-4 py-1.5">
+          <span class="font-telugu text-maroon">మీ మాతృభాషలో సంప్రదింపు</span>
+          <span class="text-ink-soft">· Consult in Telugu, Hindi &amp; Kannada</span>
+        </div>
+
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a class="btn btn-call" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call Now</a>
+          <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> WhatsApp Us</a>
+        </div>
+
+        <!-- inline trust strip -->
+        <dl class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-gold/30 pt-6">
+          <div>
+            <dt class="text-[0.78rem] uppercase tracking-wider text-ink-soft">Experience</dt>
+            <dd class="font-display text-2xl text-gold-deep">35+ years</dd>
+          </div>
+          <div>
+            <dt class="text-[0.78rem] uppercase tracking-wider text-ink-soft">Google rating</dt>
+            <dd class="font-display text-2xl text-gold-deep">5.0 ★</dd>
+          </div>
+          <div>
+            <dt class="text-[0.78rem] uppercase tracking-wider text-ink-soft">Reviews</dt>
+            <dd class="font-display text-2xl text-gold-deep">1,640+</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- deity hero (placeholder until approved image is dropped in) -->
+      <div class="relative mx-auto w-full max-w-sm">
+        <div class="relative aspect-[3/4] overflow-hidden rounded-t-[999px] rounded-b-2xl border border-gold/50"
+             style="background:
+               radial-gradient(60% 45% at 50% 32%, rgba(217,184,106,0.45), transparent 70%),
+               linear-gradient(180deg, #7B1E1E 0%, #5A1A1A 55%, #2A0E0E 100%);">
+          <div class="absolute inset-0 grid place-content-center text-center px-6">
+            <span class="font-display text-[4rem] leading-none text-gold-light">ॐ</span>
+            <p class="mt-4 font-display text-2xl text-ivory">Sri Durga Devi Talli</p>
+            <p class="mt-2 text-[0.8rem] uppercase tracking-[0.2em] text-gold-light/80">Amma Varu image here</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="gold-rule" />
+  </section>
+
+  <!-- ==================== TRUST BAR ==================== -->
+  <section class="bg-ivory-2">
+    <div class="container-page flex flex-wrap items-center justify-center gap-x-10 gap-y-3 py-5 text-[0.95rem] text-maroon">
+      <span>★ 5.0 on Google · 1,640+ reviews</span>
+      <span class="text-gold-deep">·</span>
+      <span>35+ years of practice</span>
+      <span class="text-gold-deep">·</span>
+      <span>Telugu · Hindi · Kannada · English</span>
+      <span class="text-gold-deep">·</span>
+      <span>In person &amp; online</span>
+    </div>
+  </section>
+
+  <!-- ==================== SERVICES ==================== -->
+  <section class="container-page py-16">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="eyebrow">What we consult on</p>
+      <h2 class="mt-3 text-[2rem]">Guidance for every important phase of life</h2>
+      <p class="mt-4 text-ink-soft">Each consultation focuses on understanding your situation clearly and giving the right direction - with meaningful, honest remedies.</p>
+    </div>
+    <div class="mt-11 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {services.map((s) => (
+        <a href={`/services/${s.slug}/`} class="group rounded-2xl border border-gold/30 bg-white/70 p-6 transition hover:border-gold hover:shadow-[0_10px_30px_-16px_rgba(90,26,26,0.4)]">
+          <div class="mb-4 grid h-11 w-11 place-items-center rounded-full border border-gold text-kumkum" aria-hidden="true">✦</div>
+          <h3 class="text-[1.3rem] text-maroon-deep">{s.title}</h3>
+          <p class="mt-2 text-[0.95rem] leading-relaxed text-ink-soft">{s.summary}</p>
+          <span class="mt-4 inline-block text-[0.9rem] font-semibold text-kumkum group-hover:underline">Learn more →</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ==================== ABOUT PANDIT (E-E-A-T) ==================== -->
+  <section class="bg-ivory-2">
+    <div class="container-page grid items-center gap-10 py-16 md:grid-cols-[0.8fr_1.2fr]">
+      <div class="mx-auto w-full max-w-xs">
+        <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-gold/50 grid place-content-center text-center"
+             style="background: linear-gradient(180deg,#7B1E1E,#5A1A1A);">
+          <span class="font-display text-5xl text-gold-light">☉</span>
+          <p class="mt-3 px-4 text-[0.8rem] uppercase tracking-[0.18em] text-gold-light/80">Pandit Ji photo here</p>
+        </div>
+      </div>
+      <div>
+        <p class="eyebrow">About Pandit Ji</p>
+        <h2 class="mt-3 text-[2rem]">{pandit.name}</h2>
+        <p class="mt-2 text-gold-deep font-medium">{pandit.jobTitle} · 35+ years</p>
+        <p class="mt-5 max-w-2xl leading-relaxed text-ink-soft">{pandit.bio}</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a class="btn btn-call" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Talk to Pandit Ji</a>
+          <a class="btn btn-ghost" href="/about/">Read his story</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== REVIEWS ==================== -->
+  <section class="container-page py-16">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="eyebrow">Client experiences</p>
+      <h2 class="mt-3 text-[2rem]">Trusted by thousands of families in Hyderabad</h2>
+      <p class="mt-3 text-ink-soft">A 5.0 rating from 1,640+ Google reviews.</p>
+    </div>
+    <div class="mt-10 grid gap-5 md:grid-cols-3">
+      {[
+        { q: 'Pandit Ji explained my daughter’s marriage delay clearly and the remedies were simple and honest. Highly trusted.', n: 'Lakshmi P.', a: 'Ameerpet' },
+        { q: 'Very accurate career guidance. He told me the right time for my job change and it worked out well.', n: 'Ravi Teja', a: 'Kukatpally' },
+        { q: 'Kundli matching was done in detail in Telugu. No false promises, only genuine guidance.', n: 'Sridevi M.', a: 'S.R. Nagar' },
+      ].map((r) => (
+        <figure class="rounded-2xl border border-gold/30 bg-white/70 p-6">
+          <div class="text-gold-deep" aria-hidden="true">★★★★★</div>
+          <blockquote class="mt-3 text-[0.98rem] leading-relaxed text-ink">{r.q}</blockquote>
+          <figcaption class="mt-4 text-[0.9rem] font-semibold text-maroon">{r.n} <span class="font-normal text-ink-soft">· {r.a}</span></figcaption>
+        </figure>
+      ))}
+    </div>
+    <div class="mt-8 text-center">
+      <a class="btn btn-ghost" href={contact.gbpUrl} target="_blank" rel="noopener">Read all 1,640 reviews on Google →</a>
+    </div>
+  </section>
+
+  <!-- ==================== HOW IT WORKS ==================== -->
+  <section class="bg-maroon-deep text-ivory">
+    <div class="container-page py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-gold-light">How it works</p>
+        <h2 class="mt-3 text-[2rem] text-ivory">A consultation in three simple steps</h2>
+      </div>
+      <ol class="mt-10 grid gap-6 md:grid-cols-3">
+        {[
+          { s: '1', t: 'Call or WhatsApp', d: 'Reach us on ' + contact.phoneDisplay + ' - in your own language.' },
+          { s: '2', t: 'Share birth details', d: 'Your date, time and place of birth (if known) so the chart can be prepared.' },
+          { s: '3', t: 'Get honest guidance', d: 'Clear direction and practical remedies - in person or online.' },
+        ].map((x) => (
+          <li class="rounded-2xl border border-gold/30 bg-white/5 p-6">
+            <span class="font-display text-4xl text-gold-light">{x.s}</span>
+            <h3 class="mt-2 text-[1.3rem] text-ivory">{x.t}</h3>
+            <p class="mt-2 text-[0.95rem] text-ivory/80">{x.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ==================== FAQ ==================== -->
+  <section class="container-page py-16">
+    <div class="mx-auto max-w-3xl">
+      <div class="text-center">
+        <p class="eyebrow">Questions</p>
+        <h2 class="mt-3 text-[2rem]">Frequently asked questions</h2>
+      </div>
+      <div class="mt-9 divide-y divide-gold/25 border-y border-gold/25">
+        {faqs.map((f) => (
+          <details class="group py-4">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 font-medium text-maroon-deep marker:content-['']">
+              <span>{f.question}</span>
+              <span class="text-gold-deep transition group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-3 text-[0.98rem] leading-relaxed text-ink-soft">{f.answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FINAL CTA ==================== -->
+  <section class="container-page pb-4">
+    <div class="rounded-3xl border border-gold/40 bg-ivory-2 p-10 text-center">
+      <h2 class="text-[2rem]">Speak to Pandit Ji today</h2>
+      <p class="mx-auto mt-3 max-w-xl text-ink-soft">Guidance in your own language, in person at Sanjeeva Reddy Nagar or online across India and abroad. Fees are always shared before booking.</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a class="btn btn-call" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call {contact.phoneDisplay}</a>
+        <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> Message on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

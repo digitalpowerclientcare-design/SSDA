@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+/* ---- self-hosted fonts (no third-party request, faster + privacy-safe) ---- */
+@font-face {
+  font-family: 'Rozha One';
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/fonts/rozha-one.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Anek Latin';
+  font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url('/fonts/anek-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Anek Telugu';
+  font-style: normal; font-weight: 400 600; font-display: swap;
+  src: url('/fonts/anek-telugu.woff2') format('woff2');
+}
+
+/* ============================================================================
+   Sri Sai Durga Astrology Centre — design tokens
+   Direction: "temple at golden hour" — warm ivory canvas, temple maroon +
+   kumkum red, gold used ONLY as fine lines/highlights (never large fills).
+   ============================================================================ */
+@theme {
+  --color-ivory: #FBF6EC;
+  --color-ivory-2: #F5ECD9;
+  --color-maroon-deep: #5A1A1A;
+  --color-maroon: #7B1E1E;
+  --color-maroon-black: #2A0E0E;
+  --color-kumkum: #9E2B25;
+  --color-kumkum-hover: #86211C;
+  --color-saffron: #D97A34;
+  --color-saffron-hover: #C25E1E;
+  --color-gold: #B08A3E;
+  --color-gold-light: #D9B86A;
+  --color-gold-deep: #7A5A18;
+  --color-ink: #2B2320;
+  --color-ink-soft: #5B5048;
+  --color-wa: #25D366;
+  --color-wa-hover: #1EBE5A;
+
+  --font-display: "Rozha One", Georgia, serif;
+  --font-body: "Anek Latin", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-telugu: "Anek Telugu", "Anek Latin", sans-serif;
+}
+
+/* ---- base (in @layer base so Tailwind text-* utilities can override, e.g.
+        text-ivory on dark sections) ---- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--color-maroon-deep);
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+}
+
+/* ---- reusable pieces ---- */
+.container-page { width: 100%; max-width: 1140px; margin-inline: auto; padding-inline: 1.25rem; }
+
+/* gold hairline — the signature "premium" separator */
+.gold-rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--color-gold) 20%, var(--color-gold-light) 50%, var(--color-gold) 80%, transparent);
+  opacity: 0.7;
+}
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+}
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 3rem; padding: 0.7rem 1.5rem; border-radius: 0.6rem; font-weight: 600;
+  font-size: 0.98rem; transition: background-color .18s ease, transform .06s ease, box-shadow .18s ease; }
+.btn:active { transform: translateY(1px); }
+.btn-call { background: var(--color-kumkum); color: #fff; }
+.btn-call:hover { background: var(--color-kumkum-hover); }
+.btn-wa { background: var(--color-wa); color: #06371c; }
+.btn-wa:hover { background: var(--color-wa-hover); }
+.btn-ghost { background: transparent; color: var(--color-maroon); border: 1px solid var(--color-gold); }
+.btn-ghost:hover { background: color-mix(in srgb, var(--color-gold) 12%, transparent); }
+
+/* focus visibility for accessibility */
+a:focus-visible, button:focus-visible, .btn:focus-visible {
+  outline: 3px solid var(--color-saffron); outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+}
