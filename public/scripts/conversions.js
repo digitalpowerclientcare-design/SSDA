@@ -17,6 +17,10 @@
     window.dataLayer.push(payload);
     if (typeof window.gtag === 'function') {
       window.gtag('event', payload.event, { page_type: payload.page_type });
+      // Google Ads conversion (AW-18420139351): call + WhatsApp clicks.
+      var sendTo = channel === 'call' ? 'AW-18420139351/2CJmCKCyqYEdENeKtM9E'
+                 : channel === 'whatsapp' ? 'AW-18420139351/H968CNuTqoEdENeKtM9E' : null;
+      if (sendTo) window.gtag('event', 'conversion', { send_to: sendTo });
     }
     // Microsoft Clarity: tag + custom event so recordings/heatmaps can be
     // filtered to visitors who actually clicked Call / WhatsApp.
