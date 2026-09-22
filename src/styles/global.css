@@ -1,112 +1,177 @@
 @import "tailwindcss";
 
-/* ---- self-hosted fonts (no third-party request, faster + privacy-safe) ---- */
-@font-face {
-  font-family: 'Rozha One';
-  font-style: normal; font-weight: 400; font-display: swap;
-  src: url('/fonts/rozha-one.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Anek Latin';
-  font-style: normal; font-weight: 400 700; font-display: swap;
-  src: url('/fonts/anek-latin.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Anek Telugu';
-  font-style: normal; font-weight: 400 600; font-display: swap;
-  src: url('/fonts/anek-telugu.woff2') format('woff2');
-}
+/* ---- self-hosted fonts ---- */
+@font-face { font-family:'Hanken Grotesk'; font-style:normal; font-weight:400 800; font-display:swap; src:url('/fonts/hanken.woff2') format('woff2'); }
+@font-face { font-family:'Anek Telugu'; font-style:normal; font-weight:400 600; font-display:swap; src:url('/fonts/anek-telugu.woff2') format('woff2'); }
 
 /* ============================================================================
-   Sri Sai Durga Astrology Centre — design tokens
-   Direction: "temple at golden hour" — warm ivory canvas, temple maroon +
-   kumkum red, gold used ONLY as fine lines/highlights (never large fills).
+   Sri Sai Durga Astrology Centre — WARM LIGHT system (Nakshatra-inspired).
+   Cream ground, white rounded cards, bold ink headings, marigold-gold primary,
+   one flame red-orange call CTA, deep-indigo medallion, night cosmic bands.
    ============================================================================ */
 @theme {
-  --color-ivory: #FBF6EC;
-  --color-ivory-2: #F5ECD9;
-  --color-maroon-deep: #5A1A1A;
-  --color-maroon: #7B1E1E;
-  --color-maroon-black: #2A0E0E;
-  --color-kumkum: #9E2B25;
-  --color-kumkum-hover: #86211C;
-  --color-saffron: #D97A34;
-  --color-saffron-hover: #C25E1E;
-  --color-gold: #B08A3E;
-  --color-gold-light: #D9B86A;
-  --color-gold-deep: #7A5A18;
-  --color-ink: #2B2320;
-  --color-ink-soft: #5B5048;
+  /* grounds — bright, airy */
+  --color-cream:    #FEF8ED;   /* page background — pale warm off-white */
+  --color-cream-2:  #FBF0DB;   /* softer alt sections */
+  --color-card:     #FFFFFF;   /* white cards */
+  /* ink / text */
+  --color-ink:      #201A12;   /* near-black headings */
+  --color-ink-2:    #5C5142;   /* body text */
+  --color-ink-mute: #7A6A4F;   /* captions / muted (AA on cream + white) */
+  /* gold family (primary) — sunnier */
+  --color-gold:      #FBC02D;  /* bright marigold-gold — primary fills */
+  --color-gold-deep: #B47D08;  /* readable gold on light (text/lines) */
+  --color-gold-soft: #FFEFC2;  /* soft gold surfaces */
+  --color-gold-hi:   #FFDD80;  /* highlight sheen */
+  /* flame (single hot CTA — the call button) */
+  --color-flame:   #E5431C;
+  --color-flame-2: #F86A2B;
+  /* deep indigo — medallion ring, icon chips, cosmic */
+  --color-navy:   #2B265C;
+  --color-navy-2: #3A3475;
+  /* devotional maroon accent (used sparingly) */
+  --color-maroon: #7C1D1D;
+  /* night cosmic band + footer */
+  --color-night:   #0C0A18;
+  --color-night-2: #16122E;
   --color-wa: #25D366;
-  --color-wa-hover: #1EBE5A;
 
-  --font-display: "Rozha One", Georgia, serif;
-  --font-body: "Anek Latin", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-telugu: "Anek Telugu", "Anek Latin", sans-serif;
+  --font-display: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-body: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-telugu: "Anek Telugu", "Hanken Grotesk", sans-serif;
 }
 
-/* ---- base (in @layer base so Tailwind text-* utilities can override, e.g.
-        text-ivory on dark sections) ---- */
 @layer base {
-  html {
-    scroll-behavior: smooth;
-    -webkit-text-size-adjust: 100%;
-  }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; background: var(--color-cream); }
   body {
-    background: var(--color-ivory);
-    color: var(--color-ink);
+    background: var(--color-cream);
+    color: var(--color-ink-2);
     font-family: var(--font-body);
-    font-size: 17px;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+    font-size: 17px; line-height: 1.7; letter-spacing: .002em;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
-  h1, h2, h3, .font-display {
-    font-family: var(--font-display);
-    font-weight: 400;
-    color: var(--color-maroon-deep);
-    line-height: 1.12;
-    text-wrap: balance;
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display); font-weight: 800;
+    color: var(--color-ink); line-height: 1.04; text-wrap: balance;
+    letter-spacing: -0.02em;
   }
+  ::selection { background: var(--color-gold); color: #241004; }
 }
 
-/* ---- reusable pieces ---- */
-.container-page { width: 100%; max-width: 1140px; margin-inline: auto; padding-inline: 1.25rem; }
+/* ---- layout ---- */
+.container-page { width: 100%; max-width: 1220px; margin-inline: auto; padding-inline: clamp(1.15rem, 4vw, 2.75rem); }
 
-/* gold hairline — the signature "premium" separator */
-.gold-rule {
-  height: 1px;
-  border: 0;
-  background: linear-gradient(90deg, transparent, var(--color-gold) 20%, var(--color-gold-light) 50%, var(--color-gold) 80%, transparent);
-  opacity: 0.7;
-}
-.eyebrow {
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-gold-deep);
+/* small eyebrow label */
+.label {
+  display:inline-block; font-family: var(--font-body); font-size: .72rem; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--color-gold-deep);
 }
 
-/* buttons */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-  min-height: 3rem; padding: 0.7rem 1.5rem; border-radius: 0.6rem; font-weight: 600;
-  font-size: 0.98rem; transition: background-color .18s ease, transform .06s ease, box-shadow .18s ease; }
-.btn:active { transform: translateY(1px); }
-.btn-call { background: var(--color-kumkum); color: #fff; }
-.btn-call:hover { background: var(--color-kumkum-hover); }
-.btn-wa { background: var(--color-wa); color: #06371c; }
-.btn-wa:hover { background: var(--color-wa-hover); }
-.btn-ghost { background: transparent; color: var(--color-maroon); border: 1px solid var(--color-gold); }
-.btn-ghost:hover { background: color-mix(in srgb, var(--color-gold) 12%, transparent); }
+/* ---- buttons: rounded pills, Nakshatra-style ---- */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:.55rem; min-height:3rem; padding:.8rem 1.7rem;
+  font-weight:700; font-size:.96rem; letter-spacing:.005em; border-radius:9999px;
+  transition: transform .45s cubic-bezier(.2,.8,.2,1), background-color .3s ease, color .3s ease, box-shadow .35s ease, border-color .3s ease; }
+.btn:hover { transform: translateY(-2px); }
+/* primary = flame red-orange call CTA */
+.btn-primary { background: linear-gradient(180deg, var(--color-flame-2), var(--color-flame)); color:#fff;
+  box-shadow: 0 12px 26px -12px rgba(229,67,28,.7); }
+.btn-primary:hover { box-shadow: 0 16px 34px -12px rgba(229,67,28,.85); }
+/* gold = filled marigold */
+.btn-gold { background: var(--color-gold); color:#3a2600; box-shadow: 0 10px 24px -12px rgba(243,179,22,.85); }
+.btn-gold:hover { background: #FFC42E; }
+/* outline */
+.btn-line { background: #fff; color: var(--color-ink); border:1.5px solid color-mix(in srgb, var(--color-ink) 16%, transparent); }
+.btn-line:hover { border-color: var(--color-gold-deep); color: var(--color-gold-deep); }
+/* whatsapp */
+.btn-wa { background: var(--color-wa); color:#06371c; box-shadow: 0 10px 24px -12px rgba(37,211,102,.8); }
+.btn-wa:hover { background:#1EBE5A; }
+/* dark-band variants (on night sections) */
+.btn-onnight-gold { background: var(--color-gold); color:#3a2600; }
+.btn-onnight-line { background: rgba(255,255,255,.04); color:#fff; border:1.5px solid rgba(255,255,255,.22); }
+.btn-onnight-line:hover { border-color: var(--color-gold); color: var(--color-gold-hi); }
 
-/* focus visibility for accessibility */
-a:focus-visible, button:focus-visible, .btn:focus-visible {
-  outline: 3px solid var(--color-saffron); outline-offset: 2px;
+a:focus-visible, button:focus-visible, .btn:focus-visible { outline:2px solid var(--color-flame); outline-offset:3px; }
+
+/* ---- surfaces ---- */
+.card { background: var(--color-card); border:1px solid rgba(30,25,19,.07);
+  border-radius: 1.25rem; box-shadow: 0 14px 40px -22px rgba(80,55,10,.28); }
+.chip { display:inline-flex; align-items:center; gap:.5rem; border-radius:9999px;
+  border:1px solid rgba(30,25,19,.1); background:#fff; padding:.5rem 1rem; font-size:.9rem; font-weight:600; color:var(--color-ink); }
+
+/* icon chip (navy circle, like Nakshatra "why join") */
+.icon-chip { display:grid; place-items:center; width:2.9rem; height:2.9rem; border-radius:9999px;
+  background: var(--color-navy); color: var(--color-gold-hi); }
+
+/* section spacing */
+.section { padding-block: clamp(3.5rem, 7vw, 6rem); }
+
+/* ============================================================================
+   MOTION & INTERACTIONS (CSS-first, JS-triggered where noted)
+   ============================================================================ */
+
+/* scroll reveal (motion.js adds .in) */
+.reveal, .reveal-1, .reveal-2, .reveal-3, .reveal-4 { opacity: 0; transform: translateY(26px); }
+@media (prefers-reduced-motion: no-preference) {
+  .reveal, .reveal-1, .reveal-2, .reveal-3, .reveal-4 {
+    transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1);
+  }
+  .reveal.in, .reveal-1.in, .reveal-2.in, .reveal-3.in, .reveal-4.in { opacity: 1; transform: none; }
+  .reveal-1 { transition-delay: .08s; } .reveal-2 { transition-delay: .16s; }
+  .reveal-3 { transition-delay: .24s; } .reveal-4 { transition-delay: .32s; }
+}
+@media (prefers-reduced-motion: reduce) { .reveal, .reveal-1, .reveal-2, .reveal-3, .reveal-4 { opacity:1; transform:none; } }
+
+/* soft gold ambient glow (behind hero medallion, on light) */
+.aura { position:absolute; pointer-events:none; z-index:0; border-radius:9999px;
+  background: radial-gradient(circle, rgba(243,179,22,.35), rgba(243,179,22,0) 68%); filter: blur(8px); }
+@media (prefers-reduced-motion: no-preference) {
+  .aura { animation: auraPulse 7s ease-in-out infinite; }
+  @keyframes auraPulse { 0%,100% { opacity:.7; transform:scale(.97); } 50% { opacity:1; transform:scale(1.05); } }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  * { animation: none !important; transition: none !important; }
+/* rotating rasi-chakra (zodiac) wheel */
+.zodiac { transform-origin: 50% 50%; }
+@media (prefers-reduced-motion: no-preference) { .zodiac { animation: spin 160s linear infinite; } }
+.zodiac--rev { animation-direction: reverse !important; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* floating planets */
+@media (prefers-reduced-motion: no-preference) {
+  .planet { animation: float 7s ease-in-out infinite; }
+  .planet--slow { animation-duration: 10s; }
+  .planet--fast { animation-duration: 5.5s; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
 }
+
+/* gold shimmer sweep on a keyword */
+.shimmer { background: linear-gradient(100deg, var(--color-gold-deep) 18%, var(--color-gold) 38%, #ffe9a8 50%, var(--color-gold) 62%, var(--color-gold-deep) 82%);
+  background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; }
+@media (prefers-reduced-motion: no-preference) { .shimmer { animation: shimmer 6s linear infinite; } @keyframes shimmer { to { background-position: -200% center; } } }
+/* flame keyword (like Chani's orange word) */
+.hot { color: var(--color-flame); }
+
+/* tilt + gold glow cards */
+.card-glow { transition: transform .5s cubic-bezier(.2,.8,.2,1), border-color .4s ease, box-shadow .5s ease;
+  transform: perspective(820px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); }
+.card-glow:hover { border-color: color-mix(in srgb, var(--color-gold) 70%, transparent); box-shadow: 0 26px 60px -26px rgba(243,179,22,.6); }
+
+/* glowing halo behind deity (gold) */
+.halo::before { content:""; position:absolute; inset:-16%; border-radius:9999px;
+  background: radial-gradient(circle, rgba(243,179,22,.55), transparent 62%); filter: blur(14px); z-index:-1; }
+@media (prefers-reduced-motion: no-preference) {
+  .halo::before { animation: pulse 5.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity:.5; transform:scale(.95); } 50% { opacity:.9; transform:scale(1.05); } }
+}
+
+/* infinite marquee */
+.marquee { overflow:hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+.marquee__track { display:flex; gap:1.25rem; width:max-content; }
+@media (prefers-reduced-motion: no-preference) { .marquee__track { animation: marquee 48s linear infinite; } .marquee:hover .marquee__track { animation-play-state: paused; } @keyframes marquee { to { transform: translateX(-50%); } } }
+
+/* night band starfield helper (canvas painted by motion.js) */
+.band-night { background: radial-gradient(120% 120% at 50% -10%, var(--color-night-2), var(--color-night) 60%); color:#EDE7DA; position:relative; overflow:hidden; }
+.band-night h1, .band-night h2, .band-night h3 { color:#fff; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }

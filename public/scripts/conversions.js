@@ -18,6 +18,14 @@
     if (typeof window.gtag === 'function') {
       window.gtag('event', payload.event, { page_type: payload.page_type });
     }
+    // Microsoft Clarity: tag + custom event so recordings/heatmaps can be
+    // filtered to visitors who actually clicked Call / WhatsApp.
+    if (typeof window.clarity === 'function') {
+      try {
+        window.clarity('set', 'lead_channel', channel);
+        window.clarity('event', payload.event);
+      } catch (e) {}
+    }
   }
   document.addEventListener('click', function (e) {
     var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;

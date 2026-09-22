@@ -13,36 +13,36 @@ const jsonLd = buildGraph(organizationSchema(), localBusinessSchema(), personSch
   jsonLd={jsonLd}
 >
   <section class="container-page grid items-start gap-10 py-14 md:grid-cols-[0.8fr_1.2fr]">
-    <div class="mx-auto w-full max-w-xs">
-      <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-gold/50 grid place-content-center text-center" style="background: linear-gradient(180deg,#7B1E1E,#5A1A1A);">
-        <span class="font-display text-5xl text-gold-light">☉</span>
-        <p class="mt-3 px-4 text-[0.8rem] uppercase tracking-[0.18em] text-gold-light/80">Pandit Ji photo here</p>
+    <div class="reveal mx-auto w-full max-w-xs">
+      <div class="halo relative aspect-[4/5] overflow-hidden rounded-3xl grid place-content-center text-center" style="border:1px solid rgba(198,135,10,.4); background: radial-gradient(70% 50% at 50% 30%, #FFE9A8, #F3B316 70%, #D99A00 100%);">
+        <span class="font-display text-6xl text-navy">☉</span>
+        <p class="mt-3 px-4 text-[0.8rem] font-bold uppercase tracking-[0.18em] text-navy/70">Pandit Ji photo here</p>
       </div>
-      <div class="mt-4 rounded-xl border border-gold/30 bg-white/70 p-4 text-center">
+      <div class="mt-4 rounded-xl border border-gold/30 bg-card p-4 text-center">
         <p class="font-display text-2xl text-gold-deep">5.0 ★ · 1,640+</p>
-        <p class="text-[0.85rem] text-ink-soft">Google reviews</p>
+        <p class="text-[0.85rem] text-ink-2">Google reviews</p>
       </div>
     </div>
-    <div>
-      <p class="eyebrow">About Pandit Ji</p>
+    <div class="reveal">
+      <p class="label">About Pandit Ji</p>
       <h1 class="mt-3 text-[2.4rem]">{pandit.name}</h1>
       <p class="mt-2 font-medium text-gold-deep">{pandit.jobTitle} · 35+ years in Hyderabad</p>
-      <p class="mt-5 leading-relaxed text-ink-soft">{pandit.bio}</p>
+      <p class="mt-5 leading-relaxed text-ink-2">{pandit.bio}</p>
 
       <h2 class="mt-9 text-[1.5rem]">Areas of guidance</h2>
       <div class="mt-4 flex flex-wrap gap-2">
         {pandit.knowsAbout.map((k) => (
-          <span class="rounded-full border border-gold/40 bg-white/60 px-3 py-1 text-[0.88rem] text-maroon">{k}</span>
+          <span class="rounded-full border border-gold/40 bg-card px-3 py-1 text-[0.88rem] text-gold-deep">{k}</span>
         ))}
       </div>
 
       <h2 class="mt-9 text-[1.5rem]">Our approach</h2>
-      <p class="mt-3 leading-relaxed text-ink-soft">
+      <p class="mt-3 leading-relaxed text-ink-2">
         Astrology here is not about fear or false promises. It is about understanding the right timing, the right direction, and the lessons life is teaching us. Guidance is given plainly, in your own language, and remedies are suggested only where the chart genuinely indicates them.
       </p>
 
       <div class="mt-8 flex flex-wrap gap-3">
-        <a class="btn btn-call" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Talk to Pandit Ji</a>
+        <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Talk to Pandit Ji</a>
         <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> WhatsApp</a>
       </div>
     </div>

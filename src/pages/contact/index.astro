@@ -16,27 +16,27 @@ const jsonLd = buildGraph(
   jsonLd={jsonLd}
 >
   <section class="container-page py-14">
-    <div class="mx-auto max-w-3xl text-center">
-      <p class="eyebrow">Get in touch</p>
+    <div class="reveal mx-auto max-w-3xl text-center">
+      <p class="label">Get in touch</p>
       <h1 class="mt-3 text-[2.4rem]">Book a consultation</h1>
-      <p class="mt-4 text-ink-soft">The quickest way is to call or WhatsApp. Share your birth details and Pandit Ji's team will help you book a time - in {pandit.languages.join(', ')}.</p>
+      <p class="mt-4 text-ink-2">The quickest way is to call or WhatsApp. Share your birth details and Pandit Ji's team will help you book a time - in {pandit.languages.join(', ')}.</p>
     </div>
 
-    <div class="mx-auto mt-9 grid max-w-xl gap-3 text-center sm:max-w-md">
-      <a class="btn btn-call !min-h-12" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call {contact.phoneDisplay}</a>
+    <div class="reveal-1 mx-auto mt-9 grid max-w-xl gap-3 text-center sm:max-w-md">
+      <a class="btn btn-primary !min-h-12" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call {contact.phoneDisplay}</a>
       <a class="btn btn-wa !min-h-12" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> Message on WhatsApp</a>
     </div>
 
-    <div class="mx-auto mt-12 grid max-w-4xl gap-8 md:grid-cols-2">
-      <div class="rounded-2xl border border-gold/30 bg-white/70 p-6">
+    <div class="reveal-2 mx-auto mt-12 grid max-w-4xl gap-8 md:grid-cols-2">
+      <div class="rounded-2xl border border-gold/30 bg-card p-6">
         <h2 class="text-[1.4rem]">Visit our centre</h2>
-        <address class="mt-3 not-italic leading-relaxed text-ink-soft">
+        <address class="mt-3 not-italic leading-relaxed text-ink-2">
           {contact.addressLine},<br />{contact.locality}, {contact.city}, {contact.state} {contact.postalCode}
         </address>
-        <p class="mt-3 text-[0.92rem] text-ink-soft">{contact.landmark}</p>
+        <p class="mt-3 text-[0.92rem] text-ink-2">{contact.landmark}</p>
         <p class="mt-3 text-[0.92rem]"><strong>Hours:</strong> {contact.hoursDisplay}</p>
-        <p class="mt-1 text-[0.92rem]"><strong>Phone:</strong> <a class="text-kumkum underline underline-offset-2" href={telLink()}>{contact.phoneDisplay}</a></p>
-        <p class="mt-4 text-[0.9rem] text-ink-soft">Areas served: {contact.areasServed.slice(0, 8).join(', ')} and across Hyderabad.</p>
+        <p class="mt-1 text-[0.92rem]"><strong>Phone:</strong> <a class="text-flame underline underline-offset-2" href={telLink()}>{contact.phoneDisplay}</a></p>
+        <p class="mt-4 text-[0.9rem] text-ink-2">Areas served: {contact.areasServed.slice(0, 8).join(', ')} and across Hyderabad.</p>
       </div>
       <div class="overflow-hidden rounded-2xl border border-gold/30">
         <iframe src={contact.mapEmbed} width="100%" height="100%" style="border:0; min-height:320px" loading="lazy"

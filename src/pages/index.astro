@@ -20,6 +20,27 @@ const jsonLd = buildGraph(
   organizationSchema(), websiteSchema(), localBusinessSchema(), personSchema(),
   ...servicesSchema(), faqSchema(faqs, brand.domain + '/'), breadcrumbSchema(crumbs),
 );
+
+// rasi chakra (zodiac) wheel geometry — gold line-art, rotates via CSS
+const wheel = Array.from({ length: 12 }, (_, i) => {
+  const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+  return {
+    gx: 100 + Math.cos(a) * 82, gy: 100 + Math.sin(a) * 82,
+    x1: 100 + Math.cos(a) * 62, y1: 100 + Math.sin(a) * 62,
+    x2: 100 + Math.cos(a) * 96, y2: 100 + Math.sin(a) * 96,
+  };
+});
+
+const featuredSlug = 'kundli-matching';
+
+const reviews = [
+  { q: 'Pandit Ji explained my daughter’s marriage delay clearly and the remedies were simple and honest.', n: 'Lakshmi P.', a: 'Ameerpet' },
+  { q: 'Very accurate career guidance. He told me the right time for my job change and it worked out well.', n: 'Ravi Teja', a: 'Kukatpally' },
+  { q: 'Kundli matching was done in detail in Telugu. No false promises, only genuine guidance.', n: 'Sridevi M.', a: 'S.R. Nagar' },
+  { q: 'Muhurtham for our house-warming was perfect. Very patient and clear on the phone.', n: 'Anil Kumar', a: 'Miyapur' },
+  { q: 'Consulted for business timing. Honest advice, no fear or upselling. Highly recommend.', n: 'Praveen R.', a: 'Madhapur' },
+  { q: 'Kaal Sarp dosha remedies were explained calmly in Telugu. Felt genuine and caring.', n: 'Divya S.', a: 'Kukatpally' },
+];
 ---
 <BaseLayout
   title={`Best Astrologer in Hyderabad | ${brand.name}`}
@@ -29,157 +50,232 @@ const jsonLd = buildGraph(
 >
   <!-- ==================== HERO ==================== -->
   <section class="relative overflow-hidden">
-    <div class="container-page grid items-center gap-10 py-12 md:grid-cols-[1.05fr_0.95fr] md:py-16">
-      <div>
-        <p class="eyebrow">Vedic Jyotishyam · Hyderabad · Since 1990</p>
-        <h1 class="mt-4 text-[2.4rem] leading-[1.08] sm:text-[3rem] md:text-[3.4rem]">
-          Best Astrologer in Hyderabad for Life's Important Decisions
+    <div class="aura" style="width:520px;height:520px;top:-160px;right:-120px;"></div>
+    <div class="aura" style="width:360px;height:360px;bottom:-140px;left:-120px;opacity:.5;"></div>
+
+    <div class="container-page relative z-[1] grid items-center gap-10 py-14 md:py-20 lg:grid-cols-[1.05fr_0.95fr]">
+      <!-- copy -->
+      <div class="text-center lg:text-left">
+        <span class="reveal chip !border-gold/40 !bg-gold-soft/60 text-[0.82rem] text-gold-deep">
+          <span aria-hidden="true">★</span> 5.0 &nbsp;·&nbsp; 1,640+ Google reviews
+        </span>
+        <h1 class="reveal-1 mt-5 font-display" style="font-size:clamp(2.5rem,6vw,4.6rem); line-height:1.02;">
+          The Best <span class="shimmer">Astrologer</span><br class="hidden sm:block" /> in Hyderabad
         </h1>
-        <p class="mt-5 max-w-xl text-[1.08rem] text-ink-soft">
-          Consult <strong class="font-semibold text-maroon">{pandit.name}</strong> - trusted Telugu astrologer with 35+ years of guidance on marriage, career, business and family, through the wisdom of Vedic astrology.
+        <p class="reveal-1 mt-4 font-telugu text-gold-deep" style="font-size:clamp(1.05rem,2.2vw,1.4rem);">
+          అమ్మవారి ఆశీర్వాదంతో — మీకు సరైన మార్గదర్శనం
+        </p>
+        <p class="reveal-2 mx-auto mt-5 max-w-xl text-[1.08rem] text-ink-2 lg:mx-0">
+          Honest Vedic guidance for marriage, career, business and family from
+          <span class="font-semibold text-ink">Pandit Sri Santosh Sharma Ji</span> — 35 years of experience, in your own language.
         </p>
 
-        <div class="mt-6 inline-flex flex-wrap items-center gap-2 rounded-full border border-gold/50 bg-white/60 px-4 py-1.5">
-          <span class="font-telugu text-maroon">మీ మాతృభాషలో సంప్రదింపు</span>
-          <span class="text-ink-soft">· Consult in Telugu, Hindi &amp; Kannada</span>
+        <div class="reveal-2 mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.92rem] font-semibold text-ink-2 lg:justify-start">
+          <span class="inline-flex items-center gap-1.5"><span class="text-gold-deep" aria-hidden="true">✦</span> Honest remedies</span>
+          <span class="inline-flex items-center gap-1.5"><span class="text-gold-deep" aria-hidden="true">✦</span> No false promises</span>
+          <span class="inline-flex items-center gap-1.5"><span class="text-gold-deep" aria-hidden="true">✦</span> Telugu · Hindi · Kannada</span>
         </div>
 
-        <div class="mt-7 flex flex-wrap gap-3">
-          <a class="btn btn-call" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call Now</a>
-          <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> WhatsApp Us</a>
+        <div class="reveal-3 mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
+          <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call Pandit Ji</a>
+          <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> WhatsApp</a>
         </div>
 
-        <!-- inline trust strip -->
-        <dl class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-gold/30 pt-6">
-          <div>
-            <dt class="text-[0.78rem] uppercase tracking-wider text-ink-soft">Experience</dt>
-            <dd class="font-display text-2xl text-gold-deep">35+ years</dd>
-          </div>
-          <div>
-            <dt class="text-[0.78rem] uppercase tracking-wider text-ink-soft">Google rating</dt>
-            <dd class="font-display text-2xl text-gold-deep">5.0 ★</dd>
-          </div>
-          <div>
-            <dt class="text-[0.78rem] uppercase tracking-wider text-ink-soft">Reviews</dt>
-            <dd class="font-display text-2xl text-gold-deep">1,640+</dd>
-          </div>
-        </dl>
+        <div class="reveal-4 mt-9 flex items-center justify-center gap-7 lg:justify-start">
+          <div><span class="block font-display text-[1.8rem] leading-none text-ink"><span data-count-to="35" data-suffix="+">0</span></span><span class="text-[.66rem] font-semibold uppercase tracking-[.16em] text-ink-mute">Years</span></div>
+          <span class="h-9 w-px bg-ink/10"></span>
+          <div><span class="block font-display text-[1.8rem] leading-none text-ink"><span data-count-to="5.0">0</span><span class="text-gold-deep">★</span></span><span class="text-[.66rem] font-semibold uppercase tracking-[.16em] text-ink-mute">Google</span></div>
+          <span class="h-9 w-px bg-ink/10"></span>
+          <div><span class="block font-display text-[1.8rem] leading-none text-ink"><span data-count-to="1640" data-suffix="+">0</span></span><span class="text-[.66rem] font-semibold uppercase tracking-[.16em] text-ink-mute">Reviews</span></div>
+        </div>
       </div>
 
-      <!-- deity hero (placeholder until approved image is dropped in) -->
-      <div class="relative mx-auto w-full max-w-sm">
-        <div class="relative aspect-[3/4] overflow-hidden rounded-t-[999px] rounded-b-2xl border border-gold/50"
-             style="background:
-               radial-gradient(60% 45% at 50% 32%, rgba(217,184,106,0.45), transparent 70%),
-               linear-gradient(180deg, #7B1E1E 0%, #5A1A1A 55%, #2A0E0E 100%);">
-          <div class="absolute inset-0 grid place-content-center text-center px-6">
-            <span class="font-display text-[4rem] leading-none text-gold-light">ॐ</span>
-            <p class="mt-4 font-display text-2xl text-ivory">Sri Durga Devi Talli</p>
-            <p class="mt-2 text-[0.8rem] uppercase tracking-[0.2em] text-gold-light/80">Amma Varu image here</p>
+      <!-- medallion + planets -->
+      <div class="reveal relative mx-auto aspect-square w-full max-w-[440px]">
+        <!-- rotating zodiac wheel -->
+        <svg class="zodiac absolute inset-0 h-full w-full text-gold-deep" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <circle cx="100" cy="100" r="96" stroke="currentColor" stroke-width="0.6" opacity="0.5" />
+          <circle cx="100" cy="100" r="88" stroke="currentColor" stroke-width="0.4" opacity="0.3" />
+          <circle cx="100" cy="100" r="62" stroke="currentColor" stroke-width="0.5" opacity="0.28" />
+          {wheel.map((w) => (<line x1={w.x1} y1={w.y1} x2={w.x2} y2={w.y2} stroke="currentColor" stroke-width="0.45" opacity="0.22" />))}
+          {wheel.map((w) => (<rect x={w.gx - 2.2} y={w.gy - 2.2} width="4.4" height="4.4" fill="currentColor" opacity="0.75" transform={`rotate(45 ${w.gx} ${w.gy})`} />))}
+        </svg>
+
+        <!-- deity medallion -->
+        <div class="absolute left-1/2 top-1/2 h-[62%] w-[62%] -translate-x-1/2 -translate-y-1/2">
+          <div class="aura" style="inset:-14%;"></div>
+          <div class="halo relative grid h-full w-full place-content-center overflow-hidden rounded-full text-center"
+               style="border:6px solid var(--color-navy); box-shadow:0 20px 50px -20px rgba(43,38,92,.6), inset 0 0 0 6px var(--color-gold);
+                      background: radial-gradient(70% 60% at 50% 38%, #FFE9A8, #F3B316 60%, #D99A00 100%);">
+            <span class="font-telugu text-[2.6rem] font-semibold leading-none text-navy">శ్రీ<br />దుర్గ</span>
+            <span class="mt-1 block text-[0.62rem] font-bold uppercase tracking-[0.2em] text-navy/70">Amma Varu photo here</span>
           </div>
         </div>
+
+        <!-- floating planets -->
+        <svg class="planet planet--slow absolute left-[6%] top-[20%] h-12 w-12 drop-shadow" viewBox="0 0 40 40" aria-hidden="true">
+          <defs><radialGradient id="sat" cx="40%" cy="35%"><stop offset="0%" stop-color="#F6D48A"/><stop offset="100%" stop-color="#C6870A"/></radialGradient></defs>
+          <ellipse cx="20" cy="20" rx="18" ry="6" fill="none" stroke="#C6870A" stroke-width="1.6" opacity="0.8" transform="rotate(-18 20 20)"/>
+          <circle cx="20" cy="20" r="9" fill="url(#sat)"/>
+        </svg>
+        <svg class="planet absolute right-[4%] top-[34%] h-9 w-9 drop-shadow" viewBox="0 0 40 40" aria-hidden="true">
+          <defs><radialGradient id="mars" cx="38%" cy="34%"><stop offset="0%" stop-color="#F98B5E"/><stop offset="100%" stop-color="#C1391A"/></radialGradient></defs>
+          <circle cx="20" cy="20" r="13" fill="url(#mars)"/>
+        </svg>
+        <svg class="planet planet--fast absolute bottom-[10%] right-[16%] h-8 w-8 drop-shadow" viewBox="0 0 40 40" aria-hidden="true">
+          <defs><radialGradient id="earth" cx="38%" cy="34%"><stop offset="0%" stop-color="#7CC0F2"/><stop offset="100%" stop-color="#2B5FA8"/></radialGradient></defs>
+          <circle cx="20" cy="20" r="12" fill="url(#earth)"/>
+        </svg>
       </div>
     </div>
-    <hr class="gold-rule" />
   </section>
 
-  <!-- ==================== TRUST BAR ==================== -->
-  <section class="bg-ivory-2">
-    <div class="container-page flex flex-wrap items-center justify-center gap-x-10 gap-y-3 py-5 text-[0.95rem] text-maroon">
-      <span>★ 5.0 on Google · 1,640+ reviews</span>
-      <span class="text-gold-deep">·</span>
-      <span>35+ years of practice</span>
-      <span class="text-gold-deep">·</span>
-      <span>Telugu · Hindi · Kannada · English</span>
-      <span class="text-gold-deep">·</span>
-      <span>In person &amp; online</span>
+  <!-- ==================== DARK COSMIC CONTACT STRIP ==================== -->
+  <section class="band-night">
+    <canvas id="starfield" class="absolute inset-0 block h-full w-full" aria-hidden="true"></canvas>
+    <div class="container-page relative z-[1] py-10">
+      <p class="reveal text-center text-[0.8rem] font-semibold uppercase tracking-[0.2em] text-gold-hi">Reach Pandit Ji directly</p>
+      <div class="mt-6 grid gap-4 md:grid-cols-3">
+        <a href={telLink()} data-cta="call" class="reveal-1 group flex items-center justify-between gap-3 rounded-2xl bg-gold px-6 py-5 text-[#3a2600] transition hover:-translate-y-1">
+          <span class="flex items-center gap-3 font-bold"><span class="grid h-9 w-9 place-items-center rounded-full bg-[#3a2600] text-gold" aria-hidden="true">☎</span> Call Astrologer</span>
+          <span aria-hidden="true" class="text-xl transition group-hover:translate-x-1">→</span>
+        </a>
+        <a href={whatsappLink()} data-cta="whatsapp" class="reveal-2 group flex items-center justify-between gap-3 rounded-2xl border border-white/20 bg-white/5 px-6 py-5 text-white transition hover:-translate-y-1 hover:border-gold/60">
+          <span class="flex items-center gap-3 font-bold"><span class="grid h-9 w-9 place-items-center rounded-full bg-wa text-[#06371c]" aria-hidden="true">✆</span> Chat on WhatsApp</span>
+          <span aria-hidden="true" class="text-xl transition group-hover:translate-x-1">→</span>
+        </a>
+        <a href={contact.gbpUrl} target="_blank" rel="noopener" class="reveal-3 group flex items-center justify-between gap-3 rounded-2xl border border-white/20 bg-white/5 px-6 py-5 text-white transition hover:-translate-y-1 hover:border-gold/60">
+          <span class="flex items-center gap-3 font-bold"><span class="grid h-9 w-9 place-items-center rounded-full bg-navy-2 text-gold-hi" aria-hidden="true">⚲</span> Visit the Centre</span>
+          <span aria-hidden="true" class="text-xl transition group-hover:translate-x-1">→</span>
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- ==================== SERVICES ==================== -->
-  <section class="container-page py-16">
-    <div class="mx-auto max-w-2xl text-center">
-      <p class="eyebrow">What we consult on</p>
-      <h2 class="mt-3 text-[2rem]">Guidance for every important phase of life</h2>
-      <p class="mt-4 text-ink-soft">Each consultation focuses on understanding your situation clearly and giving the right direction - with meaningful, honest remedies.</p>
-    </div>
-    <div class="mt-11 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {services.map((s) => (
-        <a href={`/services/${s.slug}/`} class="group rounded-2xl border border-gold/30 bg-white/70 p-6 transition hover:border-gold hover:shadow-[0_10px_30px_-16px_rgba(90,26,26,0.4)]">
-          <div class="mb-4 grid h-11 w-11 place-items-center rounded-full border border-gold text-kumkum" aria-hidden="true">✦</div>
-          <h3 class="text-[1.3rem] text-maroon-deep">{s.title}</h3>
-          <p class="mt-2 text-[0.95rem] leading-relaxed text-ink-soft">{s.summary}</p>
-          <span class="mt-4 inline-block text-[0.9rem] font-semibold text-kumkum group-hover:underline">Learn more →</span>
-        </a>
-      ))}
+  <section class="section">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="label">Our astrology services</p>
+        <h2 class="mt-3 text-[2.2rem]">Guidance for every important phase of life</h2>
+        <p class="mt-4 text-ink-2">Clear, honest direction with meaningful remedies - never fear or false promises.</p>
+      </div>
+      <div class="mt-11 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s) => {
+          const featured = s.slug === featuredSlug;
+          return (
+            <a href={`/services/${s.slug}/`}
+               class={`card-glow reveal group rounded-2xl p-6 ${featured ? 'bg-gold text-[#3a2600] shadow-[0_20px_44px_-20px_rgba(243,179,22,.85)]' : 'card'}`}>
+              <div class={`mb-4 grid h-12 w-12 place-items-center rounded-xl text-lg ${featured ? 'bg-[#3a2600]/10 text-[#3a2600]' : 'bg-gold-soft text-gold-deep'}`} aria-hidden="true">✦</div>
+              <h3 class={`text-[1.25rem] ${featured ? '!text-[#3a2600]' : ''}`}>{s.title}</h3>
+              <p class={`mt-2 text-[0.95rem] leading-relaxed ${featured ? 'text-[#3a2600]/85' : 'text-ink-2'}`}>{s.summary}</p>
+              <span class={`mt-4 inline-flex items-center gap-1 text-[0.9rem] font-bold ${featured ? 'text-[#3a2600]' : 'text-flame'}`}>Learn more <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span></span>
+            </a>
+          );
+        })}
+      </div>
     </div>
   </section>
 
-  <!-- ==================== ABOUT PANDIT (E-E-A-T) ==================== -->
-  <section class="bg-ivory-2">
-    <div class="container-page grid items-center gap-10 py-16 md:grid-cols-[0.8fr_1.2fr]">
-      <div class="mx-auto w-full max-w-xs">
-        <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-gold/50 grid place-content-center text-center"
-             style="background: linear-gradient(180deg,#7B1E1E,#5A1A1A);">
-          <span class="font-display text-5xl text-gold-light">☉</span>
-          <p class="mt-3 px-4 text-[0.8rem] uppercase tracking-[0.18em] text-gold-light/80">Pandit Ji photo here</p>
+  <!-- ==================== WHY TRUST ==================== -->
+  <section class="section bg-cream-2">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="label">Why families trust us</p>
+        <h2 class="mt-3 text-[2.1rem]">35 years of guidance you can rely on</h2>
+      </div>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { t: '35+ years', d: 'Decades of Vedic Jyotish practice in Hyderabad.', i: '☉' },
+          { t: '5.0 ★ · 1,640+', d: 'Rated by real families on Google.', i: '★' },
+          { t: 'Honest guidance', d: 'No fear, no false promises, no black magic.', i: '✦' },
+          { t: '4 languages · 24×7', d: 'Telugu, Hindi, Kannada, English - anytime.', i: '☏' },
+        ].map((x, i) => (
+          <div class={`card reveal-${i + 1} p-6`}>
+            <span class="icon-chip mb-4" aria-hidden="true">{x.i}</span>
+            <h3 class="text-[1.15rem]">{x.t}</h3>
+            <p class="mt-1.5 text-[0.92rem] leading-relaxed text-ink-2">{x.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ABOUT PANDIT ==================== -->
+  <section class="section">
+    <div class="container-page grid items-center gap-10 md:grid-cols-[0.85fr_1.15fr]">
+      <div class="reveal relative mx-auto w-full max-w-xs">
+        <!-- gold mandala behind -->
+        <svg class="zodiac zodiac--rev absolute -inset-4 -z-10 h-[calc(100%+2rem)] w-[calc(100%+2rem)] text-gold-deep/25" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <circle cx="100" cy="100" r="96" stroke="currentColor" stroke-width="1" />
+          {wheel.map((w) => (<line x1="100" y1="100" x2={w.x2} y2={w.y2} stroke="currentColor" stroke-width="0.5" />))}
+        </svg>
+        <div class="halo relative aspect-[4/5] overflow-hidden rounded-3xl grid place-content-center text-center"
+             style="border:1px solid rgba(198,135,10,.4); background: radial-gradient(70% 50% at 50% 30%, #FFE9A8, #F3B316 70%, #D99A00 100%);">
+          <span class="font-display text-6xl text-navy">☉</span>
+          <p class="mt-3 px-4 text-[0.78rem] font-bold uppercase tracking-[0.18em] text-navy/70">Pandit Ji photo here</p>
+        </div>
+        <div class="card mt-4 p-4 text-center">
+          <p class="font-display text-2xl text-gold-deep">5.0 ★ · 1,640+</p>
+          <p class="text-[0.85rem] text-ink-2">Google reviews</p>
         </div>
       </div>
-      <div>
-        <p class="eyebrow">About Pandit Ji</p>
-        <h2 class="mt-3 text-[2rem]">{pandit.name}</h2>
-        <p class="mt-2 text-gold-deep font-medium">{pandit.jobTitle} · 35+ years</p>
-        <p class="mt-5 max-w-2xl leading-relaxed text-ink-soft">{pandit.bio}</p>
+      <div class="reveal">
+        <p class="label">About Pandit Ji</p>
+        <h2 class="mt-3 text-[2.1rem]">{pandit.name}</h2>
+        <p class="mt-2 font-semibold text-gold-deep">{pandit.jobTitle} · 35+ years in Hyderabad</p>
+        <p class="mt-5 max-w-2xl leading-relaxed text-ink-2">{pandit.bio}</p>
         <div class="mt-6 flex flex-wrap gap-3">
-          <a class="btn btn-call" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Talk to Pandit Ji</a>
-          <a class="btn btn-ghost" href="/about/">Read his story</a>
+          <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Talk to Pandit Ji</a>
+          <a class="btn btn-line" href="/about/">Read his story →</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ==================== REVIEWS ==================== -->
-  <section class="container-page py-16">
-    <div class="mx-auto max-w-2xl text-center">
-      <p class="eyebrow">Client experiences</p>
-      <h2 class="mt-3 text-[2rem]">Trusted by thousands of families in Hyderabad</h2>
-      <p class="mt-3 text-ink-soft">A 5.0 rating from 1,640+ Google reviews.</p>
+  <!-- ==================== REVIEWS (marquee) ==================== -->
+  <section class="section bg-cream-2">
+    <div class="container-page reveal mx-auto max-w-2xl text-center">
+      <p class="label">Client experiences</p>
+      <h2 class="mt-3 text-[2.1rem]">Trusted by thousands of families in Hyderabad</h2>
+      <p class="mt-3 text-ink-2">A 5.0 rating from 1,640+ Google reviews.</p>
     </div>
-    <div class="mt-10 grid gap-5 md:grid-cols-3">
-      {[
-        { q: 'Pandit Ji explained my daughter’s marriage delay clearly and the remedies were simple and honest. Highly trusted.', n: 'Lakshmi P.', a: 'Ameerpet' },
-        { q: 'Very accurate career guidance. He told me the right time for my job change and it worked out well.', n: 'Ravi Teja', a: 'Kukatpally' },
-        { q: 'Kundli matching was done in detail in Telugu. No false promises, only genuine guidance.', n: 'Sridevi M.', a: 'S.R. Nagar' },
-      ].map((r) => (
-        <figure class="rounded-2xl border border-gold/30 bg-white/70 p-6">
-          <div class="text-gold-deep" aria-hidden="true">★★★★★</div>
-          <blockquote class="mt-3 text-[0.98rem] leading-relaxed text-ink">{r.q}</blockquote>
-          <figcaption class="mt-4 text-[0.9rem] font-semibold text-maroon">{r.n} <span class="font-normal text-ink-soft">· {r.a}</span></figcaption>
-        </figure>
-      ))}
+
+    <div class="marquee mt-11">
+      <div class="marquee__track py-2">
+        {reviews.concat(reviews).map((r) => (
+          <figure class="card w-[330px] shrink-0 p-6">
+            <div class="text-gold" aria-hidden="true">★★★★★</div>
+            <blockquote class="mt-3 text-[0.96rem] leading-relaxed text-ink">{r.q}</blockquote>
+            <figcaption class="mt-4 text-[0.9rem] font-bold text-ink">{r.n} <span class="font-normal text-ink-mute">· {r.a}</span></figcaption>
+          </figure>
+        ))}
+      </div>
     </div>
-    <div class="mt-8 text-center">
-      <a class="btn btn-ghost" href={contact.gbpUrl} target="_blank" rel="noopener">Read all 1,640 reviews on Google →</a>
+
+    <div class="container-page mt-9 text-center">
+      <a class="btn btn-line" href={contact.gbpUrl} target="_blank" rel="noopener">Read all 1,640 reviews on Google →</a>
     </div>
   </section>
 
   <!-- ==================== HOW IT WORKS ==================== -->
-  <section class="bg-maroon-deep text-ivory">
-    <div class="container-page py-16">
-      <div class="mx-auto max-w-2xl text-center">
-        <p class="text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-gold-light">How it works</p>
-        <h2 class="mt-3 text-[2rem] text-ivory">A consultation in three simple steps</h2>
+  <section class="section">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="label">How it works</p>
+        <h2 class="mt-3 text-[2.1rem]">A consultation in three simple steps</h2>
       </div>
       <ol class="mt-10 grid gap-6 md:grid-cols-3">
         {[
           { s: '1', t: 'Call or WhatsApp', d: 'Reach us on ' + contact.phoneDisplay + ' - in your own language.' },
           { s: '2', t: 'Share birth details', d: 'Your date, time and place of birth (if known) so the chart can be prepared.' },
           { s: '3', t: 'Get honest guidance', d: 'Clear direction and practical remedies - in person or online.' },
-        ].map((x) => (
-          <li class="rounded-2xl border border-gold/30 bg-white/5 p-6">
-            <span class="font-display text-4xl text-gold-light">{x.s}</span>
-            <h3 class="mt-2 text-[1.3rem] text-ivory">{x.t}</h3>
-            <p class="mt-2 text-[0.95rem] text-ivory/80">{x.d}</p>
+        ].map((x, i) => (
+          <li class={`card-glow card reveal-${i + 1} relative p-7`}>
+            <span class="absolute right-5 top-4 font-display text-5xl text-gold-soft">{x.s}</span>
+            <span class="icon-chip mb-4" aria-hidden="true">{x.s}</span>
+            <h3 class="text-[1.25rem]">{x.t}</h3>
+            <p class="mt-2 text-[0.95rem] text-ink-2">{x.d}</p>
           </li>
         ))}
       </ol>
@@ -187,20 +283,20 @@ const jsonLd = buildGraph(
   </section>
 
   <!-- ==================== FAQ ==================== -->
-  <section class="container-page py-16">
-    <div class="mx-auto max-w-3xl">
+  <section class="section bg-cream-2">
+    <div class="container-page reveal mx-auto max-w-3xl">
       <div class="text-center">
-        <p class="eyebrow">Questions</p>
-        <h2 class="mt-3 text-[2rem]">Frequently asked questions</h2>
+        <p class="label">Questions</p>
+        <h2 class="mt-3 text-[2.1rem]">Frequently asked questions</h2>
       </div>
-      <div class="mt-9 divide-y divide-gold/25 border-y border-gold/25">
+      <div class="mt-9 grid gap-3">
         {faqs.map((f) => (
-          <details class="group py-4">
-            <summary class="flex cursor-pointer items-center justify-between gap-4 font-medium text-maroon-deep marker:content-['']">
+          <details class="card group p-5 open:shadow-[0_18px_44px_-24px_rgba(80,55,10,.4)]">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 font-semibold text-ink marker:content-['']">
               <span>{f.question}</span>
-              <span class="text-gold-deep transition group-open:rotate-45" aria-hidden="true">+</span>
+              <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gold-soft text-gold-deep transition group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
-            <p class="mt-3 text-[0.98rem] leading-relaxed text-ink-soft">{f.answer}</p>
+            <p class="mt-3 leading-relaxed text-ink-2">{f.answer}</p>
           </details>
         ))}
       </div>
@@ -208,13 +304,18 @@ const jsonLd = buildGraph(
   </section>
 
   <!-- ==================== FINAL CTA ==================== -->
-  <section class="container-page pb-4">
-    <div class="rounded-3xl border border-gold/40 bg-ivory-2 p-10 text-center">
-      <h2 class="text-[2rem]">Speak to Pandit Ji today</h2>
-      <p class="mx-auto mt-3 max-w-xl text-ink-soft">Guidance in your own language, in person at Sanjeeva Reddy Nagar or online across India and abroad. Fees are always shared before booking.</p>
-      <div class="mt-6 flex flex-wrap justify-center gap-3">
-        <a class="btn btn-call" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call {contact.phoneDisplay}</a>
-        <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> Message on WhatsApp</a>
+  <section class="section pt-0">
+    <div class="container-page">
+      <div class="reveal relative overflow-hidden rounded-[2rem] border border-gold-deep/25 px-8 py-14 text-center"
+           style="background: radial-gradient(120% 130% at 50% -10%, #FFF6DA, #FFE9A8 55%, #FBD879 100%);">
+        <svg class="zodiac absolute -right-10 -top-10 h-48 w-48 text-gold-deep/25" viewBox="0 0 200 200" fill="none" aria-hidden="true"><circle cx="100" cy="100" r="96" stroke="currentColor" stroke-width="1"/>{wheel.map((w) => (<line x1="100" y1="100" x2={w.x2} y2={w.y2} stroke="currentColor" stroke-width="0.5"/>))}</svg>
+        <p class="relative label">Amma Varu's blessings</p>
+        <h2 class="relative mt-3 text-[2.3rem]">Speak to Pandit Ji today</h2>
+        <p class="relative mx-auto mt-3 max-w-xl text-ink-2">Guidance in your own language - in person at Sanjeeva Reddy Nagar, or online across India and abroad. Fees are always shared before booking.</p>
+        <div class="relative mt-7 flex flex-wrap justify-center gap-3">
+          <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call {contact.phoneDisplay}</a>
+          <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> Message on WhatsApp</a>
+        </div>
       </div>
     </div>
   </section>
