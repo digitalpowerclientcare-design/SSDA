@@ -27,7 +27,23 @@ const jsonLd = buildGraph(organizationSchema(), localBusinessSchema(), personSch
       <p class="label">About Pandit Ji</p>
       <h1 class="mt-3 text-[2.4rem]">{pandit.name}</h1>
       <p class="mt-2 font-medium text-gold-deep">{pandit.jobTitle} · 35+ years in Hyderabad</p>
-      <p class="mt-5 leading-relaxed text-ink-2">{pandit.bio}</p>
+      <p class="mt-5 leading-relaxed text-ink-2">
+        Families in Hyderabad who come to Pandit Sri Santosh Sharma Ji have usually already spoken to
+        someone else first, and arrive wanting a plain reading rather than a dramatic one. Over 35 years
+        that has stayed the pattern - a marriage taking longer than expected, a career that has stalled,
+        a family question nobody has answered clearly. The chart is read as it is: what it supports, and
+        what it does not, said directly rather than softened or exaggerated either way.
+      </p>
+
+      <h2 class="mt-9 text-[1.5rem]">How a chart is actually read</h2>
+      <p class="mt-3 leading-relaxed text-ink-2">
+        A Kundli is prepared from date, time and place of birth. For marriage matters, the 36-point
+        Ashtakoot system compares both charts together - not a score read in isolation, but the fuller
+        picture behind it, including whether a flagged dosha is genuinely significant or one of the
+        common cases where classical texts already account for it. For career, business and family
+        questions, the relevant dasha periods are read against the chart to understand timing, not just
+        possibility.
+      </p>
 
       <h2 class="mt-9 text-[1.5rem]">Areas of guidance</h2>
       <div class="mt-4 flex flex-wrap gap-2">
@@ -38,7 +54,7 @@ const jsonLd = buildGraph(organizationSchema(), localBusinessSchema(), personSch
 
       <h2 class="mt-9 text-[1.5rem]">Our approach</h2>
       <p class="mt-3 leading-relaxed text-ink-2">
-        Astrology here is not about fear or false promises. It is about understanding the right timing, the right direction, and the lessons life is teaching us. Guidance is given plainly, in your own language, and remedies are suggested only where the chart genuinely indicates them.
+        Astrology here is not about fear or false promises. It is about understanding the right timing, the right direction, and the lessons life is teaching us. Guidance is given plainly, in your own language, and remedies are suggested only where the chart genuinely indicates them. Where nothing is required, that is said as readily as anything else - and no gemstone, yantra or remedy product is sold here.
       </p>
 
       <div class="mt-8 flex flex-wrap gap-3">
@@ -48,3 +64,22 @@ const jsonLd = buildGraph(organizationSchema(), localBusinessSchema(), personSch
     </div>
   </section>
 </BaseLayout>
+
+<!--
+  TODO(client) - E-E-A-T gap, confirmed by SEO audit 2026-09-29.
+  The highest-value additions to this page for search and AI-citation trust
+  need real facts from Pandit Ji - nothing above is invented, and nothing
+  further should be either. Specifically:
+    1. Who trained him (family member's name/relationship, or guru/institution),
+       and whether he follows a named lineage or classical text/school.
+    2. Any formal title, certification, astrology-association membership,
+       felicitation or media mention - or confirmation there are none.
+    3. Roughly how many consultations he sees in a typical week/month.
+    4. Confirmation of the real founding year (business.ts has foundedYear
+       flagged TODO - "35+ years" currently implies ~1990, unconfirmed).
+    5. 1-2 real, anonymisable recurring patterns from 35 years of practice.
+    6. A real hi-res photo (pandit.photo is currently a placeholder path).
+  Once supplied, add a "Training and background" section and a real photo -
+  do not fabricate names, institutions or credentials to fill this gap.
+-->
+

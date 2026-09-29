@@ -1,24 +1,24 @@
 /**
  * ============================================================================
- *  SINGLE SOURCE OF TRUTH — every NAP fact and service on this site comes
+ *  SINGLE SOURCE OF TRUTH - every NAP fact and service on this site comes
  *  from here. No component/page/JSON-LD block hardcodes an address, phone,
  *  hour, review count or service. Fix a fact once, here.
  * ============================================================================
  */
 
 export const brand = {
-  /** Canonical name — MATCHES the Google Business Profile exactly (1,640 reviews)
+  /** Canonical name - MATCHES the Google Business Profile exactly (1,640 reviews)
    *  so Google resolves the site + GBP as one entity. */
   name: 'Sri Sai Durga Astrology Centre',
   shortName: 'Sri Sai Durga',
   legalName: 'Sri Sai Durga Astrology Centre',
-  tagline: 'Trusted Vedic astrology guidance in Hyderabad — honest, without fear or false promises.',
+  tagline: 'Trusted Vedic astrology guidance in Hyderabad - honest, without fear or false promises.',
   domain: 'https://srisaidurgaastrologer.com',
   email: 'info@srisaidurgaastrologer.com', // TODO(client): confirm working inbox
   foundedYear: 1990, // TODO(client): confirm. "35+ years" implies ~1990.
-  /** Every other spelling in the wild — emitted as schema alternateName. */
+  /** Every other spelling in the wild - emitted as schema alternateName. */
   alternateNames: ['Sri Sai Durga Astrologer', 'Sri Sai Durga Jyotishyalayam'],
-  /** Off-site profiles — schema sameAs. Add verified URLs only. */
+  /** Off-site profiles - schema sameAs. Add verified URLs only. */
   sameAs: [
     'https://maps.app.goo.gl/3hHZXUGGmFQWj5J18', // GBP
     // TODO(client): add Justdial, Sulekha, Facebook, Instagram, YouTube if owned.
@@ -34,7 +34,7 @@ export const pandit = {
   bio:
     'Pandit Sri Santosh Sharma Ji has guided individuals and families in Hyderabad for more than 35 years ' +
     'through the wisdom of traditional Vedic astrology (Jyotish Shastra). People come to him when life feels ' +
-    'uncertain — a delayed marriage, a stuck career, or family matters that create stress — and his guidance is ' +
+    'uncertain - a delayed marriage, a stuck career, or family matters that create stress - and his guidance is ' +
     'based on careful Kundli analysis and sincere, practical advice. Astrology here is about the right timing and ' +
     'the right direction, never fear or false promises.',
   knowsAbout: [
@@ -83,7 +83,7 @@ export const services: Service[] = [
   {
     slug: 'kundli-matching',
     title: 'Kundli Matching',
-    summary: 'Guna Milan compatibility before marriage — 36-point analysis and dosha check.',
+    summary: 'Guna Milan compatibility before marriage - 36-point analysis and dosha check.',
     leadAnswer:
       'Kundli matching (Guna Milan) compares the birth charts of both partners to check compatibility before marriage. ' +
       'Pandit Sri Santosh Sharma Ji examines the 36-point Ashtakoot system, emotional harmony, long-term compatibility and any doshas, and explains the result plainly.',
@@ -124,7 +124,7 @@ export const services: Service[] = [
     title: 'Muhurtham',
     summary: 'Auspicious dates for marriage, gruhapravesham and new beginnings.',
     leadAnswer:
-      'Muhurtham is the selection of an auspicious date and time for important events — weddings, gruhapravesham, business openings and naming ceremonies — based on the panchangam and the chart.',
+      'Muhurtham is the selection of an auspicious date and time for important events - weddings, gruhapravesham, business openings and naming ceremonies - based on the panchangam and the chart.',
     bullets: ['Wedding & gruhapravesham dates', 'Business opening muhurtham', 'Naming & travel timing'],
     icon: 'calendar',
   },
@@ -133,7 +133,7 @@ export const services: Service[] = [
     title: 'Vastu Consultation',
     summary: 'Vastu guidance for homes and offices, without demolition-first advice.',
     leadAnswer:
-      'Vastu consultation reviews the layout and energy of a home or office and suggests practical, sensible corrections — never fear-based demolition. Guidance covers direction, placement and simple remedies.',
+      'Vastu consultation reviews the layout and energy of a home or office and suggests practical, sensible corrections - never fear-based demolition. Guidance covers direction, placement and simple remedies.',
     bullets: ['Home & office Vastu', 'Practical corrections', 'New-property guidance'],
     icon: 'home',
   },

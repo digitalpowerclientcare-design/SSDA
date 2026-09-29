@@ -1,5 +1,5 @@
 /**
- * JSON-LD builders — every structured-data block is generated here from
+ * JSON-LD builders - every structured-data block is generated here from
  * business.ts, server-rendered into static HTML (required for AI crawlers).
  *
  * DELIBERATE OMISSION: no self-serving AggregateRating/Review markup about our
