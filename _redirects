@@ -1,0 +1,15 @@
+# Old WordPress URLs -> new site (true 301s on Cloudflare Pages).
+# Astro also emits static redirect pages (astro.config redirects) as a fallback
+# for hosts that ignore this file.
+/business-astrology/  /services/business-astrology/  301
+/vashikaran-specialist/  /services/  301
+/about-pandit-sri-santosh-sharma-ji-best-astrologer-in-hyderabad-35-years/  /about/  301
+/kundli-matching-in-hyderabad-best-horoscope-matching-for-marriage/  /services/kundli-matching/  301
+/career-astrology-in-hyderabad-job-promotion-onsite-guidance-sri-sai-durga-astrologer/  /services/career-astrology/  301
+/vastu-consultant-in-hyderabad-home-office-vastu-solutions-sri-sai-durga-astrologer/  /services/vastu/  301
+/dosha-nivarana-in-hyderabad-manglik-sade-sati-kala-sarpa-remedies-sri-sai-durga-astrologer/  /services/dosha-remedies/  301
+/marriage-problem-solution-astrologer-in-hyderabad-delay-disputes-sri-sai-durga/  /services/marriage-guidance/  301
+/love-relationship-guidance-in-hyderabad-love-problem-astrologer-sri-sai-durga-astrologer/  /services/marriage-guidance/  301
+/contact-astrologer/  /contact/  301
+/hello-world/  /  301
+/category/uncategorized/  /  301
