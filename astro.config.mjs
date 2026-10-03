@@ -32,8 +32,6 @@ export default defineConfig({
         !page.includes('/privacy-policy/') &&
         !page.includes('/terms/') &&
         !page.includes('/404'),
-      changefreq: 'weekly',
-      lastmod: new Date(),
     }),
   ],
   vite: { plugins: [tailwindcss()] },

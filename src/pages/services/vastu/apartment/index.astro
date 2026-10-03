@@ -1,0 +1,284 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { contact } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/vastu/apartment/';
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Vastu consultation', url: '/services/vastu/' },
+  { name: 'Vastu for Flat', url: path },
+];
+
+// TODO(client): confirm whether an online floor-plan review for a flat is charged separately.
+// TODO(client): confirm whether site visits to flats are offered across all of Hyderabad.
+// INTERVIEW Q11: the three Vastu worries Pandit Ji meets most in Hyderabad flats, and what he suggests moving first, step by step, without breaking walls
+// INTERVIEW Q13: how he explains a south-facing flat and a north-east toilet to a family that has been frightened by them
+// INTERVIEW Q14: what is different between a gated-community apartment, a builder floor and an independent house
+const faqs = [
+  { question: 'Is a south-facing flat good or bad as per Vastu?', answer: 'It is not bad by itself. The south is linked with Yama in the old texts, which is where the reputation comes from, but what the texts check is where the door sits along the wall and how the inside is laid out. A south-facing flat with a good layout is livable, and the inside is the part you can change.' },
+  { question: 'Is a west-facing flat good as per Vastu?', answer: 'Not bad by itself either. The west is linked with gains and completion, and many practitioners like the door in the north-west half of the west wall, so the thing to plan for is the afternoon heat on the west wall and the balcony.' },
+  { question: 'Can the Vastu of a flat be corrected without changing walls?', answer: 'In most cases yes. The facing and the walls are fixed, but the position of the bed, the stove inside the kitchen, the shrine, the heavy storage and the clutter in the middle are all yours to move. Those changes cover most apartment concerns.' },
+  { question: 'Which floor is best for Vastu in an apartment?', answer: 'The old texts were written for standalone buildings, so they do not name one best floor for a flat. Light, ventilation, privacy, noise and heat are the better guides when you compare floors, and we can go through them for a specific flat.' },
+  { question: 'Does the flat\'s facing or the building\'s facing count?', answer: 'The direction the flat\'s own main door faces is what practitioners read first. Some of them also note the orientation of the whole building and where your flat sits in it, and a review looks at both.' },
+  { question: 'Can a flat be checked before I buy it?', answer: 'Yes, and it is a very useful time. A floor plan with the facing marked is enough to begin, so you can compare options before paying a booking amount. We can consider a site visit where the surroundings matter.' },
+  { question: 'Must the kitchen be in the south-east of a flat?', answer: 'South-east is the preferred zone and the north-west is the usual second choice. If your kitchen sits elsewhere, you adjust the stove position inside the kitchen and the direction the cook faces. You do not rebuild the kitchen.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `Vastu for Flat in ${contact.city}`,
+    serviceType: 'Apartment Vastu consultation',
+    description: 'Vastu advice for apartments and flats in Hyderabad: what can and cannot be changed, floor level, balcony, room positions, shared walls, south-facing flats and a buying checklist.',
+    url: abs(path),
+    isPartOf: { '@id': abs('/services/vastu/#service') },
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)), breadcrumbSchema(crumbs),
+);
+
+const fixed = [
+  'The direction the flat faces',
+  'The floor it sits on',
+  'Where the main door is',
+  'Walls shared with the neighbours',
+  'Toilet and plumbing positions',
+  'The lift, the staircase and the buildings around you',
+];
+const flexible = [
+  'Where the bed goes and which way your head points',
+  'Where the stove sits inside the kitchen',
+  'Where the family shrine is placed',
+  'Where heavy storage and furniture stand',
+  'How clear the middle of the flat is',
+  'Lighting, colours and how the entrance is kept',
+];
+
+const inside = [
+  ['Entrance', 'The facing is fixed, so work on the entrance itself: well lit, free of shoe stacks and clutter, easy to open.'],
+  ['Kitchen', 'If the kitchen cannot move, put the stove towards the south-east corner of the kitchen, have the cook face east where possible, and keep the sink away from the stove.'],
+  ['Master bedroom', 'The south-west room is preferred. If that is not your master bedroom, put the bed in the south-west part of whichever room you use, with the head to the south or east.'],
+  ['Puja space', 'Flats rarely have a separate puja room. A compact wall unit or shelf in the north-east or east of the living area works, away from toilet walls and out of the bedroom if you can manage it. The <a class="underline decoration-[var(--accent)] underline-offset-4" href="/guides/puja-room-vastu/">puja room Vastu guide</a> has more.'],
+  ['Living room', 'Lighter furniture to the north and east, heavier pieces to the south and west.'],
+  ['Toilets', 'Their positions are fixed with the plumbing. Ventilate them, keep the doors closed and keep them clean. If one sits in the north-east or the middle, ask about your options before you assume the worst.'],
+  ['The middle', 'Keep the middle of the flat free of heavy storage and clutter.'],
+];
+
+const southCheck = [
+  'Where along the south wall does the main door sit? The texts look at that as well as the facing.',
+  'A south-east kitchen suits a south-facing flat well, so see whether your plan already has one.',
+  'The south-west is the heavy, stable corner, and a south-facing flat often has room for the master bedroom there.',
+  'Keep the north-east side light and clean. The puja space belongs there, whatever the facing.',
+  'South light is usually steadier and less harsh than west light, which counts when you sit in the flat all day.',
+];
+
+const buying = [
+  'Ask for the floor plan with the facing marked, then confirm the direction yourself with a phone compass at the site.',
+  'See where the main door opens, and whether a pillar, lift or staircase faces it directly.',
+  'Find the kitchen, and check that the stove can sit towards its south-east corner.',
+  'Decide which room will be the master bedroom and where the bed can go.',
+  'Find a spot for the shrine in the north-east or east of the living area.',
+  'Note where the toilets sit relative to the middle and the north-east. Plumbing cannot be moved later.',
+  'Check the balcony direction and view, and how much light and air each room gets at different times of day.',
+  'Send the plan for review before you pay a booking amount, so you can compare options without being hurried.',
+];
+
+const worries = [
+  { q: 'The facing is wrong, so it cannot be fixed.', a: 'The facing is not what gets fixed. The inside of the flat is, and that is where the useful changes are.' },
+  { q: 'We will have to move a toilet or open a wall.', a: 'The walls are shared or structural and the plumbing is fixed, so alterations rarely make sense. Moving things around inside comes first, and most flats never need more than that.' },
+  { q: 'A higher floor is better Vastu.', a: 'The texts do not name a best floor for a flat. Light, ventilation and privacy are the better guides.' },
+];
+---
+<BaseLayout authored
+  title="Vastu for Flat in Hyderabad | South Facing Flat Vastu"
+  description="Vastu for flat and apartment in Hyderabad: south facing flat Vastu, floor level, balcony, room placement and a buying checklist. No walls need to move."
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Vastu consultation · Flats and apartments"
+    title="Vastu for Flat in Hyderabad, South Facing Flats Included"
+    intro="You cannot turn a flat to face another way. You can move the bed, the stove and the almirah, and in most flats that is where the useful changes are. Here is what to check before you buy and what to move once you live there."
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ DIRECT ANSWER + FIXED VS FLEXIBLE ============ -->
+  <section class="band-light section">
+    <div class="container-page">
+      <div class="reveal max-w-3xl">
+        <h2>Vastu for a flat in Hyderabad: what is fixed and what is not</h2>
+        <span class="rule"></span>
+        <p class="lead mt-6">Vastu for an apartment works around one fixed fact. The direction a flat faces cannot change, but the layout inside can. Most apartment worries ease when the bed, stove, puja space and heavy storage are placed well, and no wall needs touching. Floor level, balcony and shared walls come into it as well.</p>
+        <p class="mt-5">This page covers flats and gated-community apartments. For a house with its own plot, go to <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/home/">Vastu for home</a>. The wider picture is in the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/">Vastu consultant overview</a>.</p>
+      </div>
+      <div class="mt-12 grid gap-4 md:grid-cols-2">
+        <div class="card card-static reveal">
+          <h3>Fixed, so leave it alone</h3>
+          <ul class="mt-5 grid gap-3">
+            {fixed.map((x) => (
+              <li class="flex gap-3 border-b border-[var(--line)] pb-3"><span class="mt-1 text-[var(--accent)]" aria-hidden="true">·</span><span>{x}</span></li>
+            ))}
+          </ul>
+        </div>
+        <div class="card card-static reveal">
+          <h3>Yours to move</h3>
+          <ul class="mt-5 grid gap-3">
+            {flexible.map((x) => (
+              <li class="flex gap-3 border-b border-[var(--line)] pb-3"><span class="mt-1 text-[var(--accent)]" aria-hidden="true">✓</span><span>{x}</span></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SOUTH FACING ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="reveal">
+        <h2>South facing flat Vastu: what to check before you say no</h2>
+        <span class="rule"></span>
+        <div class="prose-site mt-6">
+          <p>Someone, a relative or the agent, has probably told you: "Don't take a south-facing flat." The worry comes from the old link between the south and Yama.</p>
+          <p>What the texts check is narrower. They look at where along the wall the door sits, and at how the rooms are laid out inside. Both show on the floor plan. So the facing is a reason to look at the layout, and no reason to walk away from an otherwise good flat, because if the plan works, a south facing flat lives like any other. If it does not, Pandit Ji will say so.</p>
+          <p>Looking at an independent house instead? That has its own page on <a href="/services/vastu/south-facing-house/">south facing house Vastu</a>.</p>
+        </div>
+      </div>
+      <div class="reveal">
+        <h3 class="text-[1.5rem]">What to check in a south facing flat</h3>
+        <ul class="mt-5 grid gap-3">
+          {southCheck.map((x) => (
+            <li class="flex gap-3 border-b border-[var(--line)] pb-3"><span class="mt-1 text-[var(--accent)]" aria-hidden="true">✓</span><span>{x}</span></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INSIDE THE FLAT ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead title="Room positions in an apartment: where the bed, stove and shrine go" intro="The old advice, fitted to what a flat lets you do." />
+      <dl class="fact-table reveal mt-12">
+        {inside.map(([r, d]) => (
+          <div><dt>{r}</dt><dd set:html={d}></dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ OTHER FACINGS ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="reveal">
+        <h2>West, north-west, east and north facing flat Vastu</h2>
+        <span class="rule"></span>
+        <p class="mt-6 max-w-md">The same two checks apply to every facing: where the door sits along its wall, and how the rooms are laid out behind it.</p>
+      </div>
+      <div class="reveal prose-site">
+        <h3 class="!mt-0 text-[1.5rem]">West facing flat Vastu</h3>
+        <p>The west is linked with gains and completion, and many practitioners prefer the door in the north-west half of the west wall. What to plan for is the afternoon heat on the west wall and the balcony. Our page on <a href="/services/vastu/west-facing-house/">west facing house Vastu</a> goes further.</p>
+        <h3 class="text-[1.5rem]">North west facing flat Vastu</h3>
+        <p>The north-west is the air corner, linked with movement and change, and since the texts keep guest rooms, garages and toilets there, it is worth looking at which room sits just behind the door.</p>
+        <h3 class="text-[1.5rem]">East and north facing flats</h3>
+        <p>These are the two facings the texts like best, for the morning light and the open feel, but they still need a look at the door position and the layout inside. See <a href="/services/vastu/east-facing-house/">east facing house Vastu</a> and <a href="/services/vastu/north-facing-house/">north facing house Vastu</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FLOOR, BALCONY, SHARED WALLS ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead title="Floor level, balcony and shared walls" />
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        <div class="card card-static reveal">
+          <h3>Which floor is best for Vastu?</h3>
+          <p class="mt-3 text-[0.95rem]">The old texts were written for standalone buildings, so they do not say which floor of a tower is best. When you are choosing between the 3rd floor and the 11th, go by what you can check on a visit: how much light comes in, whether air moves through, how private the balcony is, how loud the road is, and how hot the west wall gets by afternoon.</p>
+        </div>
+        <div class="card card-static reveal">
+          <h3>Balcony Vastu</h3>
+          <p class="mt-3 text-[0.95rem]">North, east or north-east balconies are preferred because they bring in morning light and air. Keep the balcony open and tidy. It is not a store room for old things.</p>
+        </div>
+        <div class="card card-static reveal">
+          <h3>Shared walls</h3>
+          <p class="mt-3 text-[0.95rem]">Vastu reads your flat's own plan. The neighbouring flats, the lift and the staircase are fixed, so they get noted but rarely drive a recommendation. The middle of your own flat matters more. For the staircase inside a duplex, see <a class="underline decoration-[var(--accent)] underline-offset-4" href="/guides/staircase-vastu/">staircase Vastu</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BUYING CHECKLIST ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div>
+        <SectionHead title="A Vastu checklist before you buy a flat" intro="Take it to the site visit and tick it off in the corridor." />
+        <p class="reveal mt-6 max-w-md text-[0.95rem]">Send the plan and the facing before you commit. <a class="underline decoration-[var(--accent)] underline-offset-4" href="/contact/">Contact us</a> to arrange it.</p>
+        <h3 class="reveal mt-10 text-[1.375rem]">Vastu for a rented flat in Hyderabad</h3>
+        <p class="reveal mt-3 max-w-md text-[0.95rem]">If you rent, the list shrinks to what you control: where the bed goes, where the stove sits inside the kitchen, where the shrine stands, and how clear the middle is. That is still most of the useful changes.</p>
+      </div>
+      <ol class="reveal grid gap-4">
+        {buying.map((item, i) => (
+          <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+            <span class="numeral text-[1.25rem]" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ WORRIES + GRIHA PRAVESH ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:gap-20">
+      <div class="reveal">
+        <h2>What you may have heard about flat Vastu</h2>
+        <span class="rule"></span>
+        <div class="prose-site mt-6">
+          {worries.map((w) => (
+            <p>"{w.q}" {w.a}</p>
+          ))}
+        </div>
+      </div>
+      <div class="reveal">
+        <h2 class="text-[1.75rem]">Griha Pravesh in a new flat</h2>
+        <p class="mt-4 max-w-xl">Moving into a new flat is marked by Griha Pravesh on an auspicious date from the Panchang, and a Vastu review before you move in is convenient, since an empty flat is easy to arrange. The date is a separate matter, covered on <a class="underline decoration-[var(--accent)] underline-offset-4" href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham in Hyderabad</a>.</p>
+        <h2 class="mt-10 text-[1.75rem]">Other Vastu pages</h2>
+        <ul class="mt-4 border-t border-[var(--line)]">
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/home/">Vastu for home <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/office/">Office and shop Vastu <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/plot/">Plot Vastu <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/">Back to Vastu consultant in Hyderabad <span aria-hidden="true">→</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title="Flat Vastu questions people ask before they book" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand
+    title="Get your flat reviewed"
+    text="Call or WhatsApp with the floor plan and the direction the main door faces. Pandit Ji speaks Telugu, Hindi, Kannada and English. We can do the review in person at Sanjeeva Reddy Nagar or online, and you hear the fee first."
+  />
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+import { brand, pandit, contact } from '@/data/business';
+const items = [
+  { n: `${pandit.yearsExperience}+`, l: 'Years of practice' },
+  { n: brand.reviews.count.toLocaleString('en-IN'), l: 'Google reviews' },
+  { n: brand.reviews.rating.toFixed(1), l: 'Google rating' },
+  { n: 'Hyderabad', l: contact.locality },
+  { n: '24 hours', l: 'Open every day' },
+];
+---
+<section class="band-deep border-y border-white/10" aria-label="Trust summary">
+  <div class="container-page">
+    <dl class="hairline-grid grid grid-cols-2 gap-y-8 py-10 text-center md:grid-cols-5 md:py-12">
+      {items.map((i) => (
+        <div class="flex flex-col px-4">
+          <dt class="order-2 mt-3 text-[0.75rem] font-semibold uppercase tracking-[0.16em] text-on-dark-muted">{i.l}</dt>
+          <dd class="numeral text-[clamp(1.75rem,1.2rem+2vw,2.75rem)]">{i.n}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

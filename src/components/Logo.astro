@@ -1,0 +1,9 @@
+---
+interface Props { size?: 'md' | 'lg' }
+const { size = 'md' } = Astro.props;
+const h = size === 'lg' ? 76 : 52;
+const w = Math.round(h * (292 / 132));
+---
+<span class="inline-flex items-center rounded-md bg-porcelain px-2.5 py-1 ring-1 ring-brass-500/40">
+  <img src="/images/logo-trim.png" alt="Sri Sai Durga Astrology Centre" width={w} height={h} style={`height:${h}px;width:auto`} />
+</span>

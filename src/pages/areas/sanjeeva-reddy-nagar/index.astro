@@ -1,0 +1,131 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, pandit, contact, services, telLink } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Areas', url: '/areas/' },
+  { name: 'Sanjeeva Reddy Nagar', url: '/areas/sanjeeva-reddy-nagar/' },
+];
+
+const faqs = [
+  { question: 'Where exactly is the astrologer\'s centre in Sanjeeva Reddy Nagar?', answer: `${contact.addressLine}, ${contact.locality}, ${contact.city} ${contact.postalCode}. Find Andhra Bank first, with Royal College on the opposite side. We are on the 5th floor, Flat No. 502.` },
+  { question: 'Are you open at all hours?', answer: `Google lists us as ${contact.hoursDisplay.toLowerCase()}, but call or WhatsApp ${contact.phoneDisplay} before you come, so that a time is fixed for your consultation and Pandit Ji is free.` },
+  { question: 'Is S.R. Nagar the same as Sanjeeva Reddy Nagar?', answer: 'Yes. S.R. Nagar and SR Nagar are the usual short forms of Sanjeeva Reddy Nagar. We are in this locality, in the 500038 postal area of Hyderabad.' },
+  { question: 'I live elsewhere in Hyderabad. Do I have to come in person?', answer: 'No. You can consult by phone or video from wherever you are in Hyderabad, or outside it, and Pandit Ji prepares the chart in advance from the birth details you share.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'WebPage',
+    '@id': abs('/areas/sanjeeva-reddy-nagar/#webpage'),
+    url: abs('/areas/sanjeeva-reddy-nagar/'),
+    name: 'Astrologer in Sanjeeva Reddy Nagar (S.R. Nagar), Hyderabad',
+    isPartOf: { '@id': abs('/#website') },
+    about: { '@id': abs('/#localbusiness') },
+    inLanguage: 'en-IN',
+  },
+  faqSchema(faqs, abs('/areas/sanjeeva-reddy-nagar/')),
+  breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout
+  title="Astrologer in S.R. Nagar, Hyderabad | Sri Sai Durga"
+  description="Astrologer and Vastu consultant in Sanjeeva Reddy Nagar, Hyderabad, beside Andhra Bank, opposite Royal College. Directions, hours, call or WhatsApp."
+  canonicalPath="/areas/sanjeeva-reddy-nagar/"
+  jsonLd={jsonLd}
+>
+  <PageHero
+    eyebrow="Where we are"
+    title="Astrologer in Sanjeeva Reddy Nagar (S.R. Nagar), Hyderabad"
+    intro={`${brand.name} is on the 5th floor of Ramakrishna Nivas in Sanjeeva Reddy Nagar, beside Andhra Bank and opposite Royal College, Bapu Nagar. Open every day, 24 hours.`}
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ NAP + MAP ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
+      <div>
+        <SectionHead eyebrow="Find us" title="Address and contact of the astrologer in S.R. Nagar" />
+        <dl class="fact-table reveal mt-10">
+          <div><dt>Name</dt><dd>{brand.name}</dd></div>
+          <div>
+            <dt>Address</dt>
+            <dd>
+              <address class="not-italic">{contact.addressLine}, {contact.locality}, {contact.city}, {contact.state} {contact.postalCode}</address>
+            </dd>
+          </div>
+          <div><dt>Landmark</dt><dd>{contact.landmark}</dd></div>
+          <div><dt>Hours</dt><dd>{contact.hoursDisplay}</dd></div>
+          <div><dt>Phone and WhatsApp</dt><dd><a class="underline decoration-brass-700 underline-offset-4" href={telLink()}>{contact.phoneDisplay}</a></dd></div>
+          <div><dt>Consultant</dt><dd>{pandit.name}</dd></div>
+          <div><dt>Languages</dt><dd>{pandit.languages.join(', ')}</dd></div>
+        </dl>
+        <p class="reveal mt-8"><a class="link-arrow" href={contact.gbpUrl} target="_blank" rel="noopener">Open in Google Maps <span aria-hidden="true">→</span></a></p>
+      </div>
+      <div class="reveal overflow-hidden rounded-lg border border-[var(--line)] bg-white">
+        <iframe src={contact.mapEmbed} width="100%" height="100%" style="border:0; min-height:26rem" loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin" title={`Map to ${brand.name}, ${contact.locality}`}></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead eyebrow="What we do" title="Astrologer and Vastu consultant close to home in Sanjeeva Reddy Nagar" intro="You can do all of this at our centre, and most of it online too." />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {services.map((s) => (
+          <a href={`/services/${s.slug}/`} class="card reveal flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.25rem]">{s.title}</h3>
+            <p class="text-[0.92rem]">{s.summary}</p>
+            <span class="link-arrow mt-auto pt-2">Learn more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW TO FIND US ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Directions" title="How to reach the centre in S.R. Nagar" />
+      <div class="reveal prose-site">
+        <p>Look for Andhra Bank first. We are beside it, in Ramakrishna Nivas at Bapu Nagar, Sanjeeva Reddy Nagar. Royal College is directly opposite, which makes a handy second landmark when you stop to ask someone on the road.</p>
+        <p>We are in a flat and not a street-level shop: Flat No. 502 on the 5th floor, in House No. 247/3RT. Search for Sri Sai Durga Astrology Centre on Google Maps, and the saved pin will take you to the building, though it is worth phoning if you are not sure which entrance to use.</p>
+        <h3>Before you set out</h3>
+        <ul>
+          <li>Call or WhatsApp {contact.phoneDisplay} so a time is fixed and Pandit Ji expects you.</li>
+          <li>Carry your date, time and place of birth, any earlier chart, and the questions you want covered.</li>
+          <li>Parking and public transport are not listed here yet, so ask when you call.</li>
+        </ul>
+        <!-- TODO(client): add parking, nearest public transport / metro, and lift availability, only once confirmed. Do not guess. -->
+        <h3>Not nearby? Consult an astrologer online from anywhere in Hyderabad</h3>
+        <p>You do not have to travel to Sanjeeva Reddy Nagar. A phone or video consultation follows the same steps as a visit. The Google listing also names {contact.areasServed.filter((a) => !['Sanjeeva Reddy Nagar', 'SR Nagar'].includes(a)).join(', ')}, and the <a href="/areas/">areas we serve</a> page has the details. To see how a session runs, read <a href="/how-a-consultation-works/">how a consultation works</a>, or go to the <a href="/contact/">contact page</a> to book.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Visiting the astrologer: what to expect" intro="For booking, fees and consultation questions, see the main FAQ." />
+      <div class="reveal">
+        <FaqList faqs={faqs} openFirst />
+        <p class="mt-8"><a class="link-arrow" href="/faq/">All frequently asked questions <span aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Call the centre in Sanjeeva Reddy Nagar" />
+</BaseLayout>

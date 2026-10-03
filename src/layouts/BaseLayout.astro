@@ -3,7 +3,9 @@ import '@/styles/global.css';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import StickyMobileCTA from '@/components/StickyMobileCTA.astro';
-import { brand, pandit, abs } from '@/data/business';
+import { brand, pandit, abs, contentDates } from '@/data/business';
+import { buildGraph, webPageSchema } from '@/lib/schema';
+import { pageSeo } from '@/data/seo';
 
 interface Props {
   title: string;
@@ -14,13 +16,24 @@ interface Props {
   noindex?: boolean;
   /** HTML <meta name="author">. Defaults to the site's one author (the Pandit). */
   author?: string;
+  /** page is attributed to the Pandit: adds author + dates to WebPage schema */
+  authored?: boolean;
+  updated?: string;
 }
 const {
-  title, description, canonicalPath, jsonLd,
+  title: titleProp, description: descriptionProp, canonicalPath, jsonLd,
   ogImage = '/images/og-default.jpg', noindex = false,
-  author = pandit.name,
+  author = pandit.name, authored = false, updated = contentDates.updated,
 } = Astro.props;
 const canonical = abs(canonicalPath);
+const seo = pageSeo[canonicalPath];
+const title = seo?.title ?? titleProp;
+const description = seo?.description ?? descriptionProp;
+const keywords = seo?.keywords?.join(', ');
+const webPageLd = canonicalPath === '/' ? null : buildGraph(webPageSchema({
+  path: canonicalPath, name: title, description, authored,
+  ...(authored ? { published: contentDates.published, updated } : {}),
+}));
 
 // Microsoft Clarity - behavioural analytics (heatmaps + session recordings).
 // Set PUBLIC_CLARITY_PROJECT_ID in .env to activate; stays off until then.
@@ -39,7 +52,10 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID;
     <meta name="description" content={description} />
     <meta name="author" content={author} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
+    {keywords && <meta name="keywords" content={keywords} />}
+    {(noindex || seo?.robots === 'noindex')
+      ? <meta name="robots" content="noindex, follow" />
+      : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={brand.name} />
@@ -47,16 +63,32 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={abs(ogImage)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Sri Sai Durga Astrology Centre, Hyderabad: Vedic astrology and Vastu consultation" />
     <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={abs(ogImage)} />
 
-    <meta name="theme-color" content="#FEF8ED" />
+    <meta name="theme-color" content="#070B1E" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <link rel="preload" href="/fonts/hanken.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- scroll-reveal fallback: only browsers without native scroll-driven animations -->
+    <script is:inline>
+      if (!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()'))) document.documentElement.classList.add('io-reveal');
+    </script>
 
     {jsonLd && <script type="application/ld+json" set:html={jsonLd} is:inline />}
+    {webPageLd && <script type="application/ld+json" set:html={webPageLd} is:inline />}
 
     {clarityId && (
       <script is:inline set:html={`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${clarityId}");`} />
@@ -73,7 +105,7 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID;
   </head>
 
   <body>
-    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-gold focus:px-4 focus:py-2 focus:text-[#3a2600]">Skip to main content</a>
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-brass-400 focus:px-4 focus:py-2 focus:text-[#14110A]">Skip to main content</a>
     <Header />
     <main id="main">
       <slot />

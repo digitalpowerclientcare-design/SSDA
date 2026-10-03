@@ -1,0 +1,272 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { pandit, ids, vastuPages, disclaimer, whatsappLink } from '@/data/business';
+import {
+  buildGraph, organizationSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/guides/vastu-for-new-home-checklist/';
+const title = 'Vastu Checklist for a New Home in Hyderabad: Before You Buy or Move In';
+const description = 'A Vastu checklist for a new home in Hyderabad: what to check before you buy, then the entrance, kitchen, bedrooms, puja room, water and Griha Pravesh day.';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Guides', url: '/guides/' },
+  { name: 'Vastu checklist for a new home', url: path },
+];
+
+interface Group { id: string; title: string; lead: string; items: string[] }
+const groups: Group[] = [
+  {
+    id: 'before-buying', title: 'Vastu checks before you buy a new home',
+    lead: 'This is when Vastu helps most, because the facing and the shape of a property cannot be changed later.',
+    items: [
+      'Ask for the floor plan with north marked, and check the direction yourself with a compass. Keep the phone away from metal while you do it.',
+      'Note which way the main door faces. The texts prefer north, east and north-east, and if yours faces another way that only changes what you watch for inside. It is no reason to panic. Read the page for your facing: <a href="/services/vastu/west-facing-house/">west</a>, <a href="/services/vastu/south-facing-house/">south</a>, <a href="/services/vastu/east-facing-house/">east</a> or <a href="/services/vastu/north-facing-house/">north</a>.',
+      'Prefer a regular, square or rectangular shape. Cut or missing corners, most of all in the north-east, are the ones the texts warn about.',
+      'For a plot, note the road direction and the slope. The texts favour land that is lower towards the north and east than towards the south and west, and <a href="/services/vastu/plot/">Vastu for plots</a> goes further.',
+      'Make sure a pole, a tree or a drain does not stand right in front of the main entrance, since that is much harder to move than a cupboard.',
+      'Sort what you will not compromise on from what a change of placement can fix later. Most interior points fall in the second group, and that is the good news.',
+    ],
+  },
+  {
+    id: 'floor-plan', title: 'Reading the floor plan: middle, corners and light',
+    lead: 'Study how the whole space is laid out before you judge any single room, because a well-placed kitchen cannot rescue a plan that goes wrong around it.',
+    items: [
+      'Keep the middle of the home, called the Brahmasthan, as open and uncluttered as you can, with no toilet, no heavy pillar and no staircase sitting there.',
+      'A toilet in the north-east corner is the placement the texts discourage most.',
+      'Staircases suit the south, west or south-west better than the north-east or the middle of the home. <a href="/guides/staircase-vastu/">Staircase Vastu</a> goes through the options.',
+      'Heavy items and storage belong on the south and west sides, with lighter, open space towards the north and east.',
+      'Check that the plan lets in daylight and air. Windows on the north and east are best where you can get them.',
+    ],
+  },
+  {
+    id: 'entrance', title: 'Main door and entrance Vastu',
+    lead: 'The main door is the first thing any Vastu review looks at.',
+    items: [
+      'Measure the main door direction and write it down. It is the single most useful fact to bring to a consultation, and it takes a minute with a compass.',
+      'The main door should open smoothly, inwards, and be the largest door in the home.',
+      'Keep the entrance well lit and clean, with no shoe racks, no bins and no clutter piling up near the door.',
+      'Avoid a toilet door or a staircase facing the main door directly.',
+      'A name plate and a threshold in good condition make the entrance look cared for.',
+    ],
+  },
+  {
+    id: 'kitchen', title: 'Kitchen Vastu in a new house or flat',
+    lead: 'The kitchen belongs to the fire element, so the texts care about where it sits.',
+    items: [
+      'South-east is the preferred corner, with north-west as the usual second choice.',
+      'The cook should ideally face east while cooking.',
+      'The texts keep fire and water apart, so do not put the stove and the sink side by side.',
+      'Avoid a kitchen in the north-east, or one that faces the main door directly.',
+      'In a flat you cannot move the kitchen. Look at where the stove sits inside it, and which way the cook ends up facing, because those two are yours to change.',
+    ],
+  },
+  {
+    id: 'bedrooms', title: 'Bedroom Vastu: where the master bed goes',
+    lead: 'Rest is the point here, so both the room and the position of the bed count, and the bed is the one you can still move when the plan fixes the room.',
+    items: [
+      'The master bedroom suits the south-west best.',
+      'Sleep with your head towards the south or east.',
+      'Keep a mirror from facing the bed, and keep the bed out from under a beam.',
+      'Children’s and guest rooms commonly go in the west or north-west.',
+    ],
+  },
+  {
+    id: 'puja', title: 'Puja room, bathroom and staircase Vastu',
+    lead: 'The texts give the puja room the north-east, called Ishanya. <a href="/guides/puja-room-vastu/">Puja room Vastu</a> has the detail.',
+    items: [
+      'North-east is preferred, with north or east as the alternatives.',
+      'Face east or north while praying.',
+      'Keep the puja room away from the space under a staircase, a toilet wall and the bedrooms.',
+      'Keep it clean, quiet and free of unrelated storage.',
+      'Toilets and bathrooms sit best on the west or north-west side. Keep them out of the north-east and the middle of the home.',
+    ],
+  },
+  {
+    id: 'water', title: 'Water, borewell and tank placement',
+    lead: 'The north-east is the water corner.',
+    items: [
+      'An underground tank, borewell or other water source goes in the north-east.',
+      'An overhead tank goes in the south-west or west.',
+      'Look for leaks and damp patches, especially in the walls of a resale home. Damp is a maintenance problem before it is a Vastu one.',
+    ],
+  },
+  {
+    id: 'griha-pravesh', title: 'Vastu tips for Griha Pravesh day',
+    lead: 'Griha Pravesh is the housewarming, and preparing for it is part of the checklist. The <a href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham page</a> covers the date itself.',
+    items: [
+      'Finish the essentials first. Water, electricity, locks, and a home cleaned from top to bottom.',
+      'Complete the interior placement points above while the home is still empty, because furniture is much easier to move before the family arrives than after.',
+      'Fix an auspicious date and time through Muhurtham, using the Panchang and your family chart.',
+      'Do the ceremony your family follows, such as boiling milk, with the priest you trust.',
+      'Move the main items in together on the day, and keep the home lived in afterwards instead of leaving it empty for long.',
+    ],
+  },
+];
+
+const quick = [
+  ['Main entrance', 'North, east or north-east'],
+  ['Kitchen', 'South-east, then north-west'],
+  ['Master bedroom', 'South-west'],
+  ['Puja room', 'North-east'],
+  ['Underground water', 'North-east'],
+  ['Overhead tank', 'South-west or west'],
+  ['Toilets', 'West or north-west; avoid north-east and the middle of the home'],
+];
+
+const facing = [
+  { href: '/services/vastu/west-facing-house/', title: 'West facing house Vastu', blurb: 'Door, rooms and the afternoon heat in a west facing house.' },
+  { href: '/services/vastu/south-facing-house/', title: 'South facing house Vastu', blurb: 'Why the south has a bad name, and what to check instead.' },
+  { href: '/services/vastu/east-facing-house/', title: 'East facing house Vastu', blurb: 'A good facing still needs a good plan. What the rest of the layout has to do.' },
+  { href: '/services/vastu/north-facing-house/', title: 'North facing house Vastu', blurb: 'Door, open space and the water corner in a north facing house.' },
+];
+
+const faqs = [
+  { question: 'What if my flat’s facing is not ideal?', answer: 'You cannot turn a flat to face another way, so work on what you control: the kitchen, the shrine, and where the bed and heavy storage sit. In most flats that is where the useful changes are, and nobody needs to break a wall for it.' },
+  { question: 'Is it worth checking Vastu before buying, or only after moving in?', answer: 'Before buying. Facing, plot shape and the basic layout are easiest to judge then, and changing your mind costs nothing, which is why a floor-plan review works even for a property you are only considering.' },
+  { question: 'Do I need a site visit, or is a floor plan enough?', answer: 'A floor plan is enough to begin, and for a flat or a property you are still considering it often does the job. A site visit gives a fuller picture. Send the plan and the main door direction first.' },
+  { question: 'Do I have to break walls to fix Vastu?', answer: 'Rarely. Most concerns are solved by moving things and changing which way they face. If a structural change ever would help, you will hear that as well, along with a cheaper way to get most of the benefit.' },
+  { question: 'Which direction should the main door face in a new house?', answer: 'The texts prefer north, east and north-east. A west or south facing door can work just as well, with different points to plan around inside, so do not rule a house out on facing alone. Ask for the plan first.' },
+  { question: 'Where should the kitchen be in a new flat?', answer: 'South-east is preferred, then north-west. If your flat’s kitchen sits elsewhere, look at where the stove stands and which way the cook faces. Those two changes cost far less than rebuilding the kitchen.' },
+];
+
+const toc = groups.map((g) => ({ id: g.id, label: g.title })).concat([{ id: 'quick', label: 'Quick direction reference' }, { id: 'faq', label: 'Common questions' }]);
+
+const jsonLd = buildGraph(
+  organizationSchema(), personSchema(),
+  {
+    '@type': 'Article',
+    '@id': abs(`${path}#article`),
+    headline: title,
+    description,
+    url: abs(path),
+    mainEntityOfPage: abs(path),
+    datePublished: '2026-10-04',
+    dateModified: '2026-10-04',
+    author: { '@id': ids.person },
+    publisher: { '@id': ids.organization },
+    isPartOf: { '@id': abs('/#website') },
+    about: { '@type': 'Thing', name: 'Vastu Shastra for a new home' },
+    inLanguage: 'en-IN',
+  },
+  faqSchema(faqs, abs(path)),
+  breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout authored
+  title="Vastu Checklist for a New Home in Hyderabad"
+  description={description}
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Guide · Vastu"
+    title={title}
+    intro="A room-by-room Vastu checklist for a home you are about to buy or move into: what to look at on the plan, then each room, then the days before Griha Pravesh. Treat it as a first pass, and bring the rest to a consultation."
+    crumbs={crumbs}
+  >
+    <!-- TODO(client): Pandit Ji to review this guide before it goes live. -->
+  </PageHero>
+
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-16">
+      <article class="prose-site">
+        <p class="!mt-0"><strong>The best time for Vastu is before you buy or move in, while the facing, the plot shape and the layout are still yours to choose.</strong> The checklist follows the order of a review: the property first, then the plan, then room by room. Tick off what you can check yourself and bring the rest to a consultation.</p>
+        <p>A property that misses a few points is still a good property. And in a flat, most corrections are about where things stand, so no wall needs to come down. For more, see <a href="/services/vastu/">Vastu consultation</a>, <a href="/services/vastu/home/">Vastu for homes</a> or <a href="/services/vastu/apartment/">apartments and flats</a>.</p>
+
+        {groups.map((g, gi) => (
+          <div>
+            <h2 id={g.id} class:list={['scroll-mt-24', gi === 0 && '!mt-10']}>{g.title}</h2>
+            <p set:html={g.lead} />
+            <ul class="!list-none !pl-0">
+              {g.items.map((item) => (
+                <li class="flex gap-4 !mt-3 border-b border-[var(--color-line-light)] pb-3">
+                  <span class="text-brass-700" aria-hidden="true">✓</span>
+                  <span set:html={item} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+
+        <h2 id="quick" class="scroll-mt-24">Quick direction reference</h2>
+        <p>The placements above in one table. Real homes rarely allow every one, so compare your plan against it and do not treat it as a score.</p>
+        <div class="mt-6 overflow-x-auto rounded-lg border border-[var(--color-line-light)]">
+          <table class="w-full min-w-[26rem] text-left text-[0.95rem]">
+            <thead class="bg-porcelain">
+              <tr>
+                <th class="px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-brass-700">Area</th>
+                <th class="px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-brass-700">Where the texts put it</th>
+              </tr>
+            </thead>
+            <tbody>
+              {quick.map(([a, b]) => (
+                <tr class="border-t border-[var(--color-line-light)] align-top">
+                  <th scope="row" class="px-4 py-3 font-semibold text-[var(--fg)]">{a}</th>
+                  <td class="px-4 py-3">{b}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p>Building from scratch? <a href="/services/vastu/plot/">Vastu for plots</a> covers shape and road direction. For a shop or workplace, see <a href="/services/vastu/office/">Vastu for office and shop</a>, and for the housewarming date, <a href="/services/muhurtham/">Muhurtham</a>. To have the layout reviewed, <a href={whatsappLink('Namaste, I would like a Vastu review of a new home.')}>message on WhatsApp</a> with the floor plan and the main door direction.</p>
+        <p class="!mt-8 text-[0.875rem] text-[var(--muted)]">{disclaimer}</p>
+      </article>
+
+      <aside class="hidden lg:block">
+        <nav class="sticky top-28 border-l border-[var(--color-line-light)] pl-6" aria-label="On this page">
+          <p class="eyebrow">On this page</p>
+          <ul class="mt-4 grid gap-3 text-[0.9rem]">
+            {toc.map((t) => <li><a class="no-underline hover:text-brass-700" href={`#${t.id}`}>{t.label}</a></li>)}
+          </ul>
+        </nav>
+      </aside>
+    </div>
+  </section>
+
+  <section class="band-light section">
+    <div class="container-page">
+      <SectionHead eyebrow="Related" title="Vastu for your property type" />
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {vastuPages.map((v) => (
+          <a href={v.path} class="card reveal flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.25rem]">{v.title}</h3>
+            <p class="text-[0.92rem]">{v.blurb}</p>
+            <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+      <h3 class="reveal mt-14 text-[1.5rem]">Or start from the direction your door faces</h3>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {facing.map((f) => (
+          <a href={f.href} class="card reveal flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.25rem]">{f.title}</h3>
+            <p class="text-[0.92rem]">{f.blurb}</p>
+            <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="band-white section scroll-mt-20">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="New-home Vastu questions people ask" />
+      <div class="reveal">
+        <FaqList faqs={faqs} openFirst />
+        <p class="mt-8"><a class="link-arrow" href="/faq/">More questions answered <span aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand title="Get your new home's layout reviewed" text="Send the floor plan and the compass direction of the main door by call or WhatsApp, and ask the fee first. Pandit Ji speaks Telugu, Hindi, Kannada and English." />
+</BaseLayout>

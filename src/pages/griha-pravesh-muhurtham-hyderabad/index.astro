@@ -1,0 +1,202 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { contact, disclaimer } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/griha-pravesh-muhurtham-hyderabad/';
+const title = 'Griha Pravesh Muhurat in Hyderabad | Housewarming Dates';
+const description = 'Griha Pravesh muhurat in Hyderabad: housewarming dates from the Panchang, checked against your chart, with the Vastu checks to finish before you move in.';
+const answer = 'Griha Pravesh is the housewarming ceremony when a family first enters a new home. Pandit Ji takes the date and time from the Panchang (tithi, nakshatra, weekday and lagna), checks them against the chart of the head of the household, and gives you a few options that suit it, plus a Vastu check before the move.';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Muhurtham', url: '/services/muhurtham/' },
+  { name: 'Griha Pravesh muhurtham', url: path },
+];
+
+// INTERVIEW Q19: how does Pandit Ji actually pick a Griha Pravesh muhurat, how many options does he usually give, and what does he say when a family can only move on certain days or around festival dates?
+// INTERVIEW Q14: what is different when advising on a gated-community apartment, a builder floor and an independent house?
+// TODO(client): confirm whether Pandit Ji conducts the Griha Pravesh puja himself or only fixes the date and time, and whether he gives a muhurat for rented homes.
+const faqs = [
+  { question: 'How do I find the right Griha Pravesh muhurat for my home?', answer: 'Send the head of the household’s date, time and place of birth, plus the months you are considering. Pandit Ji narrows the Panchang to the dates that suit that chart and gives you a few options, because moving day also depends on the building, the priest and which relatives can travel.' },
+  { question: 'Which days are good for Griha Pravesh?', answer: 'Monday, Wednesday, Thursday and Friday are the weekdays listed most often as favourable, and Tuesday is the one most often avoided, but a weekday alone settles nothing, since the tithi, nakshatra and lagna must fit too.' },
+  { question: 'Do I need a muhurat for a rented house?', answer: 'The old texts speak mostly of homes you own, and families differ on rentals. Some do a short puja and pick a good time to enter, and some skip the formal ceremony. If it matters to your family, a muhurat can be fixed the same way.' },
+  { question: 'Is Griha Pravesh the same as a housewarming?', answer: 'Yes. Housewarming is the English word for the same ceremony, and the spellings vary from region to region, so a different spelling on a calendar or a card means the same thing.' },
+  { question: 'Should I check Vastu before Griha Pravesh?', answer: 'Yes, and before you move furniture in. An empty home is the easiest to correct, and most fixes are placement changes such as the bed, the stove and the shrine. Send the floor plan with the main door direction marked. A photo of the plan is enough to begin.' },
+  { question: 'How early should I ask for a Griha Pravesh date?', answer: 'As soon as you have a rough handover or possession date. Good dates are limited in a year, and priests, packers and the building’s lift all need notice. Share the months you are considering and the dates that cannot move.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `Griha Pravesh muhurtham in ${contact.city}`,
+    serviceType: 'Griha Pravesh muhurtham and new-home Vastu check',
+    description: answer,
+    url: abs(path),
+    isPartOf: { '@id': abs('/services/muhurtham/#service') },
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)),
+  breadcrumbSchema(crumbs),
+);
+
+const elements = [
+  { name: 'Tithi', text: 'The lunar day, fifteen in each half of the month. For a housewarming the texts steer away from the fourth, ninth and fourteenth (the rikta tithis) and from the new moon.' },
+  { name: 'Nakshatra', text: 'The star the Moon sits in that day. The four fixed stars, Rohini and the three Uttaras, are the favourites. Other stars are listed too, and the lists differ.' },
+  { name: 'Weekday', text: 'Monday, Wednesday, Thursday and Friday are named most often as favourable. Tuesday is the one most often avoided.' },
+  { name: 'Lagna', text: 'The sign rising at the moment you step in. Fixed signs (Taurus, Leo, Scorpio, Aquarius) are commonly chosen, for staying power.' },
+];
+
+const vastuChecks = [
+  'Measure the main door direction with a compass. Do not rely on the brochure.',
+  'Find the kitchen and the stove position, and the bed positions in each bedroom.',
+  'Decide where the shrine goes. The puja room page covers the options.',
+  'Look at the staircase and the toilets, especially any in the north-east corner or the middle of the home.',
+  'For a house, locate the borewell, sump and overhead tank.',
+];
+
+const property = [
+  { name: 'A new flat in Hyderabad', text: 'Handover dates slip. Fix the muhurat once the keys are in your hand, or keep two or three options open. Ask the apartment association about move-in rules and lift booking, because the facing of a flat is fixed but the layout inside is yours to arrange.' },
+  { name: 'An independent house', text: 'There is more to check here: the borewell, the sump, the overhead tank and the gate, ideally before the family has any furniture to move around. Finish the work first. A house full of workers and dust is no place for a puja.' },
+  { name: 'A rented home', text: 'The old texts speak mostly of homes you own, so with a rental some families do a short puja and enter at a good time, while others skip the ceremony. Tell us which you want and the time can be chosen to match.' },
+];
+
+const bring = [
+  'The head of the household’s date, time and place of birth.',
+  'The months you are considering, and any date that cannot move: a possession date, a venue, relatives travelling.',
+  'Whether it is a flat or a house, and whether you own it or rent it.',
+  'For a Vastu check, the floor plan with the main door direction marked.',
+];
+---
+<BaseLayout authored title={title} description={description} canonicalPath={path} jsonLd={jsonLd}>
+  <PageHero byline
+    eyebrow="Muhurtham · New home"
+    title="Griha Pravesh Muhurtham in Hyderabad: Dates and What to Check"
+    intro={answer}
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ WHAT IT IS ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Start here" title="What Griha Pravesh is, and why families fix the date first" />
+      <div class="prose-site reveal !mt-0">
+        <p class="!mt-0">Griha Pravesh, also written Gruhapravesam, is the housewarming: the first entry into a home, with a puja to begin living there. Fix the date first, because everything else hangs on it. The priest. The relatives. Leave from work, and the lift booking if it is an apartment.</p>
+        <p>Two words you will hear. A muhurtham, or muhurat, is the date and time chosen, and the Panchang is the almanac it is chosen from. Weddings and business openings have their own page under <a href="/services/muhurtham/">Muhurtham</a>. This page is only about moving into a home.</p>
+        <p>The muhurat fixes the moment of entry. Everything else on the day, from the puja to the milk to the lunch that follows, runs on your own family’s custom and whatever your priest advises.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PANCHANG ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead eyebrow="The Panchang" title="Griha Pravesh muhurat in simple words: tithi, nakshatra, weekday and lagna" intro="Four things have to fit at once. Here is what each one means." />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {elements.map((e) => (
+          <div class="card card-static reveal flex flex-col gap-3">
+            <h3 class="text-[1.375rem]">{e.name}</h3>
+            <p class="text-[0.95rem]">{e.text}</p>
+          </div>
+        ))}
+      </div>
+      <p class="reveal mt-10 max-w-3xl">Texts and regions differ on the details. Treat these as the common lists, and let the chart settle the rest, since no list can know whose name is on the home.</p>
+    </div>
+  </section>
+
+  <!-- ============ PERIODS AND PERSONAL ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Why a calendar is not enough" title="Months and periods that are skipped, and why a printed date falls short" />
+      <div class="prose-site reveal !mt-0">
+        <p class="!mt-0">Some stretches of the year are avoided for a first entry. Moudhyami, when Jupiter or Venus is combust, is one, and the extra lunar month (Adhika masa) and the four-month Chaturmasa are others that calendars commonly leave out, though regional almanacs differ again.</p>
+        <p>That leaves fewer good dates than you would think. A printed Panchang date is also a general date, the same for everyone, while a personal muhurat checks how the day sits against the head of the household’s birth star and Moon sign (Tarabalam and Chandrabalam).</p>
+        <p>Say your flat is handed over on the 3rd and the printed Panchang shows a fine day on the 5th. The 5th can still be a poor day for the person whose name is on the home. That is why two families can be given different dates in the same week.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VASTU ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Before the move" title="Vastu checks to finish before you move in" />
+      <div class="reveal">
+        <p>An empty home is the easiest one to fix. Bring the heavy furniture in last. Settle these first.</p>
+        <ul class="mt-5 grid gap-3">
+          {vastuChecks.map((v) => (
+            <li class="flex gap-4 border-b border-[var(--line)] pb-3">
+              <span class="mt-1 text-brass-700" aria-hidden="true">✓</span>
+              <span>{v}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="prose-site mt-6">
+          <p>The full list is in the <a href="/guides/vastu-for-new-home-checklist/">new home Vastu checklist</a>, and the <a href="/services/vastu/">Vastu consultation</a> page explains a review. For the shrine, read <a href="/guides/puja-room-vastu/">puja room Vastu</a>, and for stairs, <a href="/guides/staircase-vastu/">staircase Vastu</a>.</p>
+          <p>Know which way your door faces? Read the page for a <a href="/services/vastu/west-facing-house/">west facing</a>, <a href="/services/vastu/south-facing-house/">south facing</a>, <a href="/services/vastu/east-facing-house/">east facing</a> or <a href="/services/vastu/north-facing-house/">north facing</a> house. Buying in an apartment block? See <a href="/services/vastu/apartment/">Vastu for flats</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROPERTY TYPES ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Your kind of home" title="New flat, independent house or rented home: how the plan changes" />
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        {property.map((p) => (
+          <div class="card card-static reveal flex flex-col gap-3">
+            <h3 class="text-[1.5rem]">{p.name}</h3>
+            <p class="text-[0.95rem]">{p.text}</p>
+          </div>
+        ))}
+      </div>
+      <!-- INTERVIEW Q14: Pandit Ji's own words on what he checks differently for an apartment, a builder floor and an independent house -->
+    </div>
+  </section>
+
+  <!-- ============ WHAT TO SEND ============ -->
+  <section class="band-dark section-sm">
+    <div class="container-page grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Before you call" title="What to send for your housewarming dates" />
+      <div class="reveal">
+        <ul class="grid gap-4">
+          {bring.map((item) => (
+            <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+              <span class="mt-1 text-brass-500" aria-hidden="true">✓</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-6 text-[0.95rem]">Pandit Ji fixes the date and time. For the puja itself, use the priest your family trusts. Ask the fee first, and see <a class="link-arrow" href="/how-a-consultation-works/">how a consultation works</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Housewarming questions people ask" />
+      <div class="reveal">
+        <FaqList faqs={faqs} openFirst />
+        <p class="mt-8 text-[0.85rem] text-[var(--color-muted-light)]">{disclaimer}</p>
+      </div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand title="Ask Pandit Ji for a Griha Pravesh date" text="Call or WhatsApp with the head of the household’s birth details and the months you are considering. Pandit Ji speaks Telugu, Hindi, Kannada and English." />
+</BaseLayout>

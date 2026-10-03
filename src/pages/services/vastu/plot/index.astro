@@ -1,0 +1,249 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { contact } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/vastu/plot/';
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Vastu consultation', url: '/services/vastu/' },
+  { name: 'Vastu for Plot', url: path },
+];
+
+// TODO(client): confirm whether plot site visits are offered across all of Hyderabad, and whether a plot sketch or survey drawing can be reviewed online.
+// TODO(client): confirm whether layout planning support for new construction (reviewing an architect's drawing) is part of the consultation or separate.
+// INTERVIEW Q12: what Pandit Ji looks at first on a plot sketch, and what he asks the buyer to check on site
+const faqs = [
+  { question: 'Is a west facing plot good as per Vastu?', answer: 'Not bad by itself. The west is linked with gains and completion. The things to plan around are the afternoon sun and where along the west side the gate and door sit. Put the heavy parts of the building in the south-west and leave open space on the north and east.' },
+  { question: 'Is a south facing plot good as per Vastu?', answer: 'It has the strongest reputation for caution, from the old link between the south and Yama, but the facing alone does not decide it. The texts check the gate and door positions and the layout of the building. A review before you buy shows what your plot needs.' },
+  { question: 'Which plot direction is best according to Vastu?', answer: 'North and east facing plots are the ones the texts prefer, but no direction is bad by itself. The shape of the plot, the slope, the road and the plan you build all count. A well-planned building on any plot can work.' },
+  { question: 'Is a plot at a T-junction or at the end of a road bad?', answer: 'The texts discuss a road that runs straight at a plot, and opinion is split on how much weight to give it. Treat it as a point to review. The usual measures are a considered gate position, a compound wall and planting, and traffic safety and noise are worth weighing too.' },
+  { question: 'Can Vastu be checked before I buy a plot?', answer: 'Yes, and it is the best time to ask. A plot sketch or survey drawing with the road side marked is enough to begin, and we can consider a site visit where the surroundings matter. Legal verification of the title is a separate step for a qualified legal professional.' },
+  { question: 'Where should the borewell and septic tank be placed?', answer: 'The borewell and the underground water tank go in the north-east, and the septic tank in the north-west or west. The overhead tank goes on the south-west or west side. Local drainage and municipal rules apply as well, so Pandit Ji checks the plan against both.' },
+  { question: 'What can be done about an irregular plot?', answer: 'The texts prefer regular shapes, but an irregular plot is usually handled by planning the building on a regular portion and keeping the rest as open space or garden. That avoids structural changes and keeps the plan simple.' },
+  { question: 'Should Vastu be reviewed before construction begins?', answer: 'Yes, ideally before the plan is final. It is far easier to adjust a drawing than a built structure. The date for bhoomi puja and the start of work is chosen separately through Muhurtham.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `Vastu for Plot and New Construction in ${contact.city}`,
+    serviceType: 'Plot and construction Vastu consultation',
+    description: 'Vastu advice for plots and new construction in Hyderabad: west, south, east and north facing plots, shape, road direction, slope, corner plots, layout planning, borewell and septic placement, and a buying checklist.',
+    url: abs(path),
+    isPartOf: { '@id': abs('/services/vastu/#service') },
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)), breadcrumbSchema(crumbs),
+);
+
+const plotFeatures = [
+  ['Square or rectangle', 'The texts prefer these, because the directions and zones divide cleanly and the plan is simple to arrange.'],
+  ['Extended or cut corners', 'An extension towards the north-east is viewed favourably. A cut or missing corner is a point to review, and you check its effect on the plan with a drawing before deciding anything.'],
+  ['Irregular or triangular', 'Less preferred. Build on a regular portion and keep the rest as open space or garden.'],
+  ['Slope', 'North and east lower, south and west higher, so that water drains towards the north-east, and good drainage matters in any case, more so in the rains.'],
+];
+
+const services = [
+  ['Borewell and underground tank', 'North-east.'],
+  ['Septic tank', 'North-west or west. We check municipal rules and drainage as well.'],
+  ['Overhead water tank', 'South-west or west side of the building.'],
+  ['Compound wall', 'A little lower and lighter on the north and east, heavier on the south and west.'],
+];
+
+const buying = [
+  'Ask for the plot sketch or survey drawing with the road side, the dimensions and the facing marked, and confirm the direction yourself with a phone compass.',
+  'Check the shape. Is it regular, or does it have cut or extended corners?',
+  'Note which side the road is on, how wide it is, and whether it ends at your plot.',
+  'Look at the slope and the drainage, including where water collects in the rains.',
+  'See what stands on the neighbouring plots and in front of yours.',
+  'Have the title and documents verified by a qualified legal professional. That is a separate step from Vastu.',
+  'Send the plan for Vastu review before you pay a booking amount, so you can compare options without being hurried.',
+];
+
+const worries = [
+  { q: 'A west facing plot is a poor buy.', a: 'No facing is bad by itself. Plan for the afternoon sun, check where the gate and door fall along the west side, keep the heavy parts of the building in the south-west, and a west facing plot builds like any other.' },
+  { q: 'A plot with a road ending at it must be rejected.', a: 'Opinion is split on how much weight it deserves. Treat it as a point to review, with measures you can take, and no reason to panic.' },
+  { q: 'Only a north or east facing plot is good.', a: 'Plots of every facing get built on, and a well-planned building on any of them works. Facing is one consideration among several.' },
+  { q: 'An irregular plot cannot be built on.', a: 'It usually can. Build on a regular portion and leave the rest open.' },
+];
+---
+<BaseLayout authored
+  title="Vastu for Plot in Hyderabad | West, South Facing Plot"
+  description="Vastu for plot and new construction in Hyderabad: west, south and north facing plots, shape, slope, road direction and a plot-buying checklist."
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Vastu consultation · Plots and construction"
+    title="Vastu for Plot in Hyderabad: West, South, North and East Facing"
+    intro="Check the plot and plan the layout before you buy or build, because a drawing costs almost nothing to change and a built wall costs a lot. Here is what Vastu looks at in a plot, one facing at a time."
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ WEST FACING (ANSWER FIRST) ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+      <div class="reveal">
+        <h2>West facing plot Vastu in Hyderabad</h2>
+        <span class="rule"></span>
+        <p class="lead mt-6">Vastu for a plot looks at its shape, slope, road side and position before you build or buy. The texts prefer a square or rectangular plot that slopes towards the north or east, with the heavy parts of the building in the south-west. A west facing plot is not ruled out by any of that, and planning before construction saves later corrections.</p>
+        <h3 class="mt-8 text-[1.5rem]">Vastu for a west facing site: good or not?</h3>
+        <p class="mt-3">Not bad by itself. The west is linked with gains and completion. Two things need planning: the afternoon sun, and where along the west side the gate and the door fall, with many practitioners preferring the north-west half. Build the heavy parts in the south-west, leave more open space on the north and east, and a west facing site works like any other.</p>
+      </div>
+      <div class="reveal prose-site self-start">
+        <p class="!mt-0">The same checks apply to the house you put on it. Our page on <a href="/services/vastu/west-facing-house/">west facing house Vastu</a> covers the building itself, and <a href="/services/vastu/home/">Vastu for home</a> covers the rooms.</p>
+        <p>Send a plot sketch or survey drawing with the road side marked. Everything here is how the tradition is taught, and practitioners differ in some details. It's a guide to ask questions with.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SOUTH AND NORTH FACING ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead title="South facing and north facing plot Vastu" />
+      <div class="mt-12 grid gap-4 md:grid-cols-2">
+        <div class="card card-static reveal">
+          <h3>South facing site Vastu: gate and house position</h3>
+          <p class="mt-3 text-[0.95rem]">The south carries the strongest reputation for caution, from the old link with Yama. Don't let that decide it. What the texts check is the gate and door position and how the building is laid out on the plot, and a south facing site with a good plan is a better buy than a north facing one with a bad plan. If you are looking at the house itself, see <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/south-facing-house/">south facing house Vastu</a>.</p>
+        </div>
+        <div class="card card-static reveal">
+          <h3>North facing land Vastu</h3>
+          <p class="mt-3 text-[0.95rem]">Linked with Kubera, the lord of wealth, and with an open, airy feel. The gate on the north or north-east side is preferred, with more open space and a wider setback on that side. The building is covered on <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/north-facing-house/">north facing house Vastu</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EAST FACING + ROAD ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="reveal">
+        <h2>East facing plot Vastu and road direction</h2>
+        <span class="rule"></span>
+        <p class="mt-6 max-w-lg">East is linked with the rising sun, health and new beginnings, and the gate in the north-east half of the east side is the usual preference. The house on top is on the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/east-facing-house/">east facing house Vastu</a> page.</p>
+        <p class="mt-4 max-w-lg">A north or east road is the comfortable case, with light and openness in most plans. A south or west road is not bad by itself. The answer to it is a good plan.</p>
+      </div>
+      <div class="reveal prose-site">
+        <h3 class="!mt-0 text-[1.5rem]">Road ending at your plot: how much weight to give it</h3>
+        <p>You will hear it called road focus, or the T-junction problem. The texts discuss a road that runs straight at a plot, and opinion is split on how much weight it deserves, so the usual measures are a considered gate position, a compound wall and some planting. Add traffic safety and headlights to the list. Those are real whatever Vastu says.</p>
+        <p>No plot should be rejected on one point alone. Look at the whole plot and the whole plan, and weigh traffic, noise, drainage and access beside it, because a plot that is quiet, drains well and has easy access can carry one awkward Vastu point.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHAPE, SLOPE, CORNERS ============ -->
+  <section class="band-light section">
+    <div class="container-page">
+      <SectionHead title="Plot shape, slope and corner plots" intro="What the texts say about the shape and the ground, and what it means on site." />
+      <dl class="fact-table reveal mt-12">
+        {plotFeatures.map(([k, v]) => (
+          <div><dt>{k}</dt><dd>{v}</dd></div>
+        ))}
+      </dl>
+      <div class="reveal prose-site mt-10">
+        <h3 class="text-[1.5rem]">Corner plot Vastu: two roads, two possible gates</h3>
+        <p>A corner plot gives you a choice of entrance. Many practitioners prefer the gate on the north or east side, and the final gate position gets settled on the plan together with the main door.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LAYOUT PLANNING ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="reveal">
+        <h2>Planning the layout and house position first</h2>
+        <span class="rule"></span>
+        <p class="mt-6 max-w-lg">Changing a drawing costs little, and changing a built structure costs a lot. That is why the review belongs before construction. Bring the plan before it is final.</p>
+      </div>
+      <div class="reveal prose-site">
+        <p class="!mt-0">The heavy and tall parts of the building go in the south-west, so the built mass sits on the south and west sides. More open space is left on the north and east, with wider setbacks there. The compound gate goes on the north or east, and Pandit Ji checks where along the wall it falls together with the main door, while taller trees go on the south and west and lighter planting on the north and east.</p>
+        <p>Inside the building, the kitchen, bedrooms and puja room follow the same room-by-room advice as a house. See <a href="/services/vastu/home/">Vastu for home</a>, and the <a href="/guides/puja-room-vastu/">puja room Vastu</a> and <a href="/guides/staircase-vastu/">staircase Vastu</a> guides.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WATER ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead title="Borewell, septic tank and water tank placement" intro="Where each one goes, checked against local drainage and municipal rules." />
+      <dl class="fact-table reveal mt-12">
+        {services.map(([k, v]) => (
+          <div><dt>{k}</dt><dd>{v}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ BUYING CHECKLIST ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div>
+        <SectionHead title="A Vastu checklist before you buy a plot in Hyderabad" intro="Walk the plot with this in your hand." />
+        <p class="reveal mt-6 max-w-md text-[0.95rem]">Have the plan reviewed before you commit. <a class="underline decoration-[var(--accent)] underline-offset-4" href="/contact/">Contact us</a> to arrange it.</p>
+      </div>
+      <ol class="reveal grid gap-4">
+        {buying.map((item, i) => (
+          <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+            <span class="numeral text-[1.25rem]" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ WORRIES + BHOOMI PUJA + RELATED ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:gap-20">
+      <div class="reveal">
+        <h2>Plot Vastu: what you may have heard</h2>
+        <span class="rule"></span>
+        <div class="prose-site mt-6">
+          {worries.map((w) => (
+            <p>"{w.q}" {w.a}</p>
+          ))}
+        </div>
+      </div>
+      <div class="reveal">
+        <h2 class="text-[1.75rem]">Bhoomi puja and construction dates</h2>
+        <p class="mt-4 max-w-xl">Work on a plot starts with a bhoomi puja on an auspicious date, and the housewarming follows as Griha Pravesh. Both dates come from the Panchang and sit under <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/muhurtham/">Muhurtham</a> and <a class="underline decoration-[var(--accent)] underline-offset-4" href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham in Hyderabad</a>.</p>
+        <h2 class="mt-10 text-[1.75rem]">Other Vastu pages</h2>
+        <ul class="mt-4 border-t border-[var(--line)]">
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/home/">Vastu for home <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/apartment/">Flat Vastu <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/office/">Office and shop Vastu <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/">Back to Vastu consultant in Hyderabad <span aria-hidden="true">→</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title="Plot Vastu questions people ask before they buy or build" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand
+    title="Get your plot reviewed"
+    text="Call or WhatsApp with the plot sketch and the road side. We can do the review in person at Sanjeeva Reddy Nagar or online, and Pandit Ji speaks Telugu, Hindi, Kannada and English. Ask the fee first."
+  />
+</BaseLayout>

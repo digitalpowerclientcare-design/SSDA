@@ -1,0 +1,14 @@
+---
+import { pandit, contentDates, formatDate, editorialPolicyPath } from '@/data/business';
+interface Props { published?: string; updated?: string }
+const { published = contentDates.published, updated = contentDates.updated } = Astro.props;
+---
+<p class="hero-in hero-in-5 mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.875rem] text-on-dark-muted">
+  <span>Written by <a class="text-on-dark underline decoration-brass-500/50 underline-offset-4 hover:text-brass-300" href="/about/">{pandit.name}</a></span>
+  <span aria-hidden="true">·</span>
+  <span>{pandit.jobTitle}</span>
+  <span aria-hidden="true">·</span>
+  <span>Last updated <time datetime={updated}>{formatDate(updated)}</time></span>
+  <span aria-hidden="true">·</span>
+  <a class="underline decoration-brass-500/50 underline-offset-4 hover:text-brass-300" href={editorialPolicyPath}>How we write</a>
+</p>

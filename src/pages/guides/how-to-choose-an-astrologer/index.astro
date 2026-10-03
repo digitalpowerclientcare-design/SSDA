@@ -1,0 +1,238 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, ids, disclaimer, reviewsUrl } from '@/data/business';
+import {
+  buildGraph, organizationSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/guides/how-to-choose-an-astrologer/';
+const title = 'How to Choose a Genuine Astrologer in Hyderabad: Red and Green Flags';
+const description = 'Red flags, green flags and the questions to ask on a first call, so you can judge whether an astrologer in Hyderabad is genuine before you pay or commit.';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Guides', url: '/guides/' },
+  { name: 'How to choose an astrologer', url: path },
+];
+
+const reviewCount = brand.reviews.count.toLocaleString('en-IN');
+
+// INTERVIEW Q15: what does Pandit Ji refuse to say or do (a fixed date, advice on illness, a promised result, a ritual he does not believe in)?
+// INTERVIEW Q20: what does he wish every family knew before they called an astrologer, and is there a line he repeats to calm people?
+const red = [
+  { t: 'A promised date', d: '“Your marriage will happen in March.” If you hear a sentence like that, be careful. A chart can show which years look supportive and which look slow. It cannot name a day. Ask for the period and the reason behind it, and treat a firm date as a reason to ask more questions.' },
+  { t: 'Fear with a deadline', d: 'Being told that something terrible will happen unless you act today is pressure. Charts hold difficult periods and good ones. Either kind can be described calmly, with no clock attached and no bill that has to be paid before the end of the week.' },
+  { t: 'A costly gemstone or yantra, on the spot', d: 'A remedy can be fine, but it should come with a reason, a choice and time to think, so be careful when an expensive item is pushed before you understand why you would need it.' },
+  { t: 'A paid puja to remove black magic', d: 'A claim that a curse needs an urgent paid ritual can lead to payment after payment. Ask where in your chart it shows, and take your time.' },
+  { t: 'No explanation', d: 'You asked “why do you say that?” and got no answer. Astrology works by rules, and a reader should be able to explain them. A reading you cannot follow is a reading you cannot check, and you should not pay for it.' },
+  { t: 'Fees that surface late', d: 'Costs that appear after the session, or keep growing, take the decision out of your hands. Ask the fee before you give birth details.' },
+];
+
+const green = [
+  { t: 'Explains the reasoning', d: 'You can follow why a house, a planet or a period leads to a statement, in a language you speak.' },
+  { t: 'Shares the fee before you book', d: 'You know the cost in advance and nothing changes later.' },
+  { t: 'Says “I do not know” when needed', d: 'No chart answers every question, least of all when the birth time is uncertain.' },
+  { t: 'Has reviews anyone can read', d: 'An independent platform such as Google shows reviews to everyone, and not only on the astrologer’s own site.' },
+  { t: 'Lets you walk away', d: 'A remedy comes with a reason and a choice, and nobody chases you for a decision.' },
+  { t: 'Knows where astrology stops', d: 'Health, legal and money questions go to a doctor, a lawyer or an adviser first.' },
+];
+
+const phrases = [
+  ['“This will definitely happen by this date.”', 'A chart cannot promise that. Ask for the likely period and the reasoning behind it.'],
+  ['“Buy this stone or yantra today.”', 'Ask why this item, what it is meant to do, and whether anything simpler would do. Do not decide on the spot.'],
+  ['“Someone has done black magic on you.”', 'Ask where in the chart that shows. Do not pay for a ritual you cannot follow.'],
+  ['“Only I can fix this, and only now.”', 'A deadline is a pressure tactic. Take your time, and get a second opinion if you want one.'],
+];
+
+const questions = [
+  'What will this consultation cost, and what does it include?',
+  'What details do you need from me, and what happens if my birth time is uncertain?',
+  'Which part of the chart leads to that conclusion?',
+  'Is that remedy optional, and what is the simplest one?',
+  'How do I reach you again if I have a follow-up question?',
+];
+
+const faqs = [
+  { question: 'How can I tell if an astrologer in Hyderabad is any good?', answer: 'Watch what the person does, whatever they claim. A good one explains the reasoning, shares the fee before you book, admits what a chart cannot say, and lets you leave whenever you want to, and the five first-call questions on this page test all of that in a single conversation.' },
+  { question: 'Can I trust the top 10 astrologer lists online?', answer: 'A list is only as good as whoever wrote it, so ask who compiled it and whether anyone paid to appear on it. Use a list to collect names. Then use the first-call questions on this page to decide.' },
+  { question: 'Is it fine to get a second opinion?', answer: 'Yes, and a good astrologer will not mind. If two readings agree on the broad picture, that is reassuring. If they differ sharply, ask each person to explain the reasoning, and do not pick the more comforting answer.' },
+  { question: 'How should I read Google reviews?', answer: 'Read a spread of them and not just the rating. Look for recent reviews with specific, believable detail, and be careful when many are very short or worded alike. A high rating alone proves little, but reviews anyone can read are easier to check than testimonials on a private page.' },
+  { question: 'What if I already paid for an expensive remedy?', answer: 'Do not panic, and do not pay more out of fear. Ask for the reasoning in writing if you can, take time, and consider a second opinion. If you feel money was taken under pressure, talk to someone you trust.' },
+  { question: 'Does a long career in astrology mean someone is good at it?', answer: 'Experience helps. It does not replace honesty, so judge by behaviour: whether the person explains, shares fees upfront, admits uncertainty and lets you decide freely, which no number of years can fake for long.' },
+];
+
+const toc = [
+  { id: 'red', label: 'Red flags' },
+  { id: 'phrases', label: 'Phrases to question' },
+  { id: 'green', label: 'Green flags' },
+  { id: 'top10', label: 'Reading a top 10 list' },
+  { id: 'first-call', label: 'A good first call' },
+  { id: 'reviews', label: 'Reading Google reviews' },
+  { id: 'centre', label: 'How Pandit Ji handles this' },
+  { id: 'faq', label: 'Common questions' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), personSchema(),
+  {
+    '@type': 'Article',
+    '@id': abs(`${path}#article`),
+    headline: title,
+    description,
+    url: abs(path),
+    mainEntityOfPage: abs(path),
+    datePublished: '2026-10-04',
+    dateModified: '2026-10-04',
+    author: { '@id': ids.person },
+    publisher: { '@id': ids.organization },
+    isPartOf: { '@id': abs('/#website') },
+    about: { '@type': 'Thing', name: 'Choosing an astrologer' },
+    inLanguage: 'en-IN',
+  },
+  faqSchema(faqs, abs(path)),
+  breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout authored
+  title="How to Choose a Genuine Astrologer in Hyderabad"
+  description={description}
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Guide · Choosing an astrologer"
+    title={title}
+    intro="A good astrologer explains the reasoning, shares the fee before you book, and is comfortable saying “I do not know”. Here are the warning signs, the good signs, and what a first call should sound like."
+    crumbs={crumbs}
+  >
+    <!-- TODO(client): Pandit Ji to review this guide before it goes live. -->
+  </PageHero>
+
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-16">
+      <article class="prose-site">
+        <p class="!mt-0"><strong>You can judge an astrologer by how the person behaves, whatever they claim.</strong> People often call one at a stressful moment, which is also when pressure is easiest to apply, so it helps to know the checks before the phone rings. This guide is general and names nobody. The checks work on anyone, Pandit Ji included.</p>
+
+        <h2 id="red" class="scroll-mt-24">Red flags when choosing an astrologer in Hyderabad</h2>
+        <p>Any one of these is a reason to slow down. Several together? Walk away.</p>
+        <ul class="!list-none !pl-0">
+          {red.map((r) => (
+            <li class="!mt-4 border-b border-[var(--color-line-light)] pb-4">
+              <span class="block font-semibold text-[var(--fg)]">{r.t}</span>
+              <span class="mt-1 block">{r.d}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h2 id="phrases" class="scroll-mt-24">Phrases to question on a first call</h2>
+        <p>If you hear something like these, stop and ask for the reasoning before you agree to anything.</p>
+        <div class="mt-6 overflow-x-auto rounded-lg border border-[var(--color-line-light)]">
+          <table class="w-full min-w-[30rem] text-left text-[0.95rem]">
+            <thead class="bg-porcelain">
+              <tr>
+                <th class="px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-brass-700">What you may hear</th>
+                <th class="px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-brass-700">What to say back</th>
+              </tr>
+            </thead>
+            <tbody>
+              {phrases.map(([a, b]) => (
+                <tr class="border-t border-[var(--color-line-light)] align-top">
+                  <th scope="row" class="px-4 py-3 font-semibold text-[var(--fg)]">{a}</th>
+                  <td class="px-4 py-3">{b}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="green" class="scroll-mt-24">Green flags of a genuine astrologer</h2>
+        <ul class="!list-none !pl-0">
+          {green.map((g) => (
+            <li class="flex gap-4 !mt-4 border-b border-[var(--color-line-light)] pb-4">
+              <span class="text-brass-700" aria-hidden="true">✓</span>
+              <span><span class="block font-semibold text-[var(--fg)]">{g.t}</span><span class="mt-1 block">{g.d}</span></span>
+            </li>
+          ))}
+        </ul>
+
+        <h2 id="top10" class="scroll-mt-24">Top 10 astrologers in Hyderabad: how to read any list</h2>
+        <p>Search for a top 10 and you will find plenty of lists. This page does not add another, and it names nobody. A list is only as good as whoever wrote it, so ask who compiled it, how, and whether anyone paid to be on it, because a ranking built on paid placement tells you about advertising budgets. It cannot tell you how a person behaves across the table.</p>
+        <p>If you pick three names from any list, call each and ask the same questions from the next section. Compare how they answer.</p>
+        <p>Typing the best astrologer in Hyderabad into a search box has the same problem. Nobody can rank that for you. The <a href="/">home page</a> shows who Pandit Ji is and what he does, and every check on this page applies to him as well.</p>
+
+        <h2 id="first-call" class="scroll-mt-24">What a first call with a good astrologer looks like</h2>
+        <p>A first call is the easiest place to tell good practice from poor. A good one is unhurried. You hear how the consultation works and what it costs, you are asked for your birth details, and you get room to describe your question in your own words and your own language. Nobody presses you for money or for a decision.</p>
+        <p>Questions worth asking:</p>
+        <ul class="!list-none !pl-0">
+          {questions.map((q) => (
+            <li class="flex gap-4 !mt-3 border-b border-[var(--color-line-light)] pb-3">
+              <span class="text-brass-700" aria-hidden="true">✓</span>
+              <span>{q}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h2 id="reviews" class="scroll-mt-24">How to read Google reviews before you trust an astrologer in Hyderabad</h2>
+        <p>Anyone can read reviews on an independent platform, and they are harder to curate than a testimonial page on a private website. Read plenty of them, well beyond the top few and the overall rating. Prefer recent ones with believable detail about what the person went through. Be careful when many are very short or worded almost alike. See how the owner replies to criticism, if any appears, because a calm reply says as much as a five-star one.</p>
+
+        <h2 id="centre" class="scroll-mt-24">How Pandit Ji handles each of these points</h2>
+        <p>We share the fee before you book. No outcome is promised, because none can be. Pandit Ji suggests a remedy only when the chart gives a reason for one, and he tells you the reason. We do not sell gemstones, yantras or any other product. Our reviews sit on <a href={reviewsUrl} target="_blank" rel="noopener">Google</a>, where the profile shows {brand.reviews.rating.toFixed(1)} from {reviewCount} reviews. Read them in the reviewers’ own words, then hold everyone you consider, us included, to the same checks.</p>
+        <p>You can see <a href="/how-a-consultation-works/">how a consultation works</a>, and how <a href="/reviews/">reviews are shown on this site</a>.</p>
+        <!-- INTERVIEW Q15: in Pandit Ji's own words, what he will not say or do in a reading, even when a family asks -->
+        <p class="!mt-8 text-[0.875rem] text-[var(--muted)]">{disclaimer}</p>
+      </article>
+
+      <aside class="hidden lg:block">
+        <nav class="sticky top-28 border-l border-[var(--color-line-light)] pl-6" aria-label="On this page">
+          <p class="eyebrow">On this page</p>
+          <ul class="mt-4 grid gap-3 text-[0.9rem]">
+            {toc.map((t) => <li><a class="no-underline hover:text-brass-700" href={`#${t.id}`}>{t.label}</a></li>)}
+          </ul>
+        </nav>
+      </aside>
+    </div>
+  </section>
+
+  <section class="band-light section">
+    <div class="container-page">
+      <SectionHead eyebrow="Related" title="Where to go next" />
+      <div class="mt-10 grid gap-4 md:grid-cols-3">
+        <a href="/how-a-consultation-works/" class="card reveal flex flex-col gap-3 no-underline">
+          <h3>How a consultation works</h3>
+          <p class="text-[0.95rem]">What happens from the first call to the end of the session.</p>
+          <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+        </a>
+        <a href="/reviews/" class="card reveal flex flex-col gap-3 no-underline">
+          <h3>Reviews</h3>
+          <p class="text-[0.95rem]">Where our Google reviews are and how this site shows them.</p>
+          <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+        </a>
+        <a href="/about/" class="card reveal flex flex-col gap-3 no-underline">
+          <h3>About Pandit Ji</h3>
+          <p class="text-[0.95rem]">His background, and the languages he consults in.</p>
+          <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="band-white section scroll-mt-20">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Choosing an astrologer: questions people ask" />
+      <div class="reveal">
+        <FaqList faqs={faqs} openFirst />
+        <p class="mt-8"><a class="link-arrow" href="/faq/">More questions answered <span aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand title="Ask the questions, then decide" text="Call or WhatsApp and put the five questions to us. Ask the fee first, and take as long as you need." />
+</BaseLayout>

@@ -1,0 +1,221 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { contact } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/vastu/office/';
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Vastu consultation', url: '/services/vastu/' },
+  { name: 'Vastu for Office and Shop', url: path },
+];
+
+// TODO(client): confirm whether commercial site visits (offices, shops, clinics) are offered across all of Hyderabad.
+// TODO(client): confirm whether an online floor-plan review for commercial premises is charged separately.
+// INTERVIEW Q12: the first thing Pandit Ji looks at on an office or shop floor plan
+const faqs = [
+  { question: 'Which direction should the owner sit in an office?', answer: 'Vastu Shastra puts the owner or managing director in the south-west portion of the office, facing north or east, with a solid wall behind. The south-west is the heavy, stable corner, and a solid wall behind a chair gives a feeling of support.' },
+  { question: 'Where should the cash counter or locker be in a shop?', answer: 'The north is linked with Kubera, the lord of wealth. So the locker goes against the south or west wall and opens towards the north, and the counter sits in the north or east. The person at the counter faces north or east.' },
+  { question: 'Does the facing of a shop or office matter?', answer: 'North and east entrances are the ones the texts prefer, but no facing is bad by itself. A door that is clear, well lit and welcoming, with an interior arranged well, counts for more. Most corrections are furniture placement.' },
+  { question: 'Can Vastu be applied to a rented or leased office?', answer: 'Yes. In leased premises the walls are fixed, so you work with what you control: seat positions, where cash and files are kept, where the pantry equipment sits and how the entrance is kept. It also helps to have the floor plan reviewed before you sign.' },
+  { question: 'Is Vastu relevant for a clinic?', answer: 'The advice on the entrance, the waiting area and the doctor\'s seat applies to clinics just as it does to offices. It is a layout guide only. It says nothing about treatment or health outcomes and does not replace medical advice.' },
+  { question: 'Can a space be reviewed before I set up a business there?', answer: 'Yes. A floor plan with the direction of the entrance is enough to begin. Reviewing it before the interiors are fitted out is easier and cheaper than changing things afterwards.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `Vastu for Office and Shop in ${contact.city}`,
+    serviceType: 'Commercial Vastu consultation',
+    description: 'Vastu advice for offices, shops and clinics in Hyderabad: owner seat, staff seating, cash counter, entrance, reception, pantry and electrical placement.',
+    url: abs(path),
+    isPartOf: { '@id': abs('/services/vastu/#service') },
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)), breadcrumbSchema(crumbs),
+);
+
+const frontOfHouse = [
+  ['Owner or MD seat', 'South-west of the office, facing north or east, with a solid wall behind you and no door or window at your back. The south-west is the heavy corner of the plan, and a solid wall behind a chair gives a feeling of support.'],
+  ['Cash counter and locker', 'The counter goes in the north or east, and whoever sits at it faces north or east. The locker or cash box sits against a south or west wall and opens towards the north, the side linked with Kubera, so the cash faces the direction the texts tie to wealth.'],
+  ['Entrance', 'North, east or north-east is preferred. Whatever its direction, keep it clear, lit and easy to open, with a tidy path to it and no pillar straight in front.'],
+];
+
+const behindTheScenes = [
+  ['Reception and waiting area', 'North-east, north or east. The receptionist faces north or east, and visitors walk into a bright, uncluttered space.'],
+  ['Staff seating', 'North, east or west portions. Sales and marketing sit in the north-west, the corner linked with movement. Accounts and finance sit in the north.'],
+  ['Pantry', 'South-east, the fire corner, since the pantry holds the heat-producing equipment of the office, the kettle and the microwave and whatever else runs hot.'],
+  ['Server and electrical room', 'South-east or south, because electrical equipment is linked with fire, so keep the room ventilated and keep it well away from the north-east.'],
+  ['Meeting room', 'West or north-west, with the chair at the head of the table in the south-west part of the room.'],
+  ['Toilets', 'North-west or west. Not the north-east, and not the middle of the office.'],
+];
+
+const premises = [
+  { t: 'Vastu for an office', d: 'Seat positions, the cabinet that holds cash or files, the pantry and the server room can nearly always be adjusted with furniture alone. The owner\'s seat is the first thing Pandit Ji reviews.' },
+  { t: 'Vastu for a shop: cash counter and display', d: 'Entrance on the north or east, cash counter on the north or east, owner\'s seat in the south-west facing north. Heavy stock goes on the south and west sides, and the north-east stays light and clear.' },
+  { t: 'Vastu for a clinic or showroom', d: 'A clinic follows the same ideas for the entrance, the waiting area and the doctor\'s seat, and the doctor faces north or east. Vastu is a layout guide and says nothing about treatment. A showroom follows the shop pattern: entrance, counter and owner\'s seat first.' },
+];
+
+const checklist = [
+  'Get the floor plan and mark the direction of the entrance.',
+  'Check whether the owner\'s seat can sit in the south-west with a solid wall behind.',
+  'Find a place for the cash counter or locker in the north or east, opening towards the north.',
+  'See whether the pantry or electrical equipment can sit in the south-east.',
+  'Keep the middle of the premises free of heavy storage so it stays open.',
+  'Check where the toilets are, and if one sits in the north-east, plan the furniture around it with care.',
+  'Review the plan before you sign a lease and before the interiors go in, because a seat moved on paper costs nothing and a seat moved after the fit-out costs real money.',
+];
+
+const worries = [
+  { q: 'My shop faces the wrong way, so it will not do well.', a: 'No direction is bad by itself. Sales depend on a hundred things, from the stock and the street to the person at the counter, and Vastu gives layout advice with no promise about turnover.' },
+  { q: 'The whole interior has to be redone.', a: 'Mostly it is seat positions and furniture, and a structural change comes last, if it comes at all.' },
+  { q: 'The cash box has to be in one exact spot.', a: 'The north side is preferred, but the placement also has to make sense for the premises you have.' },
+];
+---
+<BaseLayout authored
+  title="Vastu for Office and Shop in Hyderabad | Sri Sai Durga"
+  description="Vastu for office and shop in Hyderabad: where the owner sits, where cash goes, entrance, reception, staff seating and pantry. Placement first, walls last."
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Vastu consultation · Offices and shops"
+    title="Vastu for Office and Shop in Hyderabad: Seat, Cash Counter, Entrance"
+    intro="Where the owner sits, where the cash is kept, how the entrance and the staff seating are set up. Vastu advice for offices, shops and clinics, starting with furniture and keeping demolition out of it."
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ DIRECT ANSWER ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+      <div class="reveal">
+        <h2>What Vastu says about an office or shop in Hyderabad</h2>
+        <span class="rule"></span>
+        <p class="lead mt-6">Vastu for an office or shop comes down to a few placements: the owner's seat, the cash counter, the entrance and the staff seating. The owner sits towards the south-west facing north or east, and cash is kept on the north side. Most of it comes down to moving furniture, which is why a rented shop with fixed walls can still be put right.</p>
+        <p class="mt-5">The ideas are the same as for a house, so if you would like to see the directions and the five elements laid out first, start with the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/">Vastu consultation overview</a>.</p>
+      </div>
+      <div class="reveal self-start prose-site">
+        <p class="!mt-0">Say you have taken a rented shop. The walls are fixed and the entrance faces west. Walk away? No. The useful question is where the counter, the cash box and your own seat should go inside it, and a floor plan can answer that before you spend anything on interiors.</p>
+        <p>Send the plan and the direction the entrance faces. Offices, shops, showrooms, clinics and workshops are all fine.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OWNER, CASH, ENTRANCE ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead title="Owner's seat, cash counter and entrance placement" intro="These three get looked at first. The texts are specific about them. A real premises is rarely perfect." />
+      <dl class="fact-table reveal mt-12">
+        {frontOfHouse.map(([r, d]) => (
+          <div><dt>{r}</dt><dd>{d}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ RECEPTION, STAFF, PANTRY ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead title="Reception, staff seating and pantry" />
+      <dl class="fact-table reveal mt-12">
+        {behindTheScenes.map(([r, d]) => (
+          <div><dt>{r}</dt><dd>{d}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ BY PREMISES ============ -->
+  <section class="band-light section">
+    <div class="container-page">
+      <SectionHead title="Office, shop or clinic: what changes" intro="The ideas stay the same. The emphasis moves." />
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        {premises.map((p) => (
+          <div class="card card-static reveal flex flex-col gap-3">
+            <h3>{p.t}</h3>
+            <p class="text-[0.95rem]">{p.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LEASED PREMISES + CHECKLIST ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div>
+        <SectionHead title="Choosing a space, and Vastu for rented premises" intro="Walls in a lease are fixed, so the useful part of the review is everything you still control: the seats, the cash box, the pantry equipment and the entrance." />
+        <h3 class="reveal mt-10 text-[1.375rem]">Office Vastu for rented premises</h3>
+        <p class="reveal mt-3 max-w-md text-[0.95rem]">Reviewing the plan before the interiors go in is far easier, and cheaper, than changing things afterwards. Still choosing between two spaces? Send both plans.</p>
+      </div>
+      <ul class="reveal grid gap-4">
+        {checklist.map((item) => (
+          <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+            <span class="mt-1 text-[var(--accent)]" aria-hidden="true">✓</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ NEW BUSINESS + WORRIES ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:gap-20">
+      <div class="reveal">
+        <h2>Opening a new business: Vastu and muhurtham</h2>
+        <span class="rule"></span>
+        <p class="mt-6 max-w-xl">The layout is one question and the date is another. <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/muhurtham/">Muhurtham</a> covers an auspicious date and time for the opening, and <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/business-astrology/">business astrology</a> looks at timing and partnerships from the chart. Choosing a business name? <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/numerology/">Numerology</a> adds a second angle.</p>
+      </div>
+      <div class="reveal">
+        <h2 class="text-[1.75rem]">Office Vastu: what you may have heard</h2>
+        <div class="prose-site mt-2">
+          {worries.map((w) => (
+            <p>"{w.q}" {w.a}</p>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RELATED ============ -->
+  <section class="band-light section-sm">
+    <div class="container-page grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <h2 class="reveal text-[1.75rem]">Other Vastu pages</h2>
+      <ul class="reveal border-t border-[var(--line)]">
+        <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/home/">Vastu for home <span aria-hidden="true">→</span></a></li>
+        <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/apartment/">Flat Vastu <span aria-hidden="true">→</span></a></li>
+        <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/plot/">Plot Vastu <span aria-hidden="true">→</span></a></li>
+        <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href="/services/vastu/">Back to Vastu consultant in Hyderabad <span aria-hidden="true">→</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title="Office Vastu questions people ask before they book" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand
+    title="Get your office or shop reviewed"
+    text="Call or WhatsApp with the floor plan and the direction the entrance faces. We can do the review in person at Sanjeeva Reddy Nagar or online. Ask the fee first."
+  />
+</BaseLayout>

@@ -1,0 +1,164 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, contact } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/vastu/north-facing-house/';
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Vastu consultation', url: '/services/vastu/' },
+  { name: 'North facing house Vastu', url: path },
+];
+
+// TODO(client): confirm whether home site visits are offered across all of Hyderabad.
+// INTERVIEW Q11: the Vastu worries Pandit Ji meets most often in north facing houses, and what he suggests moving first.
+// INTERVIEW Q14: how his advice differs between a north facing gated-community flat, a builder floor and an independent house.
+
+const faqs = [
+  { question: 'Is a north facing house good as per Vastu?', answer: 'Vastu Shastra speaks well of the north and links it with Kubera, the lord of wealth, and with an open, airy feel. It does not make the house sound by itself. The door position, the north-east corner and the rooms behind the door decide how well the plan works.' },
+  { question: 'Is a north facing house lucky for money?', answer: 'The old texts connect the north with prosperity, but no consultant can promise you wealth from a facing, and we do not. What we can do is read your plan and tell you what sits well and what does not.' },
+  { question: 'Where should the main door be in a north facing house?', answer: 'Many practitioners prefer the north or north-east half of the north wall and avoid the north-west end, though schools differ on the exact stretch. Take a compass reading at the door and mark the spot on the plan.' },
+  { question: 'Where should the kitchen be in a north facing house?', answer: 'South-east first, north-west second. In a north facing plan the south-east is at the back of the house, which is a quiet position. If your kitchen is in the north-east, mention it early, because that corner is meant to stay light.' },
+  { question: 'Where should the water tank and borewell go in a north facing house?', answer: 'The underground tank and the borewell prefer the north-east. An overhead tank is placed on the south-west or west side. If the borewell is already drilled elsewhere, we look at the rest of the plan before saying anything about it.' },
+  { question: 'Is a north facing flat the same as a north facing house?', answer: 'The facing is the same, but in a flat you cannot move the door or the building. The checks move inside the flat: the stove, the bed, the shrine and the balcony. See our apartment page for the full list.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `North facing house Vastu in ${contact.city}`,
+    serviceType: 'Vastu consultation for a north facing house',
+    description: 'Vastu review for north facing houses in Hyderabad: main door position on the north wall, north-east corner, kitchen, water placement, open space and Griha Pravesh timing.',
+    url: abs(path),
+    isPartOf: { '@id': abs('/services/vastu/#service') },
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)), breadcrumbSchema(crumbs),
+);
+
+const steps = [
+  ['Mark the door.', 'Note where on the north wall it falls. The north or north-east half is the preferred stretch, and the north-west end is the one to question.'],
+  ['Look at the north-east corner.', 'It should be open and light. A toilet, a kitchen or a pile of storage there is the first thing to flag.'],
+  ['Find the kitchen and the master bedroom.', 'South-east for the kitchen, south-west for the main bedroom. In a north facing house both sit at the back.'],
+  ['Locate the water.', 'Borewell and underground tank to the north-east, overhead tank to the south-west or west.'],
+];
+---
+<BaseLayout authored
+  title={`North Facing House Vastu in Hyderabad | ${brand.shortName}`}
+  description="North facing house Vastu in Hyderabad: where the main door goes on the north wall, the north-east corner, kitchen, water placement and open space."
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Vastu for a house that faces north"
+    title="North Facing House Vastu: Door, Open Space and Water Corner"
+    intro="Say the plan in your hand puts the main door on the north wall. That's a good sign in the old texts. They have more to say about what sits behind it."
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ WHAT VASTU SAYS ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="reveal">
+        <h2>What Vastu says about a north facing house</h2>
+        <span class="rule"></span>
+      </div>
+      <div class="reveal prose-site !mt-0">
+        <p class="lead !mt-0">The north belongs to Kubera, the lord of wealth, and Vastu Shastra traditionally treats it as an open, airy direction. A north facing house is therefore one of the facings people ask for by name.</p>
+        <p>Be careful with the next step. Nobody can promise that a facing brings money, and we don't. The texts link the north with prosperity, and whether your particular house lives up to that link is decided by the plan, which you can check room by room before you pay anything. Not by the compass.</p>
+        <p>Practitioners differ on the finer points of every facing, so you may hear a slightly different door position from a second consultant. Ask why, and compare the answers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DOOR ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+      <div class="reveal">
+        <h2>North facing house Vastu: the door and the approach</h2>
+        <span class="rule"></span>
+        <p class="mt-6">Many practitioners prefer the door in the north or north-east half of the north wall, and they like the north-west end least. The same plan can look fine or odd depending on that one measurement, so take the compass reading at the door, with the phone held away from metal and gates, and mark the spot on the plan.</p>
+        <p class="mt-5">Then look at the approach. The path from the gate to the door should be clear, with no pole, tree or drain in line with it. A road that runs straight at the door, the kind you find at a T-junction, is worth mentioning when you call, because it changes what we look at.</p>
+        <p class="mt-5">If the door falls at the north-west end, don't panic. A door is one feature of a plan, and the rooms behind it, the kitchen, the bedrooms and the water, carry at least as much weight in the reading as the door does.</p>
+      </div>
+      <div class="reveal">
+        <h3 class="text-[1.4rem]">Reading a north facing plan in four steps</h3>
+        <ol class="mt-5 grid gap-4">
+          {steps.map(([t, d], i) => (
+            <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+              <span class="font-display text-[1.5rem] leading-none text-[var(--accent)]" aria-hidden="true">{i + 1}</span>
+              <span><strong class="text-[var(--fg)]">{t}</strong> {d}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OPEN SPACE AND WATER ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:gap-20">
+      <div class="reveal">
+        <h2>Open space on the north side</h2>
+        <span class="rule"></span>
+        <p class="mt-6">The texts want more open ground on the north and east and more built weight on the south and west. A north facing house starts with the first half of that already in front of it, in the form of a gate, a set-back or a small garden. Good.</p>
+        <p class="mt-4">Plots in a crowded city can be tight, and a narrow set-back is not unusual. If yours is small, keep it clear of parked scooters, building material and the pump room.</p>
+      </div>
+      <div class="reveal">
+        <h2>Water in a north facing house</h2>
+        <span class="rule"></span>
+        <p class="mt-6">The north-east is the water corner, so the borewell, sump and underground tank prefer it, while an overhead tank goes on the south-west or west side. Say your borewell is already in the south-east and the house is built. That is not a reason to redo the plumbing, and it is not something to ignore either. Send the plan. We look at the whole layout before saying anything about one item.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLOT, FLAT, GRIHA PRAVESH ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20">
+      <div class="reveal prose-site">
+        <h2 class="!mt-0">North facing plot, flat and house</h2>
+        <p>Building new? The <a href="/services/vastu/plot/">plot Vastu page</a> covers shape, slope and road direction before the first wall goes up. Buying a flat? The facing is fixed and the checks move inside, so read <a href="/services/vastu/apartment/">Vastu for flats and apartments</a>.</p>
+        <h3>Griha Pravesh in a north facing house</h3>
+        <p>The date is chosen from the Panchang through Muhurtham, and the facing does not change it. Do the layout check first, while the rooms are empty. The <a href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham page</a> explains how dates are picked.</p>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">The other three facings</p>
+        <ul class="mt-4 border-t border-[var(--line)]">
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-5 no-underline" href="/services/vastu/west-facing-house/">West facing house Vastu <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-5 no-underline" href="/services/vastu/south-facing-house/">South facing house Vastu <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-5 no-underline" href="/services/vastu/east-facing-house/">East facing house Vastu <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-5 no-underline" href="/services/vastu/home/">Vastu for home <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-5 no-underline" href="/services/vastu/">Vastu consultation hub <span aria-hidden="true">→</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title="North facing home: questions people ask" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand
+    title="Send the plan of your north facing house"
+    text="Call or WhatsApp with the floor plan and the compass direction of the door. Ask the fee first, and speak in Telugu, Hindi, Kannada or English, whichever feels easiest."
+  />
+</BaseLayout>

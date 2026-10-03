@@ -1,0 +1,232 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { contact } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/vastu/home/';
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Vastu consultation', url: '/services/vastu/' },
+  { name: 'Vastu for Home', url: path },
+];
+
+// TODO(client): confirm whether home site visits are offered across all of Hyderabad.
+// INTERVIEW Q12: the first thing Pandit Ji looks at on a house floor plan, and what he asks the family to check on site
+// INTERVIEW Q14: what changes when he advises a gated-community apartment, a builder floor and an independent house
+const faqs = [
+  { question: 'Which direction is best for a house according to Vastu?', answer: 'Vastu Shastra links north and east facing houses with light, openness and good flow, but no direction is bad by itself. Each facing comes with its own advice on where the door sits and how the rooms are laid out. A well-planned house of any facing works well.' },
+  { question: 'Where should the main door be according to Vastu?', answer: 'On the north, east or north-east side of the wall facing out, with the door itself in the right part of that wall. The texts look at where along the wall it falls as well as at the direction, and they want the door to open freely, be well lit and have nothing standing in front of it, and that includes a stack of shoes.' },
+  { question: 'Is a south-facing house bad for Vastu?', answer: 'No, but it deserves a closer look. A south-facing house gets its bad name from the old link between the south and Yama, while what the texts care about is where along the wall the door sits and how the rooms are laid out inside. Both show up on the floor plan, so send it before you decide, and a well-planned south-facing house is a better home than a badly planned one facing east.' },
+  { question: 'Where should the kitchen be according to Vastu?', answer: 'In the south-east, the fire corner, with the north-west as the usual second choice, and the stove position and the direction the cook faces, east in the texts, count along with the room itself.' },
+  { question: 'Can Vastu problems in a home be corrected without demolition?', answer: 'In most cases yes. Moving a bed, shifting a shrine, relocating heavy storage, clearing the middle and keeping the north-east light are all placement changes. If a structural change would help, you hear that too, with a cheaper option beside it.' },
+  { question: 'Should a Vastu consultation be done before Griha Pravesh?', answer: 'It is not required, but it is a convenient time, because an empty house is easy to arrange. A review before you move in lets you put the bed, the kitchen set-up and the puja space in the right place from day one. The Griha Pravesh date itself is chosen separately through Muhurtham.' },
+  { question: 'Can my existing house be reviewed without a site visit?', answer: 'Yes. A floor plan with the direction the main door faces is enough to begin. A visit shows more of the surroundings and the actual rooms, but it is not the only option.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `Vastu for Home in ${contact.city}`,
+    serviceType: 'Home Vastu consultation',
+    description: 'Vastu advice for independent houses and villas in Hyderabad: main door, kitchen, bedrooms, puja room, toilets, staircase and water placement, with remedies that do not need demolition.',
+    url: abs(path),
+    isPartOf: { '@id': abs('/services/vastu/#service') },
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)), breadcrumbSchema(crumbs),
+);
+
+const rooms = [
+  ['Kitchen', 'South-east, the fire corner, with the north-west as the usual second choice. The cook faces east, and the sink sits away from the stove because fire and water do not mix.'],
+  ['Master bedroom', 'South-west, the heavy corner, for the head of the household. Sleep with your head to the south or east.'],
+  ['Puja room', 'North-east first, then east or north. Quiet and clean matter most. Keep it off the space under a staircase and away from a toilet wall.'],
+  ['Living room', 'North, east or north-east, where the morning light comes in. Heavier furniture goes to the south and west sides.'],
+  ['Children\'s room', 'West or north-west, with the study table placed so the child faces east or north while studying.'],
+  ['Toilets and bathrooms', 'North-west or west. Keep them out of the north-east and out of the middle of the house.'],
+  ['Staircase', 'South, west or south-west, rising clockwise, and clear of the middle and the north-east.'],
+  ['Water', 'Borewell and underground tank in the north-east. Overhead tank on the south-west or west side.'],
+];
+
+const facings = [
+  { href: '/services/vastu/east-facing-house/', t: 'East facing house Vastu', d: 'Linked with the rising sun, health and new beginnings. The door in the north-east half of the east wall is the usual preference, and the morning light is the real advantage.' },
+  { href: '/services/vastu/north-facing-house/', t: 'North facing house Vastu', d: 'Linked with Kubera, the lord of wealth, and with an open, airy feel, and the door in the north or north-east half of the wall is the usual preference.' },
+  { href: '/services/vastu/west-facing-house/', t: 'West facing house Vastu', d: 'Linked with gains and completion, and many practitioners prefer the door towards the north-west half of the west wall, so the one thing to plan for is the afternoon heat.' },
+  { href: '/services/vastu/south-facing-house/', t: 'South facing house Vastu', d: 'It gets the most caution, but the texts check the door position and the layout inside, and leave the house itself alone. A south facing house with a good layout is perfectly livable.' },
+];
+
+const remedies = [
+  'Move the bed so your head points south or east, and keep heavy wardrobes on the south-west side of the room.',
+  'Shift the family shrine to the north-east corner, or the east or north wall, away from toilet walls.',
+  'Push heavy storage and furniture towards the south and south-west. Keep the north-east light.',
+  'Clear the middle of the house of clutter, so the brahmasthan stays open.',
+  'Move the stove, or change the way the cook faces, and keep the sink apart from it.',
+  'Light the main door well, keep it clear and easy to open, and keep the path up to it tidy.',
+  'Fix leaking taps. Water is linked with flow, and a dripping tap is an easy thing to put right.',
+];
+
+const worries = [
+  { q: 'Our house faces south, so it must be unlucky.', a: 'No direction is bad by itself. The advice for each facing is about door position and the layout inside, and both show on the plan.' },
+  { q: 'There is a toilet in the north-east. We will have to rebuild.', a: 'The texts discuss it, but how much it matters depends on the whole plan: where the toilet sits, how big it is, and what shares the corner with it. Options short of demolition come first, and a rebuild is rarely the opening suggestion.' },
+  { q: 'The kitchen has to be exactly in the south-east.', a: 'South-east is preferred and north-west is the usual second choice. The stove position and the way the cook faces count too.' },
+  { q: 'A Vastu-compliant home has to satisfy every rule.', a: 'Hardly any real home does. Pandit Ji sets priorities, so the points that matter most are dealt with first and the minor ones are left alone.' },
+];
+
+const related = [
+  { href: '/services/vastu/apartment/', t: 'Flat Vastu, south facing flats included' },
+  { href: '/services/vastu/office/', t: 'Office and shop Vastu' },
+  { href: '/services/vastu/plot/', t: 'Plot Vastu for new construction' },
+  { href: '/guides/puja-room-vastu/', t: 'Puja room Vastu guide' },
+  { href: '/guides/staircase-vastu/', t: 'Staircase Vastu guide' },
+  { href: '/services/vastu/', t: 'Back to Vastu consultant in Hyderabad' },
+];
+---
+<BaseLayout authored
+  title="Vastu for Home in Hyderabad | House Vastu Shastra Guide"
+  description="Vastu for home in Hyderabad, room by room: main door, kitchen, bedroom, puja room and water placement, plus fixes that need no demolition. Call Pandit Ji."
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Vastu consultation · Homes"
+    title="Vastu for Home in Hyderabad: Where the Door, Kitchen and Bed Go"
+    intro="Moving into a house, or living in one where something feels off? Here is where Vastu puts the main door, kitchen, bedrooms, puja room and water, what each facing means, and how to fix a layout without breaking a wall."
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ DIRECT ANSWER ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+      <div class="reveal">
+        <h2>What Vastu Shastra says about a house in Hyderabad</h2>
+        <span class="rule"></span>
+        <p class="lead mt-6">Vastu for home puts the main door, kitchen, bedrooms, puja room, toilets and water in the zones the texts assign to each. No facing is bad by itself, and most problems ease with a move: the bed, the stove, the shrine. Nobody needs to demolish anything to start.</p>
+        <p class="mt-5">What follows is how the tradition is taught, and practitioners differ in the details. A consultation reads your actual plan, because Pandit Ji looks at the whole plan together and never judges one room alone, however awkward it looks on its own. For the wider picture, see the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/">Vastu consultant in Hyderabad overview</a>.</p>
+      </div>
+      <div class="reveal self-start prose-site">
+        <p class="!mt-0">This page is for independent houses, villas and duplexes. Bring a floor plan and the direction your main door faces. Living in an apartment tower instead? Go to <a href="/services/vastu/apartment/">flat Vastu</a>, where the walls are not yours to move.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MAIN DOOR ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="reveal">
+        <h2>Main door Vastu: entrance direction and where it sits on the wall</h2>
+        <span class="rule"></span>
+      </div>
+      <div class="reveal prose-site">
+        <p class="!mt-0">Start with the door, because everything else starts from it. Stand in the doorway, look out, and note the direction on a compass. That is your facing. The texts like the north, east or north-east side of the wall that faces out, and they also look at where along that wall the door falls. So the same facing can read well in one house and awkwardly in another.</p>
+        <p>Say two houses both face east. In one the door sits near the north-east end of the wall, in the other near the south-east end. The texts prefer the north-east half of an east wall, so the first reads better than the second, and the only way to know which one you have is to look at the floor plan. That is why a facing on its own tells you very little.</p>
+        <p>Then the part you can check today. The door should open freely, be well lit and have nothing in front of it, no pillar, no pole, no heap of old things.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROOM BY ROOM ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead title="House Vastu room by room: kitchen, bedroom, bathroom and puja room" intro="This is how the texts usually place each room. No real house matches all of it, so use it to ask questions of your plan. Nobody scores full marks." />
+      <dl class="fact-table reveal mt-12">
+        {rooms.map(([r, d]) => (
+          <div><dt>{r}</dt><dd>{d}</dd></div>
+        ))}
+      </dl>
+      <p class="reveal mt-8 max-w-3xl text-[0.95rem]">To know the direction of each room you need a steady compass reading. A phone compass app held away from metal is enough to begin. Two of these rooms have their own guides: <a class="underline decoration-[var(--accent)] underline-offset-4" href="/guides/puja-room-vastu/">puja room Vastu</a> and <a class="underline decoration-[var(--accent)] underline-offset-4" href="/guides/staircase-vastu/">staircase Vastu</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============ FACINGS ============ -->
+  <section class="band-light section">
+    <div class="container-page">
+      <SectionHead title="Vastu for east, north, south and west facing houses" intro="The facing is the direction you look when you stand at the main door and face outward. Each of the four has its own page. Here is the short version." />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2">
+        {facings.map((f) => (
+          <a href={f.href} class="card reveal group flex flex-col gap-3 no-underline">
+            <h3>{f.t}</h3>
+            <p class="text-[0.95rem]">{f.d}</p>
+            <span class="link-arrow mt-auto">Read the full page <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+      <p class="reveal mt-8 max-w-3xl">Choosing between two houses? Don't rule one out on facing alone. Ask for the plan, see how the inside can be set up, and decide on that.</p>
+    </div>
+  </section>
+
+  <!-- ============ REMEDIES ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div>
+        <SectionHead title="Vastu remedies for a home that need no construction" intro="Most fixes move furniture. If a structural change would help, Pandit Ji says so and offers a cheaper way to do it, and the decision is yours." />
+      </div>
+      <ul class="reveal grid gap-4">
+        {remedies.map((item) => (
+          <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+            <span class="mt-1 text-[var(--accent)]" aria-hidden="true">✓</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ WORRIES ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead title="Home Vastu: what you may have heard" intro="Relatives, neighbours and builders all have a view. These are the four we would check first." />
+      <div class="reveal prose-site">
+        {worries.map((w) => (
+          <p>"{w.q}" {w.a}</p>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GRIHA PRAVESH + RELATED ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:gap-20">
+      <div class="reveal">
+        <h2>Vastu before Griha Pravesh: moving into a new house</h2>
+        <span class="rule"></span>
+        <p class="mt-6 max-w-xl">Griha Pravesh, the housewarming, falls on an auspicious date taken from the Panchang. If you can, get the Vastu review done before that day. An empty house is easy to arrange, so the bed, the stove and the puja space go in the right place from the first night and nothing needs dragging around afterwards.</p>
+        <p class="mt-4 max-w-xl">The date is a separate question. Read about <a class="underline decoration-[var(--accent)] underline-offset-4" href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham in Hyderabad</a> or go through the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/guides/vastu-for-new-home-checklist/">new home Vastu checklist</a>.</p>
+      </div>
+      <div class="reveal">
+        <h2 class="text-[1.75rem]">Related Vastu pages</h2>
+        <ul class="mt-4 border-t border-[var(--line)]">
+          {related.map((s) => (
+            <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-4 no-underline" href={s.href}>{s.t} <span aria-hidden="true">→</span></a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title="House Vastu questions people ask before they book" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand
+    title="Get your house reviewed"
+    text="Call or WhatsApp with your floor plan and the direction the main door faces. We can do the review in person at Sanjeeva Reddy Nagar or online, and Pandit Ji will tell you the fee first."
+  />
+</BaseLayout>

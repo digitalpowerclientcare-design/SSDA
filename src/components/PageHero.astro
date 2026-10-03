@@ -1,0 +1,32 @@
+---
+import Crumbs from '@/components/Crumbs.astro';
+import AuthorByline from '@/components/AuthorByline.astro';
+import { telLink, whatsappLink } from '@/data/business';
+interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  crumbs?: { name: string; url: string }[];
+  ctas?: boolean;
+  byline?: boolean;
+  updated?: string;
+}
+const { eyebrow, title, intro, crumbs, ctas = false, byline = false, updated } = Astro.props;
+---
+<section class="page-hero band-dark">
+  <div class="container-page pt-10 pb-14 md:pt-14 md:pb-20">
+    {crumbs && <div class="hero-in hero-in-1 mb-8"><Crumbs items={crumbs} /></div>}
+    {eyebrow && <p class="eyebrow hero-in hero-in-1">{eyebrow}</p>}
+    <h1 class="hero-in hero-in-2 mt-4 max-w-4xl">{title}</h1>
+    <span class="rule hero-in hero-in-2"></span>
+    {intro && <p class="lead hero-in hero-in-3 mt-6 max-w-2xl">{intro}</p>}
+    {ctas && (
+      <div class="hero-in hero-in-4 mt-8 flex flex-wrap gap-3">
+        <a class="btn btn-call" href={telLink()} data-cta="call">Call Pandit Ji</a>
+        <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp">Chat on WhatsApp</a>
+      </div>
+    )}
+    {byline && <AuthorByline updated={updated} />}
+    <slot />
+  </div>
+</section>

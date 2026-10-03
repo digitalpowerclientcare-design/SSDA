@@ -1,36 +1,165 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { brand, contact, services, telLink, whatsappLink } from '@/data/business';
-import { buildGraph, organizationSchema, localBusinessSchema, servicesSchema, breadcrumbSchema } from '@/lib/schema';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, contact, vastuPages, disclaimer, telLink, whatsappLink } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  servicesSchema, faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
 
-const crumbs = [{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/' }];
-const jsonLd = buildGraph(organizationSchema(), localBusinessSchema(), ...servicesSchema(), breadcrumbSchema(crumbs));
+const path = '/services/';
+const reviewCount = brand.reviews.count.toLocaleString('en-IN');
+
+// Astrology services, grouped the way a family would think about them.
+// Each card pairs a situation with the page that deals with it.
+const marriageAndCareer = [
+  { title: 'Kundli matching in Hyderabad', text: 'A proposal is on the table and both families want the charts compared before going further.', href: '/services/kundli-matching/' },
+  { title: 'Nadi dosha', text: 'Your match shows the same Nadi in both charts, and the score says zero out of 8.', href: '/services/nadi-dosha/' },
+  { title: 'Marriage astrologer', text: 'A marriage is late and you want to know what the chart says about timing.', href: '/services/marriage-guidance/' },
+  { title: 'Janam kundli reading', text: 'Nobody has read your birth chart properly, or you want it read again from scratch.', href: '/services/janam-kundli-reading/' },
+  { title: 'Career astrologer', text: 'A job offer, a stream to choose, a promotion that keeps slipping away.', href: '/services/career-astrology/' },
+  { title: 'Business astrology', text: 'A shop to open, a partner to take in, a second branch to plan.', href: '/services/business-astrology/' },
+];
+const datesAndDoshas = [
+  { title: 'Muhurtham in Hyderabad', text: 'A wedding, an engagement or an opening needs a date that suits the chart.', href: '/services/muhurtham/' },
+  { title: 'Griha Pravesh muhurtham', text: 'You are about to move into a new house or flat and want the right day and hour.', href: '/griha-pravesh-muhurtham-hyderabad/' },
+  { title: 'Dosha remedies', text: 'Mangal dosha, Kalasarpa dosha or Sade Sati has been mentioned about your chart.', href: '/services/dosha-remedies/' },
+  { title: 'Numerologist in Hyderabad', text: 'A baby\'s name, a business name or a spelling is being decided.', href: '/services/numerology/' },
+];
+
+const faqs = [
+  { question: 'What services does Sri Sai Durga Astrology Centre offer?', answer: 'Vastu consultation for homes, flats, offices and plots. On the astrology side: Kundli matching, janam kundli reading, marriage astrology, career and business astrology, Muhurtham and Griha Pravesh dates, dosha remedies including Nadi dosha, and numerology. Pandit Sri Santosh Sharma Ji leads all of it.' },
+  { question: 'How do I know which service I need?', answer: 'Start with the situation on your mind: a proposal, a delay, a job decision, a date, a dosha worry, a name or a property. The cards on this page pair each situation with a service, and if none of them fits, call or WhatsApp and Pandit Ji will point you to the right one.' },
+  { question: 'Can I combine more than one service?', answer: 'Yes, and many questions overlap. Kundli matching often leads to a Muhurtham for the wedding, and a shop opening can involve business astrology, a Muhurtham and Vastu for the premises, so mention everything you want covered when you call.' },
+  { question: 'Is there an astrology centre near Ameerpet or Erragadda?', answer: `Yes. We are in ${contact.locality}, close to both: ${contact.addressLine}, ${contact.city} ${contact.postalCode}. If the traffic is the problem, do the consultation by call or video.` },
+  { question: 'Are consultations in person or online?', answer: `Both. You can visit at ${contact.locality}, ${contact.city}, or have the consultation over a call or video. The line is ${contact.hoursDisplay.toLowerCase()}.` },
+  { question: 'Will I be told to do expensive remedies?', answer: 'No. A remedy comes up only if your chart shows a need, you hear what it is and why, and you can decline. Nothing is sold apart from the consultation, so there is no product to push.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  ...servicesSchema(),
+  {
+    '@type': 'CollectionPage',
+    '@id': abs(`${path}#webpage`),
+    url: abs(path),
+    name: `Astrology and Vastu services in ${contact.city}`,
+    isPartOf: { '@id': abs('/#website') },
+    about: { '@id': abs('/#localbusiness') },
+    inLanguage: 'en-IN',
+  },
+  faqSchema(faqs, abs(path)),
+  breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Services', url: path }]),
+);
+
+const answer =
+  'Pandit Sri Santosh Sharma Ji has been reading charts and floor plans in Hyderabad for more than 35 years. Vastu for homes, flats, offices and plots is one half of the work. The other half is astrology: Kundli matching, marriage and career, Muhurtham, doshas and numerology. Come to Sanjeeva Reddy Nagar, or do it all by phone or video.';
 ---
 <BaseLayout
-  title={`Astrology Services in Hyderabad | ${brand.name}`}
-  description="Vedic astrology services in Hyderabad with Pandit Sri Santosh Sharma Ji - kundli matching, marriage & career guidance, business astrology, muhurtham, Vastu, dosha remedies and numerology. Call or WhatsApp."
-  canonicalPath="/services/"
+  title="Astrology and Vastu Services in Hyderabad | Sri Sai Durga"
+  description="Vedic astrology services in Hyderabad with Pandit Ji: Kundli matching, marriage, career, business, Muhurtham, dosha remedies, numerology and Vastu."
+  canonicalPath={path}
   jsonLd={jsonLd}
 >
-  <section class="container-page py-14">
-    <div class="reveal mx-auto max-w-2xl text-center">
-      <p class="label">Our services</p>
-      <h1 class="mt-3 text-[2.4rem]">Vedic astrology services in Hyderabad</h1>
-      <p class="mt-4 text-ink-2">Guidance for every important phase of life, with {contact.hoursDisplay.toLowerCase()} availability and consultations in Telugu, Hindi, Kannada and English.</p>
-    </div>
-    <div class="mt-11 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {services.map((s) => (
-        <a href={`/services/${s.slug}/`} class="card-glow reveal group rounded-2xl border border-gold/30 bg-card p-6">
-          <div class="mb-4 grid h-11 w-11 place-items-center rounded-full border border-gold text-flame" aria-hidden="true">✦</div>
-          <h2 class="text-[1.3rem] text-ink">{s.title}</h2>
-          <p class="mt-2 text-[0.95rem] leading-relaxed text-ink-2">{s.summary}</p>
-          <span class="mt-4 inline-block text-[0.9rem] font-semibold text-flame group-hover:underline">Learn more →</span>
-        </a>
-      ))}
-    </div>
-    <div class="mt-12 flex flex-wrap justify-center gap-3">
-      <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call {contact.phoneDisplay}</a>
-      <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> WhatsApp</a>
+  <PageHero
+    eyebrow={`Services · ${contact.city}`}
+    title="Astrology and Vastu services in Hyderabad"
+    intro={answer}
+    crumbs={[{ name: 'Home', url: '/' }, { name: 'Services', url: path }]}
+    ctas
+  />
+
+  <!-- ============ VASTU FIRST (client priority) ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+      <div>
+        <SectionHead eyebrow="Vastu" title="Vastu consultant services for homes, flats, offices and plots" />
+        <div class="reveal mt-6 grid gap-4 [&_a]:underline [&_a]:decoration-[var(--accent)] [&_a]:underline-offset-4">
+          <p>Vastu Shastra is the old science of direction and layout in buildings, and a Vastu consultation looks at the entrance, kitchen, bedrooms, puja room and workspace, then tells you what to move and what to leave alone.</p>
+          <p>You cannot turn a flat to face another way, but you can move the bed, the stove and the almirah, and in most flats that is where the useful changes are. Nobody needs to break a wall for it.</p>
+          <p>Facing has its own pages too: <a href="/services/vastu/west-facing-house/">west facing</a>, <a href="/services/vastu/south-facing-house/">south facing</a>, <a href="/services/vastu/east-facing-house/">east facing</a> and <a href="/services/vastu/north-facing-house/">north facing</a> house Vastu.</p>
+        </div>
+        <div class="reveal mt-8 flex flex-wrap gap-3">
+          <a class="btn btn-call" href="/services/vastu/">Vastu consultant in Hyderabad</a>
+          <a class="btn btn-ghost" href={whatsappLink('Namaste, I would like a Vastu consultation.')} data-cta="whatsapp">Ask about Vastu</a>
+        </div>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {vastuPages.map((v) => (
+          <a href={v.path} class="card reveal group flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.375rem]">{v.title}</h3>
+            <p class="text-[0.95rem]">{v.blurb}</p>
+            <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
     </div>
   </section>
+
+  <!-- ============ ASTROLOGY: MARRIAGE AND CAREER ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Astrology" title="Vedic astrology services in Hyderabad: start from your situation" intro="Pick the line closest to your situation. These six cover Kundli matching, marriage and career astrology, and the next section handles dates, doshas and numbers." />
+      <div class="mt-12 grid gap-px overflow-hidden rounded-lg border border-[var(--color-line-light)] bg-[var(--color-line-light)] sm:grid-cols-2 lg:grid-cols-3">
+        {marriageAndCareer.map((x) => (
+          <a href={x.href} class="reveal group flex flex-col gap-3 bg-white p-8 no-underline transition-colors hover:bg-porcelain">
+            <h3 class="text-[1.375rem]">{x.title}</h3>
+            <p class="text-[0.95rem]">{x.text}</p>
+            <span class="link-arrow mt-auto pt-2">Read more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DATES, DOSHAS, NUMBERS ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead title="Muhurtham, dosha remedies and numerology" />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {datesAndDoshas.map((x) => (
+          <a href={x.href} class="card reveal group flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.375rem]">{x.title}</h3>
+            <p class="text-[0.95rem]">{x.text}</p>
+            <span class="link-arrow mt-auto pt-2">Read more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+        <div class="card card-static reveal flex flex-col justify-between gap-6 lg:col-span-2">
+          <p class="text-[1.0625rem] leading-snug text-[var(--fg)]">Not sure where your question fits? Describe it in a line or two and Pandit Ji will say which service it belongs to.</p>
+          <span class="flex flex-wrap gap-x-5 gap-y-2">
+            <a class="link-arrow" href={telLink()} data-cta="call">Call {contact.phoneDisplay}</a>
+            <a class="link-arrow" href={whatsappLink()} data-cta="whatsapp">WhatsApp</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead title="Vedic astrology consultation: how it works" />
+      <div class="prose-site reveal !mt-0">
+        <p class="!mt-0">Call or WhatsApp {contact.phoneDisplay}, say what is on your mind, and send birth details if the question needs a chart. Then come to {contact.locality}, which is close to Ameerpet and Erragadda, or do the whole consultation by call or video if the traffic is the problem. The line is open every day, 24 hours.</p>
+        <p>Pandit Ji speaks Telugu, Hindi, Kannada and English, so use the one you think in. Looking for an astrologer near you in Hyderabad? The <a href="/areas/">areas page</a> shows where he consults, and <a href="/how-a-consultation-works/">how a consultation works</a> takes you through the call step by step.</p>
+        <p>Want to check us out first? You can read all {reviewCount} Google reviews, and the <a href="/reviews/">reviews page</a> shows how to read them.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title="Astrology and Vastu services: questions before you book" />
+      <div class="reveal">
+        <FaqList faqs={faqs} openFirst />
+        <p class="mt-8 text-[0.85rem] text-[var(--color-muted-light)]">{disclaimer}</p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Tell Pandit Ji what is on your mind" text="Call or WhatsApp, say whether it is a chart, a date or a building, and ask the fee first. He will tell you which service fits." />
 </BaseLayout>

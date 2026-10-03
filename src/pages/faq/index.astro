@@ -1,0 +1,333 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, pandit, contact, disclaimer, reviewsUrl } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const reviewCount = brand.reviews.count.toLocaleString('en-IN');
+
+interface Item { question: string; answer: string; href: string; label: string }
+interface Group { id: string; short: string; title: string; intro: string; items: Item[] }
+
+const groups: Group[] = [
+  {
+    id: 'booking',
+    short: 'Booking',
+    title: 'Booking an astrologer in Hyderabad: fees, languages and online options',
+    intro: 'What to ask, what to bring, and how a session gets arranged.',
+    items: [
+      {
+        question: 'How do I book an astrologer consultation in Hyderabad?',
+        answer: `Call or WhatsApp ${contact.phoneDisplay}. Tell us your date, time and place of birth and what you want to ask, and we fix a time that suits the family, either at the centre in Sanjeeva Reddy Nagar or on a phone or video call, whichever is easier for you. Google lists us as open 24 hours, but call first so Pandit Ji is free when you arrive.`,
+        href: '/how-a-consultation-works/', label: 'How a consultation works',
+      },
+      {
+        question: 'Can I consult an astrologer online if I live outside Hyderabad?',
+        answer: 'Yes. The session runs on a phone or video call, and the reading is the same as it would be in person. It suits a family in another city, or a relative abroad who wants to listen in. Send the birth details first so the chart is ready when you call.',
+        href: '/how-a-consultation-works/', label: 'Online or in person: how it works',
+      },
+      {
+        question: 'Is there a good astrologer near me in S.R. Nagar?',
+        answer: 'We are in Sanjeeva Reddy Nagar, beside Andhra Bank and opposite Royal College, Bapu Nagar. It is a flat on the 5th floor, not a street shop, so look for Ramakrishna Nivas. If you are in Ameerpet, Erragadda or Kukatpally and the drive is the problem, use video instead.',
+        href: '/areas/sanjeeva-reddy-nagar/', label: 'Directions and landmarks',
+      },
+      {
+        question: 'Can I get a jyothisham consultation in Telugu, or only in English?',
+        answer: 'Telugu, Hindi, Kannada and English are all fine. Say which one you want when you book, and we hold the session in it. Pick the language you think in, because that is the one you will ask your best questions in.',
+        href: '/contact/', label: 'Call or WhatsApp to book',
+      },
+      {
+        question: 'How much does an astrologer consultation cost in Hyderabad?',
+        answer: 'We do not list prices on the website, because they depend on what you want looked at. Call or WhatsApp, say which service you need, and ask the fee first. You hear the amount before you book anything.',
+        href: '/contact/', label: 'Ask about fees',
+      },
+      {
+        question: 'What should I keep ready before I call an astrologer?',
+        answer: 'Your date, time and place of birth. For Kundli matching, the same three for both people. If the birth time is a guess, say so, because some timing points get less exact. For Vastu, keep the floor plan and the compass direction of the main door.',
+        href: '/how-a-consultation-works/', label: 'What to keep ready',
+      },
+    ],
+  },
+  {
+    id: 'kundli-marriage',
+    short: 'Kundli and marriage',
+    title: 'Kundli matching, horoscope matching and janam kundli questions',
+    intro: 'What the 36 points mean, what they leave out, and why a marriage can be slow.',
+    items: [
+      {
+        question: 'What is Kundli matching (horoscope matching), and what does the 36-point score mean?',
+        answer: 'Kundli matching, also called horoscope matching or Guna Milan, compares two birth charts before a marriage is fixed. The Ashtakoot system awards up to 36 points across eight factors, such as temperament, health and family. The score is where the reading starts. The charts and any doshas decide the rest.',
+        href: '/guides/kundli-matching-explained/', label: 'Read the full Guna Milan guide',
+      },
+      {
+        question: 'How many Gunas are needed for marriage? Is 18 out of 36 enough?',
+        answer: 'Eighteen is the usual cut-off. But neither 18 nor 28 settles anything alone. Say a match scores 24: it clears the cut-off, and a serious dosha can still matter. A lower score can sometimes be balanced by strengths elsewhere in the two charts, which is why the reading goes past the number.',
+        href: '/services/kundli-matching/', label: 'Kundli matching in Hyderabad',
+      },
+      {
+        question: 'Is Kundli matching enough to decide a marriage?',
+        answer: 'No. The score uses the Moon sign and birth star, which is a narrow slice of a chart. Pandit Ji also looks at the seventh house, any doshas and the running dasha of both people. After that, the two families still have to talk about work, money, where to live and what each side expects.',
+        href: '/services/kundli-matching/', label: 'How Kundli matching is done',
+      },
+      {
+        question: 'What is a Janam Kundli, and what does a birth chart reading cover?',
+        answer: 'Janam Kundli is your birth chart, drawn from the date, time and place you were born. A reading goes through the Lagna, the nine grahas and the running dasha, then turns to what you came to ask: marriage, work, money, a decision you are stuck on. The exact birth time matters here.',
+        href: '/services/janam-kundli-reading/', label: 'Janam Kundli reading',
+      },
+      {
+        question: 'Why is my marriage getting delayed, and can astrology explain it?',
+        answer: 'Astrology looks at the seventh house, its ruler and the dasha you are in. That can show why things feel slow and which periods look easier. It cannot give you a date. And not every delay sits in the chart. How the search is run, and what the family expects, count too.',
+        href: '/services/marriage-guidance/', label: 'Marriage delay astrology',
+      },
+    ],
+  },
+  {
+    id: 'dosha',
+    short: 'Doshas',
+    title: 'Mangal dosha, Nadi dosha and Kaal Sarp dosha questions',
+    intro: 'What each one means, and when a remedy is worth thinking about.',
+    items: [
+      {
+        question: 'What is Mangal dosha (Manglik), and does it make a match impossible?',
+        answer: 'Mangal dosha means Mars sits in certain houses of the chart. It does not rule out a match. The texts give several conditions under which it is cancelled or reduced, for example when both partners carry it. An app\'s one-line flag cannot tell you whether any of those apply, so get both charts read.',
+        href: '/services/dosha-remedies/', label: 'Dosha remedies',
+      },
+      {
+        question: 'What is Nadi dosha, and how serious is it in Kundli matching?',
+        answer: 'Nadi carries the most points in the Ashtakoot score, 8 of the 36, and the dosha shows when both partners fall in the same Nadi. That weight is why people worry about it. It has cancellation conditions too, so the flag alone is not the end of a match. Pandit Ji checks those first.',
+        href: '/services/nadi-dosha/', label: 'Nadi dosha explained',
+      },
+      {
+        question: 'What is Kaal Sarp dosha?',
+        answer: 'The old texts say it forms when all the planets in a chart sit between Rahu and Ketu. How much it matters depends on the exact placement and on the dasha running now, and that varies a great deal from chart to chart. The label by itself tells you very little.',
+        href: '/services/dosha-remedies/', label: 'Kaal Sarp and other doshas',
+      },
+      {
+        question: 'Do I need a remedy if a dosha shows up in my chart?',
+        answer: 'Not always. Many doshas are cancelled by something else in the chart, or are weak to begin with, and Pandit Ji looks for that before he says anything about a remedy. If one does make sense, he tells you what it is and why, and the decision is yours. Nobody should be hurried into it.',
+        href: '/services/dosha-remedies/', label: 'When a remedy makes sense',
+      },
+    ],
+  },
+  {
+    id: 'muhurtham',
+    short: 'Muhurtham',
+    title: 'Muhurtham and Griha Pravesh questions',
+    intro: 'Choosing a date for a wedding, a housewarming or an opening.',
+    items: [
+      {
+        question: 'What is Muhurtham (Muhurat), and when do I need it?',
+        answer: 'Muhurtham is a date and time chosen for an event, using the Panchang and the charts of the people involved. Families ask for it before a wedding, a Griha Pravesh, a business opening or a naming ceremony. The date is picked for your event and your people.',
+        href: '/services/muhurtham/', label: 'Muhurtham service',
+      },
+      {
+        question: 'How do I find a Griha Pravesh muhurtham in Hyderabad?',
+        answer: 'Tell us about the house, who will live in it and the weeks you are considering. Pandit Ji checks the Panchang and the family charts and suggests dates that work. If the Vastu is still a question, send the floor plan as well, so the date and the layout get settled together.',
+        href: '/griha-pravesh-muhurtham-hyderabad/', label: 'Griha Pravesh muhurtham',
+      },
+      {
+        question: 'How early should I ask for a Muhurtham date?',
+        answer: 'As early as you can. Halls, priests and relatives all have to be arranged around the date, and that is easier to do with weeks in hand than with days. Tell us the event, the people involved and any dates that cannot work for the family, and Pandit Ji suggests options from what is left.',
+        href: '/services/muhurtham/', label: 'Muhurtham service',
+      },
+    ],
+  },
+  {
+    id: 'career-business',
+    short: 'Career and business',
+    title: 'Career and business astrology questions',
+    intro: 'What a chart can say about a job move or a new venture.',
+    items: [
+      {
+        question: 'Can astrology help me decide on a job change?',
+        answer: 'It helps with timing. Pandit Ji reads the tenth house and the running dasha to see which periods favour a move and which favour staying put. Weigh that alongside salary, skills and what your family needs, since a good period will not make up for a bad offer.',
+        href: '/services/career-astrology/', label: 'Career astrology',
+      },
+      {
+        question: 'Can astrology help with business timing and partnerships?',
+        answer: 'Yes. Business astrology looks at the periods that suit a launch or an expansion, and at how the charts of two partners sit together. A Muhurtham can then be chosen for the opening or the signing. Financial and legal advice still come from the right professionals.',
+        href: '/services/business-astrology/', label: 'Business astrology',
+      },
+    ],
+  },
+  {
+    id: 'numerology',
+    short: 'Numerology',
+    title: 'Numerology questions',
+    intro: 'Birth numbers, name spellings and how they sit next to a chart.',
+    items: [
+      {
+        question: 'What is numerology, and how is it different from astrology?',
+        answer: 'Numerology works from numbers. Your birth number and destiny number come from your date of birth, and a name carries values of its own. Astrology works from where the planets stood in your birth chart. Here, numerology sits next to the chart and does not replace it.',
+        href: '/services/numerology/', label: 'Numerology',
+      },
+      {
+        question: 'Should I change my name spelling because of numerology?',
+        answer: 'Not automatically. A spelling change touches your official records, so weigh the paperwork as well. Name analysis gives you a second angle on a question. It is not a fix on its own, and whether any change is worth the trouble is your call.',
+        href: '/services/numerology/', label: 'Name analysis',
+      },
+    ],
+  },
+  {
+    id: 'vastu',
+    short: 'Vastu',
+    title: 'Vastu consultant questions: flats, houses and plots',
+    intro: 'What to move, what to leave, and when to ask before you buy.',
+    items: [
+      {
+        question: 'Is Vaastu the same as Vastu?',
+        answer: 'Yes. Vastu, Vaastu and Vasthu are different spellings of Vastu Shastra, the old Indian system for placing rooms, doors and furniture in a building. However you spell it when you search, you are asking for the same thing.',
+        href: '/glossary/', label: 'Vastu and other terms',
+      },
+      {
+        question: 'Do Vastu corrections mean breaking walls?',
+        answer: 'Usually not. You cannot turn a flat to face another way, but you can move the bed, the stove and the almirah, and in a flat that is where the changes tend to be. If a structural change ever would help, Pandit Ji says so and gives you a cheaper way to do it as well.',
+        href: '/services/vastu/', label: 'Vastu consultation in Hyderabad',
+      },
+      {
+        question: 'Can a Vastu consultant check my flat from the floor plan?',
+        answer: 'Yes. Send the plan with the main door\'s compass direction marked. A floor-plan review works for a flat you live in or one you are thinking of buying, and a visit shows more, but you do not need one to make a start.',
+        href: '/services/vastu/apartment/', label: 'Vastu for flats and apartments',
+      },
+      {
+        question: 'Does Vastu work for a rented flat in Hyderabad?',
+        answer: 'Within limits, yes. A tenant cannot move a kitchen, but can move a bed, a desk, a puja shelf or an almirah. The facing and the walls stay as they are. Pandit Ji tells you which changes are worth making in your flat and which you can leave alone.',
+        href: '/services/vastu/apartment/', label: 'Flat Vastu',
+      },
+      {
+        question: 'Is a south-facing house bad for Vastu?',
+        answer: 'No, but it deserves a closer look. The bad name comes from the old link between south and Yama. What the texts care about is where along the wall the door sits and how the rooms are laid out inside. Send the plan before you decide either way.',
+        href: '/services/vastu/south-facing-house/', label: 'South-facing house Vastu',
+      },
+      {
+        question: 'Is a west-facing house good or bad as per Vastu?',
+        answer: 'Neither, on its own. A west-facing house has its own points to plan around, such as heat on the west wall in the afternoon and where the door sits. A well-planned one is a good home. East, north and south-facing houses get the same treatment: check the layout first.',
+        href: '/services/vastu/west-facing-house/', label: 'West-facing house Vastu',
+      },
+      {
+        question: 'Can I get Vastu advice before buying a plot or flat?',
+        answer: 'Yes, and it is the best time to ask, because the layout and plot shape are easiest to judge before you commit. Bring the plan with the compass direction marked. For a quick self-check first, the new-home checklist lists what to look at.',
+        href: '/guides/vastu-for-new-home-checklist/', label: 'New-home Vastu checklist',
+      },
+    ],
+  },
+  {
+    id: 'trust',
+    short: 'Trust and limits',
+    title: 'Choosing an astrologer in Hyderabad: trust, reviews and limits',
+    intro: 'How to size up any astrologer, us included.',
+    items: [
+      {
+        question: 'Who is the best astrologer in Hyderabad?',
+        answer: '"Best" is not something anyone audits, so be careful with anyone who names himself that. What you can check is public: Pandit Ji has 35+ years of practice, and the Google reviews are there for you to read. Then call, ask your question, and see whether the answer makes sense to you.',
+        href: '/reviews/', label: 'Google reviews',
+      },
+      {
+        question: 'How do I choose a good astrologer in Hyderabad?',
+        answer: 'Pick someone who explains the reasoning behind what he sees in your chart, tells you the fee before you book, and is comfortable saying "I do not know". Be careful with a firm date, a fear story, or pressure to buy something costly on the spot.',
+        href: '/guides/how-to-choose-an-astrologer/', label: 'How to choose an astrologer',
+      },
+      {
+        question: 'Will you guarantee results, or do any black magic?',
+        answer: 'No to both. A chart shows likely periods and tendencies, and nobody can promise an outcome from it. We do not do black magic, and no remedy comes with a guarantee attached. If a remedy makes sense, Pandit Ji explains why he suggests it.',
+        href: '/guides/how-to-choose-an-astrologer/', label: 'Warning signs to look for',
+      },
+      {
+        question: 'Where can I read the Google reviews for Sri Sai Durga Astrology Centre?',
+        answer: `On Google, in the reviewers' own words. The profile shows ${brand.reviews.rating.toFixed(1)} across ${reviewCount} reviews, and you can sort them and read the critical ones as easily as the kind ones. Do that before you call.`,
+        href: '/reviews/', label: 'About the reviews',
+      },
+      {
+        question: 'Can astrology replace a doctor, lawyer or financial adviser?',
+        answer: 'No. A chart can help you think about timing, but for health, legal, money or mental-health questions see a qualified professional first. Nothing on this site is advice in those areas, and no outcome is guaranteed.',
+        href: '/about/', label: 'About Pandit Ji',
+      },
+    ],
+  },
+];
+
+const allFaqs = groups.flatMap((g) => g.items.map(({ question, answer }) => ({ question, answer })));
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'FAQ', url: '/faq/' }];
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'WebPage',
+    '@id': abs('/faq/#webpage'),
+    url: abs('/faq/'),
+    name: 'Astrology and Vastu FAQ: questions people in Hyderabad ask',
+    isPartOf: { '@id': abs('/#website') },
+    about: { '@id': abs('/#localbusiness') },
+    inLanguage: 'en-IN',
+  },
+  faqSchema(allFaqs, abs('/faq/')),
+  breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout authored
+  title="Astrology and Vastu FAQ for Hyderabad | Sri Sai Durga"
+  description="Answers on booking an astrologer in Hyderabad, Kundli matching, Mangal and Nadi dosha, Griha Pravesh muhurtham and Vastu from Pandit Ji's centre."
+  canonicalPath="/faq/"
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="FAQ"
+    title="Astrology and Vastu FAQ: Questions People in Hyderabad Ask"
+    intro="Short answers to what people ask before they book with Pandit Sri Santosh Sharma Ji. If yours is not here, call or WhatsApp and ask him."
+    crumbs={crumbs}
+  >
+    <nav class="hero-in hero-in-4 mt-9" aria-label="FAQ topics">
+      <ul class="flex flex-wrap gap-2.5">
+        {groups.map((g) => (
+          <li>
+            <a href={`#${g.id}`} class="inline-block rounded-full border border-white/20 px-4 py-2 text-[0.875rem] font-medium text-on-dark-body no-underline transition-colors hover:border-brass-400 hover:text-brass-300">{g.short}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </PageHero>
+
+  {groups.map((g, i) => (
+    <section id={g.id} class:list={['section-sm scroll-mt-20', i % 2 === 0 ? 'band-white' : 'band-light']}>
+      <div class="container-page grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+        <SectionHead eyebrow={g.short} title={g.title} intro={g.intro} />
+        <div class="reveal">
+          <div class="faq border-t border-[var(--line)]">
+            {g.items.map((f) => (
+              <details>
+                <summary><h3 style="font-family:var(--font-body);font-size:1.0625rem;font-weight:600;line-height:1.4;letter-spacing:0;text-align:left">{f.question}</h3></summary>
+                <div class="faq-a">
+                  <p>{f.answer}</p>
+                  <p class="mt-3"><a class="link-arrow" href={f.href}>{f.label} <span aria-hidden="true">→</span></a></p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="band-white section-sm">
+    <div class="container-page grid gap-6 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <div class="reveal">
+        <p class="eyebrow">Before you rely on this page</p>
+        <h2 class="mt-3 text-[1.75rem]">Your own chart or home: ask Pandit Ji in Hyderabad</h2>
+      </div>
+      <div class="reveal grid gap-4">
+        <p>{disclaimer}</p>
+        <p>Want to see what other families wrote before you call? <a class="text-[var(--fg)] underline decoration-brass-700 underline-offset-4" href={reviewsUrl} target="_blank" rel="noopener">Read the Google reviews</a>. You can also look at <a class="text-[var(--fg)] underline decoration-brass-700 underline-offset-4" href="/how-a-consultation-works/">how a consultation runs</a>, or check an unfamiliar word in the <a class="text-[var(--fg)] underline decoration-brass-700 underline-offset-4" href="/glossary/">glossary</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand title="Still have a question?" text="Call or WhatsApp and ask. If it is about a chart, have the birth details to hand. If it is about a home, keep the floor plan ready." />
+</BaseLayout>

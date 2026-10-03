@@ -1,0 +1,270 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { pandit, contact } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/vastu/';
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Vastu consultation', url: path },
+];
+
+// TODO(client): confirm whether site visits are offered across all of Hyderabad or only in some areas.
+// TODO(client): confirm whether an online floor-plan review is charged separately.
+// TODO(client): confirm what, if anything, is used to read directions on site (instruments or phone compass).
+// INTERVIEW Q11: the three Vastu worries Pandit Ji meets most in Hyderabad flats and houses, and what he suggests moving first (in his own words)
+// INTERVIEW Q12: the first thing he looks at on a floor plan
+const faqs = [
+  { question: 'How much does a Vastu consultation cost in Hyderabad?', answer: 'Fees are shared before booking. Call or WhatsApp with the property type (home, flat, office, shop or plot) and what you want reviewed, and we will tell you the fee before you commit to anything.' },
+  { question: 'Is a site visit necessary, or can a floor plan be reviewed?', answer: 'A floor plan with the direction of the main door marked is enough to begin, and it works well for flats and for properties you are still thinking of buying. A visit shows more of the surroundings and the actual rooms, so ask for one where those matter, but it is not the only way.' },
+  { question: 'Will I have to break walls or rebuild anything?', answer: 'Not as a first suggestion. Most concerns are fixed by moving things: the stove, the bed, the shrine or the heavy storage. If a structural change would help, Pandit Ji says so and puts a cheaper option beside it.' },
+  { question: 'Can a property be checked before I buy it?', answer: 'Yes, and it is one of the best times to ask. Send the floor plan and the facing before you pay a booking amount, and you will see which layout points are easy to live with and which would need a compromise.' },
+  { question: 'Does Vastu guarantee wealth, health or success?', answer: 'No. Vastu Shastra is a guide to planning and arranging a space well. It sits beside effort, finances and health care, and no outcome is promised.' },
+  { question: 'Is Vaastu or Vasthu different from Vastu?', answer: 'No. Vastu, Vaastu and Vasthu are three spellings of the same subject, Vastu Shastra. You will see all three on signboards and in searches, and they mean the same thing here.' },
+  { question: 'Which languages is the consultation held in?', answer: `Pandit Ji speaks ${pandit.languages.join(', ')}. Tell us which one you think in when you call.` },
+  { question: 'Where are you based, and do you serve nearby areas?', answer: `We are at ${contact.locality}, ${contact.city}, ${contact.landmark}. People come from nearby areas such as Ameerpet, Panjagutta, Somajiguda, Erragadda and Balkampet, and online consultation covers properties elsewhere.` },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `Vastu Consultation in ${contact.city}`,
+    serviceType: 'Vastu Shastra consultation',
+    description: 'Vastu consultation for homes, apartments, offices, shops and plots in Hyderabad, based on the floor plan and main-door direction or a site visit, with placement and direction corrections before any structural change.',
+    url: abs(path),
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Vastu consultation types',
+      itemListElement: [
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Vastu for Home in Hyderabad', url: abs('/services/vastu/home/') } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Vastu for Flat in Hyderabad', url: abs('/services/vastu/apartment/') } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Vastu for Office and Shop in Hyderabad', url: abs('/services/vastu/office/') } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Vastu for Plot in Hyderabad', url: abs('/services/vastu/plot/') } },
+      ],
+    },
+  },
+  faqSchema(faqs, abs(path)), breadcrumbSchema(crumbs),
+);
+
+const covers = [
+  { t: 'Main door and entrance Vastu', d: 'Which way the property faces and where along that wall the door sits. Then what you see when the door opens, and whether a pillar, a pole or a pile of shoes is in the way.' },
+  { t: 'Kitchen, fire and water', d: 'Where the stove, sink, water storage and borewell sit. The texts pair the kitchen with fire and give water a zone of its own, and they like the two kept apart.' },
+  { t: 'Bedroom Vastu and sleeping direction', d: 'Which room suits the head of the household, where beds and heavy wardrobes go, and which way your head points when you sleep.' },
+  { t: 'Puja room', d: 'A clean, quiet spot for the family shrine, and the direction you face while praying. There is a separate guide to <a class="underline decoration-[var(--accent)] underline-offset-4" href="/guides/puja-room-vastu/">puja room Vastu</a>.' },
+  { t: 'Toilets, stairs and storage', d: 'Where toilets, store rooms and overhead tanks sit in the plan, and the quiet fixes when one sits badly. Stairs have their own guide on <a class="underline decoration-[var(--accent)] underline-offset-4" href="/guides/staircase-vastu/">staircase Vastu</a>.' },
+  { t: 'Plot, shape and surroundings', d: 'Plot shape, slope, road side and the buildings around it, and planning the layout before the first brick goes up.' },
+];
+
+const steps = [
+  { t: 'Call or WhatsApp', d: `Ring ${contact.phoneDisplay} and say what the property is and what is bothering you: a flat you are about to buy, a house you live in, an office you are fitting out.` },
+  { t: 'Send the plan and the door direction', d: 'A builder\'s brochure plan or a neat hand sketch with room names is enough, plus the direction the main door faces. If the surroundings matter, we can consider a site visit.' },
+  { t: 'Room by room', d: 'Pandit Ji goes through each room against the directions and the elements, and he sorts the points that matter from the minor ones, so you don\'t leave the call worrying about everything and nothing in particular.' },
+  { t: 'Fixes in order', d: 'First the things you can move yourself. Then small adjustments. A structural change comes up only if it is worth the cost, and you hear a cheaper option next to it.' },
+];
+
+const types = [
+  { href: '/services/vastu/home/', t: 'House Vastu for villas and independent homes', d: 'Main door, kitchen, bedrooms, puja room, staircase and water placement, room by room.' },
+  { href: '/services/vastu/apartment/', t: 'Flat Vastu, south facing flats included', d: 'You can\'t turn a flat around, but you can move the bed, the stove and the almirah, and the page goes through floor level, the balcony, and a checklist to use before you buy.' },
+  { href: '/services/vastu/office/', t: 'Office and shop Vastu', d: 'The owner\'s seat, cash counter, staff seating, entrance, reception and pantry, for offices, shops and clinics.' },
+  { href: '/services/vastu/plot/', t: 'Plot Vastu for west, south and north facing sites', d: 'Shape, road side, slope and corner plots, and how to plan the layout before you build.' },
+];
+
+const facingPages = [
+  { href: '/services/vastu/west-facing-house/', t: 'West facing house Vastu', d: 'Door position and the afternoon heat.' },
+  { href: '/services/vastu/south-facing-house/', t: 'South facing house Vastu', d: 'Where its reputation comes from and what the texts check.' },
+  { href: '/services/vastu/east-facing-house/', t: 'East facing house Vastu', d: 'Morning light and where along the wall the door sits.' },
+  { href: '/services/vastu/north-facing-house/', t: 'North facing house Vastu', d: 'Door position and keeping the front open.' },
+];
+
+const directions = [
+  ['North', 'Kubera\'s side, the lord of wealth, and linked with water. Keep it open: entrance, living room, cash and valuables.'],
+  ['North-east', 'The most sacred corner, linked with water and a clear head. Puja, prayer, study. Keep it light.'],
+  ['East', 'The rising sun and Indra, linked with health and new beginnings. Main entrance, living room, windows for the morning light.'],
+  ['South-east', 'Agni, the fire corner. Kitchen, stove and electrical equipment belong here.'],
+  ['South', 'Yama, linked with rest and weight. Bedrooms, heavier furniture, storage.'],
+  ['South-west', 'Earth and Nirrti, the stable corner. Master bedroom, the owner\'s seat, heavy storage.'],
+  ['West', 'Varuna, linked with gains and completion. Dining area, the children\'s study, a second living space.'],
+  ['North-west', 'Vayu, the air corner, linked with movement and change. Guest room, garage, toilets, stored grain and supplies.'],
+];
+---
+<BaseLayout authored
+  title="Best Vastu Consultant in Hyderabad | Home, Flat, Office"
+  description="Vastu consultant in Hyderabad for homes, flats, offices, shops and plots. Pandit Sri Santosh Sharma Ji works from your floor plan or visits the site."
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Vastu consultation · Hyderabad"
+    title="Vastu Consultant in Hyderabad for Homes, Flats, Offices and Plots"
+    intro="A flat you are about to buy, a kitchen sitting in the wrong corner, a shop you are about to open: bring the floor plan and the question. Pandit Sri Santosh Sharma Ji has advised families in Hyderabad for more than 35 years, and Vastu is part of that work."
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ DIRECT ANSWER + WHAT IS LOOKED AT ============ -->
+  <section class="band-light section">
+    <div class="container-page">
+      <div class="reveal max-w-3xl">
+        <h2>What a Vastu consultant in Hyderabad looks at</h2>
+        <span class="rule"></span>
+        <p class="lead mt-6">A Vastu consultant reads your floor plan against the eight directions and the five elements, then tells you what to move. Pandit Sri Santosh Sharma Ji works from the plan and the direction the main door faces, or from a visit to the property. He begins with what you can shift yourself, the bed, the stove, the shrine, the heavy almirah, and talks about structural change last.</p>
+        <p class="mt-5">Hyderabad has a lot of apartment living, plenty of independent houses in the older colonies, and steady building on plots, so the same handful of questions keeps coming round. They are below. We are in {contact.locality}, close to Ameerpet, Panjagutta and Somajiguda, and the whole review can be done online if the property is across town. Directions are on the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/areas/sanjeeva-reddy-nagar/">Sanjeeva Reddy Nagar page</a>.</p>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {covers.map((c) => (
+          <div class="card card-static reveal flex flex-col gap-3">
+            <h3>{c.t}</h3>
+            <p class="text-[0.95rem]" set:html={c.d}></p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROPERTY TYPES ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead title="Vastu consultation for flats, homes, offices, shops and plots in Hyderabad" intro="Each kind of property raises its own questions. Pick the page closest to yours." />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2">
+        {types.map((x, i) => (
+          <a href={x.href} class="card reveal group flex flex-col gap-4 no-underline">
+            <span class="numeral text-[1.25rem] !text-[var(--line)]" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{x.t}</h3>
+            <p class="text-[0.95rem]">{x.d}</p>
+            <span class="link-arrow mt-auto">Open this page <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FACING PAGES ============ -->
+  <section class="band-light section-sm">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="reveal">
+        <h2>Vastu for west, south, east and north facing houses</h2>
+        <span class="rule"></span>
+        <p class="mt-6 max-w-md">Stand at the main door and look out. The direction you are facing is the facing of the house. Each one has its own page because the questions differ, and the flat version of the same worry sits on the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/apartment/">flat Vastu page</a>.</p>
+      </div>
+      <ul class="reveal border-t border-[var(--line)] self-start">
+        {facingPages.map((f) => (
+          <li class="border-b border-[var(--line)]">
+            <a class="flex flex-col gap-1 py-5 no-underline sm:flex-row sm:items-baseline sm:justify-between" href={f.href}>
+              <span class="link-arrow">{f.t} <span aria-hidden="true">→</span></span>
+              <span class="text-[0.95rem] text-[var(--body)]">{f.d}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PRINCIPLES ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Vastu, Vaastu, Vasthu" title="Vastu Shastra explained: one subject, three spellings" />
+      <div class="reveal prose-site mt-8">
+        <p>Vastu Shastra is the old Indian system for placing rooms and doors by direction, light, air and the five elements. You will see it written Vastu, Vaastu and Vasthu. It is the same subject. It is also not a single rulebook: the texts and the practitioners differ in detail, so read everything below as the way the tradition is taught and not as law. One awkward room rarely matters on its own, and Pandit Ji weighs the whole plan together.</p>
+      </div>
+
+      <h3 class="reveal mt-14 text-[1.75rem]">Vastu directions: what each of the eight is linked with</h3>
+      <dl class="fact-table reveal mt-6">
+        {directions.map(([d, a]) => (
+          <div><dt>{d}</dt><dd>{a}</dd></div>
+        ))}
+      </dl>
+
+      <div class="mt-14 grid gap-12 lg:grid-cols-2 lg:gap-16">
+        <div class="reveal prose-site">
+          <h3 class="!mt-0 text-[1.75rem]">The five elements</h3>
+          <p>Vastu lays the five elements, the pancha bhutas, over the plan of a building. Earth sits in the south-west, water in the north-east, fire in the south-east, air in the north-west, and space in the middle. Most placement advice comes from keeping each zone true to its element. Kitchen in the fire corner, water away from it, the heavy things in the earth corner.</p>
+        </div>
+        <div class="reveal prose-site">
+          <h3 class="!mt-0 text-[1.75rem]">The Vastu Purusha mandala and the brahmasthan</h3>
+          <p>In the classical picture a site is laid over a square grid of 64 or 81 squares. A figure called the Vastu Purusha lies across it, head to the north-east and feet to the south-west, and each part of the grid has a presiding deity and a direction.</p>
+          <p>The middle of the grid is the brahmasthan. It is kept open and light, with no heavy structure, toilet or staircase on it. You cannot open up the middle of a modern flat, so the working advice there is shorter: keep that central zone clear and clean.</p>
+          <p>The same picture explains the north-east and south-west. One is light and calm, the other heavy and settled. That is why so much Vastu advice puts the puja room in the north-east and the master bedroom in the south-west.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead title="A Vastu consultation in four steps" />
+      <ol class="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+        {steps.map((x, i) => (
+          <li class="reveal relative lg:px-7 lg:first:pl-0 lg:last:pr-0 lg:[&:not(:first-child)]:border-l lg:[&:not(:first-child)]:border-white/12">
+            <span class="numeral text-[3rem]">{i + 1}</span>
+            <h3 class="mt-4 text-[1.375rem]">{x.t}</h3>
+            <p class="mt-3 text-[0.98rem]">{x.d}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="reveal mt-12"><a class="link-arrow" href="/how-a-consultation-works/">More on how a consultation works <span aria-hidden="true">→</span></a></p>
+    </div>
+  </section>
+
+  <!-- ============ WHAT TO ASK ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div class="reveal">
+        <h2>Looking for the best Vastu consultant? What to ask before you book</h2>
+        <span class="rule"></span>
+        <p class="mt-6 max-w-md">Ask what the consultant will work from. A floor plan with the main door marked is a fair answer. A verdict given before anyone has seen the plan is not.</p>
+      </div>
+      <div class="reveal prose-site">
+        <p>You may have been told: "Fixing Vastu means breaking walls." In a modern apartment the walls are mostly shared or structural anyway, so the useful changes move a bed, a stove, a shrine or a cupboard. If a structural change would help, Pandit Ji tells you, and puts a cheaper option next to it.</p>
+        <p>"A flat that faces the wrong way should be avoided." No facing is bad by itself. The facing is fixed and the inside of the flat is not, which is why the <a href="/services/vastu/apartment/">flat Vastu page</a> spends its time on the inside.</p>
+        <p>"Put a crystal or a pyramid in the corner and it is sorted." Layout comes first. A small object is at best a supporting detail. We do not sell any product, so nobody here has a reason to find a defect that is not there.</p>
+        <p>"A Vastu defect means misfortune is certain." Vastu flags a placement as something to look at and says nothing certain about your future. It doesn't promise money, health or success either, because it sits next to effort, finances and looking after yourself, and none of those can be skipped.</p>
+        <p>Moving into a new house or opening an office? The date is a separate question. See <a href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham in Hyderabad</a> and <a href="/services/muhurtham/">Muhurtham</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PREPARE ============ -->
+  <section class="band-white section-sm">
+    <div class="container-page grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div>
+        <SectionHead title="What to keep ready for a Vastu consultation" />
+      </div>
+      <ul class="reveal grid gap-4">
+        <li class="flex gap-4 border-b border-[var(--line)] pb-4"><span class="mt-1 text-[var(--accent)]" aria-hidden="true">✓</span><span>The floor plan. A builder's brochure plan or a neat sketch with room names will do.</span></li>
+        <li class="flex gap-4 border-b border-[var(--line)] pb-4"><span class="mt-1 text-[var(--accent)]" aria-hidden="true">✓</span><span>The direction the main door faces. Stand in the doorway, look outward, and read it off a phone compass held away from metal.</span></li>
+        <li class="flex gap-4 border-b border-[var(--line)] pb-4"><span class="mt-1 text-[var(--accent)]" aria-hidden="true">✓</span><span>Whether you live there, plan to buy, or are about to build.</span></li>
+        <li class="flex gap-4 border-b border-[var(--line)] pb-4"><span class="mt-1 text-[var(--accent)]" aria-hidden="true">✓</span><span>Where the stove, puja space, master bedroom, toilets and water tank sit, if the plan does not show them.</span></li>
+        <li class="flex gap-4 border-b border-[var(--line)] pb-4"><span class="mt-1 text-[var(--accent)]" aria-hidden="true">✓</span><span>The worries you most want answered. Write them down, and the time goes on those.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title="Vastu consultation questions people ask before they book" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand
+    title="Book a Vastu consultation"
+    text="Call or WhatsApp with the property type and the floor plan. Pandit Ji speaks Telugu, Hindi, Kannada and English, and the review can be in person at Sanjeeva Reddy Nagar or online. Ask the fee first."
+  />
+</BaseLayout>

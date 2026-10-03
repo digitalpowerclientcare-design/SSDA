@@ -1,0 +1,171 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, contact } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/vastu/west-facing-house/';
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Vastu consultation', url: '/services/vastu/' },
+  { name: 'West facing house Vastu', url: path },
+];
+
+// TODO(client): confirm whether home site visits are offered across all of Hyderabad, or only floor-plan reviews.
+// INTERVIEW Q12: what Pandit Ji looks at first on a west facing floor plan, in his own words.
+// INTERVIEW Q14: how advice differs for a west facing gated-community flat, a builder floor and an independent house.
+
+const faqs = [
+  { question: 'Is a west facing house good as per Vastu?', answer: 'Yes, it can be. Vastu Shastra does not call the west unlucky. It asks you to look at where the main door sits along the west wall and how the rooms are arranged behind it. A west facing house with a sound layout is a better home than a badly planned house facing east.' },
+  { question: 'Which side should the main door be in a west facing house?', answer: 'Many practitioners prefer the north-west half of the west wall and avoid the south-west end, though schools differ on the exact stretch. Take a compass reading at the door, mark the wall on the floor plan, and have both checked together instead of guessing by eye.' },
+  { question: 'Where should the kitchen be in a west facing house?', answer: 'The south-east is the first choice and the north-west the second. In a west facing plan the north-west corner sits at the front, near the door, so check that the stove is not the first thing you see on entering. If the kitchen is elsewhere, the stove position and the way the cook faces matter.' },
+  { question: 'Is a west facing flat bad for Vastu?', answer: 'No. A flat\'s facing is fixed, so attention moves to the layout inside: kitchen, bedroom, puja corner and balcony. The afternoon heat is a real point to plan for in Hyderabad. Our apartment page covers what you can and cannot change in a flat.' },
+  { question: 'Can a west facing house be corrected without demolition?', answer: 'Mostly, yes. Moving the bed, the stove, the almirah and the puja shelf fixes most layout concerns. Breaking or rebuilding a wall comes last, and if it ever helps, ask for a cheaper alternative alongside it.' },
+  { question: 'Can you review my west facing house plan without a site visit?', answer: 'You can start with a floor plan and the compass direction of the main door. A visit shows the rooms, the light and the surroundings better, so say which you want when you call.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `West facing house Vastu in ${contact.city}`,
+    serviceType: 'Vastu consultation for a west facing house',
+    description: 'Vastu review for west facing houses and flats in Hyderabad: main door position on the west wall, kitchen, bedrooms, puja room, afternoon heat and Griha Pravesh timing.',
+    url: abs(path),
+    isPartOf: { '@id': abs('/services/vastu/#service') },
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)), breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout authored
+  title={`West Facing House Vastu in Hyderabad | ${brand.shortName}`}
+  description="West facing house Vastu in Hyderabad: where the main door goes on the west wall, kitchen and bedroom positions, afternoon heat and Griha Pravesh timing."
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Vastu for a house that faces west"
+    title="West Facing House Vastu: Door, Rooms and Afternoon Heat"
+    intro="Say the main door of your house opens to the west and a relative has told you to think twice. Here is what Vastu Shastra says about it, room by room, and what to do about the sun."
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ SHORT ANSWER ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+      <div class="reveal">
+        <h2>A west facing house is not a bad house</h2>
+        <span class="rule"></span>
+        <p class="lead mt-6">A west facing house is one where you look west as you step out of the main door. Vastu Shastra links the west with Varuna and the setting sun, and it does not call the facing unlucky. What it cares about is where the door sits along the wall and what lies behind it, room by room.</p>
+        <p class="mt-5">One caution before the details. Vastu Shastra traditionally holds a single set of placements, but practitioners differ on the finer points, and it is quite normal for two consultants to give you two slightly different answers about the same plan, so ask each of them why.</p>
+        <p class="mt-5">Pandit Ji starts with where things stand and which way they point. Knocking down a wall is the last item on the list, and you hear the fee before anything is booked.</p>
+      </div>
+      <aside class="card card-static reveal self-start">
+        <h3>Bring these three things</h3>
+        <ul class="mt-4 grid gap-3">
+          <li>The floor plan, with north marked</li>
+          <li>A compass reading taken at the main door, with the phone held away from metal and gates</li>
+          <li>The floor you live on, if it is a flat</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ DOOR ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="reveal">
+        <h2>West facing house Vastu plan: start with the door</h2>
+        <span class="rule"></span>
+      </div>
+      <div class="reveal prose-site !mt-0">
+        <p class="!mt-0">Stand outside and look at the house. The west wall runs from its north end to its south end, and many practitioners like the door in the north-west half of that wall and like the south-west end least, although some schools divide the wall into nine parts, name each one, and don't agree on the list.</p>
+        <p>So don't judge it by eye. Mark the wall on the plan, note where the door falls, and have it checked.</p>
+        <p>Say the builder's plan puts your door at the south-west end, and you've already paid the booking amount. That doesn't mean you walk away. It means the entrance gets a closer look: does the door open fully, is it well lit, is anything standing in front of it, and what else on the plan can balance it? A pole, a tree or a drain facing the door gets noticed before a few feet along the wall does.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROOMS ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead title="Rooms in a west facing house: kitchen, bedrooms, puja room" intro="The old texts give each room a corner. Below is what each one means when the house faces west." />
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        <div class="card card-static reveal flex flex-col gap-3">
+          <h3>Kitchen in a west facing house</h3>
+          <p class="text-[0.95rem]">South-east first, north-west second. In a west facing plan the north-west corner sits at the front, close to the door, so a kitchen there is the first thing a visitor sees. If yours is somewhere else, look at the stove: the cook should face east, and the sink should not sit beside the burners.</p>
+        </div>
+        <div class="card card-static reveal flex flex-col gap-3">
+          <h3>Bedrooms and the study table</h3>
+          <p class="text-[0.95rem]">The south-west is for the master bedroom, with the head towards the south or east. Children's rooms go west or north-west, with the study table turned so the child faces east or north. Heavy almirahs belong on the south and west walls, which suits a west facing house well.</p>
+        </div>
+        <div class="card card-static reveal flex flex-col gap-3">
+          <h3>Puja room and toilets</h3>
+          <p class="text-[0.95rem]">The north-east is the puja corner, which here is the back of the house, away from the road. Toilets prefer the west or north-west. The north-east corner and the middle of the house should stay free of them. The <a class="underline decoration-[var(--accent)] underline-offset-4" href="/guides/puja-room-vastu/">puja room guide</a> covers idols and flats with no spare corner.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SUN ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:gap-20">
+      <div class="reveal">
+        <h2>Afternoon sun in a west facing home</h2>
+        <span class="rule"></span>
+        <p class="lead mt-6">A west wall takes the afternoon sun, and Hyderabad summers are hot.</p>
+        <p class="mt-5">Here the old advice and common sense point the same way. Keep the large windows on the north and east sides where you can, put the heavy wardrobes and storage along the west wall so they soak up the heat instead of the family, and shade the west balcony with a louvre, a blind or a tree. Curtain the west window early.</p>
+        <p class="mt-5">If the south-west bedroom turns into an oven in May, tell us when you book. There are ways to protect the room without moving it.</p>
+      </div>
+      <div class="reveal">
+        <h2>West facing flat Vastu: what changes</h2>
+        <span class="rule"></span>
+        <p class="mt-6">In a flat you can't turn the building or shift the door along the wall. What you can move is everything inside: the stove, the bed, the almirah, the shrine. The floor matters too, since a top-floor west flat gets more sun than a lower one. A west facing flat has its own page of checks, including balconies and shared walls, on our <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/apartment/">Vastu for apartments and flats</a> page.</p>
+        <p class="mt-4">Buying a flat? Ask for the plan before you pay the token amount.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GRIHA PRAVESH + OTHER FACINGS ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:gap-20">
+      <div class="reveal">
+        <h2>Griha Pravesh in a west facing house</h2>
+        <span class="rule"></span>
+        <p class="mt-6">The date for entering the house is a Panchang question, answered through Muhurtham. The layout is a separate question. An empty house is the easiest time to place the bed and the stove, so look at the plan before the furniture arrives. You can read about the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham in Hyderabad</a> or see the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/muhurtham/">Muhurtham service</a>.</p>
+      </div>
+      <div class="reveal">
+        <h2>Comparing a west facing house with the other three</h2>
+        <span class="rule"></span>
+        <p class="mt-6">Choosing between two houses? Don't decide on the compass alone. Read about <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/south-facing-house/">south facing</a>, <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/east-facing-house/">east facing</a> and <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/north-facing-house/">north facing</a> houses, then see the general <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/home/">Vastu for home</a> page for every room. The whole range is on the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/">Vastu consultation</a> hub.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title="West facing home: questions people ask" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand
+    title="Send the plan of your west facing house"
+    text="Call or WhatsApp, send the floor plan and the compass direction of the door, and ask the fee first. Pandit Ji speaks Telugu, Hindi, Kannada and English, so use the one you think in."
+  />
+</BaseLayout>

@@ -1,0 +1,181 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { contact, disclaimer } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/nadi-dosha/';
+const title = 'Nadi Dosha: Meaning, Cancellation and Puja | Hyderabad';
+const description = 'Nadi dosha in kundli matching: the 8-point Nadi factor, the same-Nadi rule, when it is cancelled, Bhakoot dosha and Nadi dosha nivaran puja, explained.';
+const answer = 'Nadi dosha appears in kundli matching when both partners fall in the same Nadi group, so Nadi scores zero of its 8 points. It is a reason to look closer, nothing more. The texts list conditions that cancel it, and the rest of both charts still count. Pandit Ji checks all of that before you decide.';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Kundli matching', url: '/services/kundli-matching/' },
+  { name: 'Nadi dosha', url: path },
+];
+
+// INTERVIEW Q7: a parent arrives worried because an app flagged Nadi or Mangal dosha. What does Pandit Ji say in the first two minutes, and what does he check first?
+// INTERVIEW Q16: when does he tell a family "there is nothing wrong here, you do not need a remedy", and what happens next?
+// TODO(client): confirm whether Pandit Ji conducts a Nadi dosha shanti puja himself, refers it to a priest, or only advises on it, and what he suggests in a same-Nadi case.
+const faqs = [
+  { question: 'What is Nadi dosha in kundli matching?', answer: 'Every birth star belongs to one of three Nadis: Adi, Madhya or Antya. If the bride and groom share one, the Nadi factor scores zero of its 8 points. That is the heaviest single factor in the 36-point score, so it gets looked at first.' },
+  { question: 'Is Nadi dosha a reason to reject a match?', answer: 'Not on its own. First check whether a cancellation condition applies, then read the rest of the two charts. Some families go ahead after that, and some decide against it. The decision is yours.' },
+  { question: 'Can Nadi dosha be cancelled?', answer: 'The texts give conditions, such as the Moon signs being different even though the birth star is the same, or the birth stars being different within the same Moon sign. Sources differ on the details, so the actual charts have to be checked.' },
+  { question: 'Does Nadi dosha affect health or children?', answer: 'The tradition links Nadi with the body’s constitution and, through it, with the health of the couple and their children. That is the tradition’s reasoning and no medical finding. A chart cannot answer a health question. Take that to a doctor.' },
+  { question: 'What is Nadi dosha nivaran puja, and is it compulsory?', answer: 'It is a shanti ritual some families perform when the dosha applies. It is never compulsory. If the dosha is cancelled there is nothing to remedy, and if it applies you can ask what Pandit Ji suggests, why, and what it costs.' },
+  { question: 'Is Nadi dosha the same as Nadi astrology?', answer: 'No. Nadi dosha is one factor in Ashtakoot matching and comes from your own birth star. Nadi astrology, also called nadi jyothisham, is a separate practice that works from palm-leaf manuscripts. Readings here work from your birth chart.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `Nadi dosha check in kundli matching, ${contact.city}`,
+    serviceType: 'Nadi dosha and Bhakoot dosha check',
+    description: answer,
+    url: abs(path),
+    isPartOf: { '@id': abs('/services/kundli-matching/#service') },
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)),
+  breadcrumbSchema(crumbs),
+);
+
+const nadis = [
+  { name: 'Adi Nadi', trait: 'Linked with Vata', stars: 'Ashwini, Ardra, Punarvasu, Uttara Phalguni, Hasta, Jyeshtha, Moola, Shatabhisha, Purva Bhadrapada' },
+  { name: 'Madhya Nadi', trait: 'Linked with Pitta', stars: 'Bharani, Mrigashira, Pushya, Purva Phalguni, Chitra, Anuradha, Purva Ashadha, Dhanishta, Uttara Bhadrapada' },
+  { name: 'Antya Nadi', trait: 'Linked with Kapha', stars: 'Krittika, Rohini, Ashlesha, Magha, Swati, Vishakha, Uttara Ashadha, Shravana, Revati' },
+];
+
+const steps = [
+  'Check both birth times against a hospital record or birth certificate. Memory drifts.',
+  'Find the Moon’s birth star in each chart and look both up in the table above.',
+  'See whether any cancellation condition applies to those two actual charts.',
+  'Read the rest of the match: Mars, the seventh house, and the dasha periods running for each of them.',
+  'Talk it through as a family before anyone is given a verdict, including the two people getting married.',
+];
+---
+<BaseLayout authored title={title} description={description} canonicalPath={path} jsonLd={jsonLd}>
+  <PageHero byline
+    eyebrow="Kundli matching · Nadi"
+    title="Nadi Dosha in Kundli Matching: What It Means and What to Do"
+    intro={answer}
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ WHAT NADI IS ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="The 8 points" title="What Nadi is in the 36 points, and why it weighs 8" />
+      <div class="prose-site reveal !mt-0">
+        <p class="!mt-0">Kundli matching scores eight factors out of 36 (the full list is in the <a href="/guides/kundli-matching-explained/">kundli matching guide</a>), and Nadi comes last and weighs the most at 8 points, with Bhakoot next at 7.</p>
+        <p>The rule is short. Different Nadis for the two partners earn all 8 points. The same Nadi earns none, and that zero is what people call Nadi dosha.</p>
+        <p>Say a match comes back 26 out of 36 and the app flags Nadi: with Nadi at zero, the other seven factors scored 26 out of a possible 28, which is a strong match with one open question. Now take another couple at 26 with Nadi fully scored, whose other seven factors made only 18 of 28. Same total. Very different charts.</p>
+        <p>The old texts tie Nadi to the body’s constitution (Vata, Pitta, Kapha) and, through it, to the health of the couple and their children, on the reasoning that two people of one constitution may share the same weak spots. That is the tradition speaking. Health worries belong with a doctor.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THREE NADIS ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Look yours up" title="Same Nadi: the three groups and the birth stars in each" intro="Each of the 27 birth stars (nakshatras) sits in one Nadi. Use the Moon’s nakshatra from the birth chart, and ignore the sun sign in a newspaper." />
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        {nadis.map((n) => (
+          <div class="card card-static reveal flex flex-col gap-3">
+            <h3>{n.name}</h3>
+            <p class="eyebrow">{n.trait}</p>
+            <p class="text-[0.95rem]">{n.stars}</p>
+          </div>
+        ))}
+      </div>
+      <div class="prose-site reveal mt-10">
+        <p>Say the Moon is in Ashwini for the boy and Punarvasu for the girl. Both stars are Adi, so Nadi scores zero.</p>
+        <p>Birth time matters here more than people expect. The Moon spends about a day in each nakshatra, so a child born near the changeover can land in the next star on an approximate time, and sometimes in a different Nadi. Fix the time before you trust the flag.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CANCELLATION ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Cancellation" title="When the texts cancel the same-Nadi rule" />
+      <div class="prose-site reveal !mt-0">
+        <p class="!mt-0">Here is the catch: the old texts, and the people who follow them today, do not agree on every condition, so what follows are the ones quoted most, and each needs the real charts to confirm.</p>
+        <h3 class="text-[1.5rem]">Same nakshatra, different Moon sign</h3>
+        <p>Some nakshatras stretch across two signs. Say both partners have the Moon in Punarvasu, but one has it in Gemini and the other in Cancer. Both partners share the Nadi but not the Moon sign, and several sources treat that as cancelling the dosha.</p>
+        <h3 class="text-[1.5rem]">Same Moon sign, different nakshatra</h3>
+        <p>Say both have the Moon in Gemini, one in Ardra and the other in Punarvasu. Same sign, different stars. Several sources count this as a cancellation too.</p>
+        <h3 class="text-[1.5rem]">Friendly Moon sign lords</h3>
+        <p>A third condition looks at the lords of the two Moon signs. If they are the same planet, or friends, some texts reduce the dosha. Some also name particular pairs of birth stars, but those lists differ from one text to the next, so they have to be checked against the actual pair and not quoted from memory.</p>
+        <p>A cancellation does not clear the rest of the chart off the table. Mars, the seventh house and the running dasha periods still need reading, and that is what <a href="/services/kundli-matching/">kundli matching</a> does after the score.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BHAKOOT ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="The other heavy factor" title="Bhakoot dosha: 7 points, and how Moon signs sit together" />
+      <div class="prose-site reveal !mt-0">
+        <p class="!mt-0">Bhakoot looks at how the two Moon signs sit against each other, counting from one sign to the other. The pairs flagged are 2 and 12, 6 and 8, and in some texts 5 and 9, though sources disagree on which pairs count and how firmly, so ask which rule is being applied.</p>
+        <p>The texts link Bhakoot to emotional closeness and the welfare of the household, and they list their own cancellations, such as the two Moon sign lords being the same planet or friends. Treat a Bhakoot flag like a Nadi flag. Find out whether it applies. Then read the rest of the chart.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BEFORE YOU PANIC ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Before anything else" title="Nadi flagged on your match? Its effects, and five things to do first" />
+      <ol class="reveal grid gap-5">
+        {steps.map((s, i) => (
+          <li class="flex gap-5 border-b border-[var(--line)] pb-5">
+            <span class="numeral text-[1.75rem] !text-[var(--color-brass-700)]">{i + 1}</span>
+            <span>{s}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ PUJA ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Remedy" title="Nadi dosha nivaran puja: do you need one?" />
+      <div class="prose-site reveal !mt-0">
+        <p class="!mt-0">Search for a remedy and you will see the phrase nivaran puja everywhere. It means a shanti ritual, with prayers to the Navagrahas, done to calm the effect of the dosha.</p>
+        <p>Whether you need one depends on the cancellation check. If the dosha is cancelled, there is nothing to remedy. If it applies, Pandit Ji tells you what he suggests, why, and that you may say no. No puja comes with a promise attached, and nobody should take money for one before you understand it. A marriage rests on the whole match, and a ritual is a small part of it.</p>
+        <!-- INTERVIEW Q16: one real example, anonymised and in Pandit Ji's own words, of a same-Nadi match where he told the family no remedy was needed -->
+        <p>For other doshas, such as Mangal or Kalasarpa, see <a href="/services/dosha-remedies/">dosha remedies</a>. If it is a first birth chart reading you are after, see <a href="/services/janam-kundli-reading/">janam kundli reading</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Same-Nadi and Bhakoot questions people ask" />
+      <div class="reveal">
+        <FaqList faqs={faqs} openFirst />
+        <p class="mt-8 text-[0.85rem] text-[var(--color-muted-light)]">{disclaimer}</p>
+      </div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand title="Send both birth details to Pandit Ji" text="Share the date, time and place of birth for both people on WhatsApp or by phone, and ask the fee first. Pandit Ji speaks Telugu, Hindi, Kannada and English, so use the one you think in." />
+</BaseLayout>

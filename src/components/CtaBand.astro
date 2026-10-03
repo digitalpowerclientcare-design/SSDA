@@ -1,0 +1,17 @@
+---
+import { contact, telLink, whatsappLink } from '@/data/business';
+interface Props { title?: string; text?: string }
+const { title = 'Speak to Pandit Ji', text = 'Call or message on WhatsApp. Share your birth details and what is on your mind, and a consultation time is arranged, in person at Sanjeeva Reddy Nagar or online.' } = Astro.props;
+---
+<section class="band-dark relative overflow-hidden border-t border-brass-500/30">
+  <div class="hero-glow opacity-60" aria-hidden="true"></div>
+  <div class="container-page relative py-20 text-center md:py-28">
+    <h2 class="reveal mx-auto max-w-2xl">{title}</h2>
+    <p class="reveal lead mx-auto mt-5 max-w-xl">{text}</p>
+    <div class="reveal mt-9 flex flex-wrap justify-center gap-3">
+      <a class="btn btn-call" href={telLink()} data-cta="call">Call {contact.phoneDisplay}</a>
+      <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp">Chat on WhatsApp</a>
+    </div>
+    <p class="reveal mt-8 text-[0.9rem] text-on-dark-muted">{contact.locality}, {contact.city} · {contact.hoursDisplay}</p>
+  </div>
+</section>

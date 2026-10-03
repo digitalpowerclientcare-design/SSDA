@@ -1,0 +1,168 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { vastuPages } from '@/data/business';
+import {
+  buildGraph, organizationSchema, personSchema,
+  breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Guides', url: '/guides/' }];
+
+const articles = [
+  { href: '/guides/kundli-matching-explained/', tag: 'Marriage', title: 'Kundli Matching (Guna Milan) Explained', blurb: 'The eight Ashtakoot factors and their 36 points, how to read a score, what Nadi and Mangal dosha mean for a match, and what to bring along.' },
+  { href: '/guides/vastu-for-new-home-checklist/', tag: 'Vastu', title: 'Vastu Checklist for a New Home', blurb: 'What to check before you buy, then each room in turn, then the water, and finally the days before Griha Pravesh.' },
+  { href: '/guides/puja-room-vastu/', tag: 'Vastu', title: 'Puja Room Vastu', blurb: 'The best corner, which way to face, where idols go, and what to do when your flat has no spare corner.' },
+  { href: '/guides/staircase-vastu/', tag: 'Vastu', title: 'Staircase Vastu', blurb: 'Which direction suits a staircase, why the turn matters, and what to do with the space under the stairs.' },
+  { href: '/guides/how-to-choose-an-astrologer/', tag: 'Choosing', title: 'How to Choose an Astrologer', blurb: 'Red flags and green flags, how to read any top 10 list, and the questions to ask on a first call.' },
+];
+
+const facing = [
+  { href: '/services/vastu/west-facing-house/', title: 'West facing house', blurb: 'The door, the rooms and the afternoon heat.' },
+  { href: '/services/vastu/south-facing-house/', title: 'South facing house', blurb: 'Where the bad name comes from, and what to check before you say no.' },
+  { href: '/services/vastu/east-facing-house/', title: 'East facing house', blurb: 'A good facing still needs a good plan.' },
+  { href: '/services/vastu/north-facing-house/', title: 'North facing house', blurb: 'Door, open space and the water corner.' },
+];
+
+const questions = [
+  { href: '/services/janam-kundli-reading/', title: 'Janam kundli reading', blurb: 'One birth chart read against your own questions, and what to do when the birth time is missing.' },
+  { href: '/services/nadi-dosha/', title: 'Nadi dosha', blurb: 'The same-Nadi rule, Bhakoot dosha, when the texts cancel them, and what to do before you worry.' },
+  { href: '/griha-pravesh-muhurtham-hyderabad/', title: 'Griha Pravesh muhurtham', blurb: 'Housewarming dates from the Panchang, and the Vastu checks to finish before you move in.' },
+];
+
+const refs = [
+  { href: '/faq/', title: 'Frequently asked questions', blurb: 'Short answers on booking, matching, Muhurtham, dosha, numerology and Vastu.' },
+  { href: '/glossary/', title: 'Astrology glossary', blurb: 'What the terms you will hear in a consultation mean.' },
+  { href: '/how-a-consultation-works/', title: 'How a consultation works', blurb: 'The steps from the first call to the end of the session, and how to prepare.' },
+  { href: '/reviews/', title: 'Reviews', blurb: 'Where our public Google reviews are and how this site shows them.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), personSchema(),
+  {
+    '@type': 'CollectionPage',
+    '@id': abs('/guides/#collection'),
+    url: abs('/guides/'),
+    name: 'Astrology and Vastu guides for Hyderabad families',
+    description: 'Guides on Kundli matching, Vastu for a new home, puja room and staircase Vastu, facing-direction Vastu and choosing an astrologer, with FAQs and a glossary.',
+    isPartOf: { '@id': abs('/#website') },
+    publisher: { '@id': abs('/#organization') },
+    inLanguage: 'en-IN',
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: [
+        ...articles.map((a) => ({ title: a.title, href: a.href })),
+        ...facing.map((f) => ({ title: f.title, href: f.href })),
+        ...vastuPages.map((v) => ({ title: v.title, href: v.path })),
+        ...questions.map((q) => ({ title: q.title, href: q.href })),
+        ...refs.map((r) => ({ title: r.title, href: r.href })),
+      ].map((x, i) => ({ '@type': 'ListItem', position: i + 1, name: x.title, url: abs(x.href) })),
+    },
+  },
+  breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout
+  title="Astrology and Vastu Guides for Hyderabad Families"
+  description="Guides from a Hyderabad astrologer: Kundli matching explained, Vastu for a new home, facing-direction Vastu, and how to choose an astrologer wisely."
+  canonicalPath="/guides/"
+  jsonLd={jsonLd}
+>
+  <PageHero
+    eyebrow="Guides and resources"
+    title="Astrology and Vastu Guides for Hyderabad: Read Before You Book"
+    intro="Read these before you book anything. How kundli matching works, what to check in a new home, where the puja room and the staircase go, and how to size up any astrologer, Pandit Ji included."
+    crumbs={crumbs}
+  />
+
+  <!-- ============ ARTICLES ============ -->
+  <section class="band-light section">
+    <div class="container-page">
+      <SectionHead eyebrow="Start here" title="In-depth guides on kundli matching, Vastu and choosing an astrologer" intro="Each one stands on its own, with tables, checklists and the questions people ask." />
+      <p class="reveal mt-8 max-w-3xl">Not sure where to begin? If a marriage proposal is on the table, start with kundli matching. If you are buying a flat or about to move house, start with the new home checklist, and if you are about to speak to an astrologer for the first time, read the last guide before you pick up the phone.</p>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {articles.map((a) => (
+          <a href={a.href} class="card reveal flex flex-col gap-4 no-underline">
+            <span class="eyebrow">{a.tag}</span>
+            <h3>{a.title}</h3>
+            <p class="text-[0.95rem]">{a.blurb}</p>
+            <span class="link-arrow mt-auto">Read the guide <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FACING ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Vastu by facing" title="Vastu for west, south, east and north facing houses" intro="Know which way the main door faces? Start with that page." />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {facing.map((f) => (
+          <a href={f.href} class="card reveal flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.375rem]">{f.title}</h3>
+            <p class="text-[0.92rem]">{f.blurb}</p>
+            <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROPERTY TYPE ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead eyebrow="Vastu by property" title="Vastu by property type: flat, home, office and plot" intro="Begin with the overview, then pick the page that matches what you own or plan to buy." />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <a href="/services/vastu/" class="card reveal flex flex-col gap-3 no-underline">
+          <h3 class="text-[1.25rem]">Vastu Consultation</h3>
+          <p class="text-[0.92rem]">The overview: what a Vastu consultation covers and how it works.</p>
+          <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+        </a>
+        {vastuPages.map((v) => (
+          <a href={v.path} class="card reveal flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.25rem]">{v.title}</h3>
+            <p class="text-[0.92rem]">{v.blurb}</p>
+            <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SPECIFIC QUESTIONS ============ -->
+  <section class="band-light section">
+    <div class="container-page">
+      <SectionHead eyebrow="One question at a time" title="A birth chart, a Nadi dosha flag or a housewarming date" intro="Three questions that come up often enough to need a page each." />
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        {questions.map((q) => (
+          <a href={q.href} class="card reveal flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.375rem]">{q.title}</h3>
+            <p class="text-[0.95rem]">{q.blurb}</p>
+            <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUICK REFERENCES ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Quick references" title="Answers, terms and how consultations work" />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {refs.map((r) => (
+          <a href={r.href} class="card reveal flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.375rem]">{r.title}</h3>
+            <p class="text-[0.92rem]">{r.blurb}</p>
+            <span class="link-arrow mt-auto">Open <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Prefer to talk it through?" text="If a guide raises a question about your own chart or property, call or WhatsApp with your birth details or floor plan and ask the fee first. You can come to Sanjeeva Reddy Nagar, or do it online." />
+</BaseLayout>

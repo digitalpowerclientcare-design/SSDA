@@ -1,0 +1,166 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, contact } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/vastu/south-facing-house/';
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Vastu consultation', url: '/services/vastu/' },
+  { name: 'South facing house Vastu', url: path },
+];
+
+// TODO(client): confirm whether site visits for independent houses are offered across all of Hyderabad.
+// INTERVIEW Q13: how Pandit Ji explains a south facing house to a family that has been frightened by it, in his own words.
+// INTERVIEW Q11: the first things he suggests moving in a south facing house, step by step, without breaking walls.
+
+const faqs = [
+  { question: 'Is a south facing house bad as per Vastu?', answer: 'No. No direction is bad by itself. The south has a heavy reputation because of its old link with Yama, but the texts mostly care about where the door sits along the wall and how the rooms are arranged inside. Both show up on the floor plan, so look at it before you decide.' },
+  { question: 'Which side should the main door be in a south facing house?', answer: 'Many practitioners prefer the south-east half of the south wall and avoid the south-west end, although schools differ on the exact stretch. Take a compass reading at the door and mark where it falls on the plan before you rely on anyone\'s opinion, ours included.' },
+  { question: 'Can I buy a south facing house if my relatives are against it?', answer: 'You can, and many people do after getting the plan checked. If the door position and the interior work out, the facing alone is not a reason to drop the house. If the plan has several problems at once, that is worth knowing before you pay, and it is a better reason to hesitate than the compass.' },
+  { question: 'Where should the kitchen and bedroom go in a south facing house?', answer: 'The kitchen prefers the south-east, with the north-west as second choice. The master bedroom prefers the south-west, with the head towards the south or east. Heavy furniture sits well on the south and west sides, and the north-east stays light and open.' },
+  { question: 'Is a south facing flat the same as a south facing house?', answer: 'The worry is the same, but a flat gives you less to change. You cannot move the door along the wall, so the checks move inside: the stove, the bed, the shrine, the balcony. Our apartment page covers a south facing flat in full.' },
+  { question: 'Can a south facing house be corrected without demolition?', answer: 'Mostly, yes. Most changes are moves: the bed, the stove, the almirah, the shrine. If a structural change would help, ask for a cheaper alternative alongside it, and ask the fee before you book anything.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `South facing house Vastu in ${contact.city}`,
+    serviceType: 'Vastu consultation for a south facing house',
+    description: 'Vastu review for south facing independent houses in Hyderabad: main door position on the south wall, kitchen, bedrooms, north-east corner and what to check before buying.',
+    url: abs(path),
+    isPartOf: { '@id': abs('/services/vastu/#service') },
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)), breadcrumbSchema(crumbs),
+);
+
+const checks = [
+  ['Mark the door', 'Note where on the south wall the door falls. The south-east half is the preferred stretch and the south-west end is the one to question.'],
+  ['Look at the north-east corner', 'It should be open, light and free of a toilet or a kitchen. If it is cut off or blocked on the plan, say so first.'],
+  ['Find the kitchen', 'South-east or north-west. If it is somewhere else, note where the stove stands and which way the cook faces.'],
+  ['Find the master bedroom', 'South-west is the heavy corner, and in a south facing house it sits towards the front. Check it is not a passage room.'],
+  ['See where the open space is', 'The texts like open space on the north and east sides. In a south facing house the north side is the back, so a garden or set-back there suits that preference.'],
+];
+---
+<BaseLayout authored
+  title={`South Facing House Vastu in Hyderabad | ${brand.shortName}`}
+  description="South facing house Vastu in Hyderabad: why the fear exists, where the main door goes on the south wall, and what to check on the plan before you buy."
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Vastu for an independent house facing south"
+    title="South Facing House Vastu: What to Check Before You Say No"
+    intro="&quot;Don't buy a south facing house.&quot; If a relative has told you that, it helps to know where the advice comes from before it decides a purchase this big."
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ THE WORRY ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="reveal">
+        <h2>South facing house Vastu: where the fear comes from</h2>
+        <span class="rule"></span>
+      </div>
+      <div class="reveal prose-site !mt-0">
+        <p class="lead !mt-0">The south is linked in the old texts with Yama, and that association has followed south facing houses around ever since. It tells you nothing about your house. Nothing at all.</p>
+        <p>What Vastu Shastra traditionally holds about a south facing house comes down to two questions: where along the south wall the door sits, and how the rooms are arranged inside. Both are visible on a floor plan, so you can answer them before you pay a rupee. Do that first. Practitioners differ on the details, so don't be surprised if two of them say slightly different things.</p>
+        <p>A well planned south facing house is a better home than a badly planned one facing east. A floor plan shows you which of the two you are looking at, if you read it with care.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DOOR ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead title="Where the main door goes in a south facing house" intro="Stand outside and look at the south wall of the house. The stretch you pick the door from matters more than the facing itself." />
+      <div class="mt-10 grid gap-8 lg:grid-cols-2 lg:gap-16">
+        <div class="reveal prose-site">
+          <p class="!mt-0">Many practitioners prefer the door in the south-east half of the wall. The south-west end they like least. The exact middle? Argued over.</p>
+          <p>Say the plan you are looking at has the door right at the south-west end. That is worth a conversation. But a door is one feature among many, and a clear approach, good light and a door that opens fully count for something too.</p>
+          <p>Hold the phone compass away from metal and gates, and take the reading at the door itself. A guess made from the road can easily land on the wrong direction.</p>
+        </div>
+        <div class="reveal">
+          <h3 class="text-[1.4rem]">Five checks on the plan</h3>
+          <dl class="fact-table mt-5">
+            {checks.map(([k, v]) => (
+              <div><dt>{k}</dt><dd>{v}</dd></div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOUSE VS FLAT ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:gap-20">
+      <div class="reveal">
+        <h2>South facing independent house or south facing flat?</h2>
+        <span class="rule"></span>
+        <p class="mt-6">This page is about independent houses and villas, where the door, the compound and the set-backs are yours to look at. A flat is a different job. The building decides the facing, you cannot move the door, and the floor and the balcony enter the picture. The <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/apartment/">Vastu for flats and apartments</a> page has a full section on the south facing flat.</p>
+      </div>
+      <div class="reveal">
+        <h2>Light and sun in a south facing house</h2>
+        <span class="rule"></span>
+        <p class="mt-6">The front wall of a south facing house sees the sun through much of the day, so check whether a neighbour's wall shades it and whether the rooms on the north side get enough daylight. Those are comfort questions. Ask them at the visit whatever Vastu says.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BUYING ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+      <div class="reveal">
+        <h2>Buying a south facing house: what to ask before you pay</h2>
+        <span class="rule"></span>
+        <h3 class="mt-6 text-[1.25rem]">Ask for the plan and send it first</h3>
+        <p class="mt-3">A rough sketch with north marked is enough to begin. That is enough for a first look at the door position, the corners and the room order, before you commit to anything.</p>
+        <h3 class="mt-6 text-[1.25rem]">Keep the family in the room</h3>
+        <p class="mt-3">In many families the elders weigh in on a house purchase, and the south facing worry may well be theirs. Bring them to the call. Hearing the reason from the person explaining it is easier than repeating it second hand.</p>
+        <h3 class="mt-6 text-[1.25rem]">Griha Pravesh in a south facing house</h3>
+        <p class="mt-3">The date comes from the Panchang through Muhurtham, and it has nothing to do with the facing. The layout is easiest to adjust while the house is empty, so do the Vastu check before the furniture comes in. See the page on <a class="underline decoration-[var(--accent)] underline-offset-4" href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham in Hyderabad</a>.</p>
+      </div>
+      <aside class="reveal self-start">
+        <p class="eyebrow">Compare facings</p>
+        <ul class="mt-4 border-t border-[var(--line)]">
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-5 no-underline" href="/services/vastu/west-facing-house/">West facing house Vastu <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-5 no-underline" href="/services/vastu/east-facing-house/">East facing house Vastu <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-5 no-underline" href="/services/vastu/north-facing-house/">North facing house Vastu <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-5 no-underline" href="/services/vastu/home/">Vastu for home, room by room <span aria-hidden="true">→</span></a></li>
+          <li class="border-b border-[var(--line)]"><a class="link-arrow flex justify-between py-5 no-underline" href="/services/vastu/">Vastu consultation overview <span aria-hidden="true">→</span></a></li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title="South facing home: questions people ask" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand
+    title="Get your south facing house plan checked"
+    text="Send the floor plan and the compass direction of the door by call or WhatsApp. Pandit Ji starts with placement and direction, and you will hear the fee before you book."
+  />
+</BaseLayout>

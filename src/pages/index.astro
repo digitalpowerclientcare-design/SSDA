@@ -1,409 +1,298 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { brand, pandit, contact, services, telLink, whatsappLink } from '@/data/business';
+import TrustBand from '@/components/TrustBand.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+// Hero image: Unsplash (photo Haa-xBjLzWA, Sonika Agarwal), Unsplash License. Stand-in until the client supplies his own temple murti photo.
+import durga from '@/assets/durga-devi.jpg';
+import { brand, pandit, contact, services, vastuPages, reviewsUrl, telLink, whatsappLink } from '@/data/business';
 import {
   buildGraph, organizationSchema, websiteSchema, localBusinessSchema,
-  personSchema, servicesSchema, faqSchema, breadcrumbSchema,
+  personSchema, servicesSchema, faqSchema,
 } from '@/lib/schema';
 
+const reviewCount = brand.reviews.count.toLocaleString('en-IN');
+const rating = brand.reviews.rating.toFixed(1);
+const otherAreas = contact.areasServed.filter((a) => !['Sanjeeva Reddy Nagar', 'SR Nagar'].includes(a));
+
 const faqs = [
-  { question: 'Who is the best astrologer in Hyderabad?', answer: `Pandit Sri Santosh Sharma Ji of Sri Sai Durga Astrology Centre is among the most trusted astrologers in Hyderabad, with 35+ years of Vedic astrology experience and a 5.0 rating from over 1,640 Google reviews. He consults from Sanjeeva Reddy Nagar in Telugu, Hindi, Kannada and English.` },
-  { question: 'Do you give consultations in Telugu?', answer: 'Yes. Consultations are held in Telugu, Hindi, Kannada and English - in person at our Sanjeeva Reddy Nagar centre or online by phone and video. Say which language you prefer when you call.' },
-  { question: 'How do I book a consultation?', answer: `The quickest way is to call or WhatsApp ${contact.phoneDisplay}. Share your birth details (date, time and place, if known) and Pandit Ji's team will help you book a time.` },
-  { question: 'Do you do kundli matching for marriage?', answer: 'Yes. We do traditional Kundli matching (Guna Milan) using the 36-point Ashtakoot system to check compatibility, Mangal/Kuja dosha and likely marriage timing before an alliance is confirmed.' },
-  { question: 'Do you make guaranteed promises or do black magic?', answer: 'No. We give honest Vedic guidance and practical remedies only where the chart genuinely indicates them - never fear, false urgency, black magic or guaranteed-outcome claims.' },
-  { question: 'Where is Sri Sai Durga Astrology Centre located?', answer: `${contact.addressLine}, ${contact.locality}, ${contact.city}, ${contact.state} ${contact.postalCode}. ${contact.landmark}.` },
-  { question: 'Do I need to visit in person for a Vastu consultation?', answer: 'No. A floor-plan review works well for apartments and for properties you are considering buying - send the plan with the compass direction marked. A site visit gives a more complete assessment, but it is not the only option.' },
-  { question: 'Does numerology work alongside my birth chart, or instead of it?', answer: 'Alongside it. Numerology is offered as a second angle on a name or number question, not as a stand-alone system in place of a chart reading.' },
-  { question: 'What if I do not know my exact birth time?', answer: 'A reading is still possible, but some factors - particularly timing-related ones - are more approximate without an exact time. Say so when you call and we will tell you which parts of the reading are reliable.' },
+  { question: 'Who is the best astrologer in Hyderabad?', answer: `There is no official ranking, so go by what you can check. Pandit Sri Santosh Sharma Ji has practised in Hyderabad for more than 35 years, and we hold a ${brand.reviews.rating.toFixed(1)} rating across ${reviewCount} Google reviews, which we cannot edit. Read them, then call and put your question to him.` },
+  { question: 'Is Pandit Ji a famous astrologer in Hyderabad?', answer: `Fame is not something we can measure, so we do not claim it. What you can check is the record: 35+ years of practice and a ${brand.reviews.rating.toFixed(1)} rating on ${reviewCount} Google reviews. Read through them and decide for yourself.` },
+  { question: 'Is there a good astrologer near me in S.R. Nagar?', answer: `If you are in or around Sanjeeva Reddy Nagar, we are at Flat No. 502, 5th floor, Ramakrishna Nivas, ${contact.landmark.toLowerCase()}. Google lists us as open 24 hours, but call or WhatsApp ${contact.phoneDisplay} first so that a time is fixed and Pandit Ji is there to meet you.` },
+  { question: 'Can I consult an astrologer online from Hyderabad?', answer: 'Yes. You can consult by phone, video or WhatsApp from anywhere in Hyderabad, or from outside it. Pandit Ji prepares the chart from your birth details before the appointment, so an online session covers the same ground as a visit. For Vastu, send the floor plan and the direction the main door faces.' },
+  { question: 'Can I consult a Telugu astrologer in Hyderabad in my own language?', answer: `Yes. Pandit Ji consults in ${pandit.languages.join(', ')}. Tell us which you prefer when you call or message, and bring along any family member who will be part of the decision.` },
+  { question: 'How do I book an astrologer consultation in Hyderabad, and what does it cost?', answer: `Call or WhatsApp ${contact.phoneDisplay} and send your date, time and place of birth, if you know them. Ask the fee in the same conversation. We share it before you book, and a time is fixed after that, at our centre or online.` },
+  { question: 'Do you do Kundli matching for marriage in Hyderabad?', answer: 'Yes. Pandit Ji compares both charts using the 36-point Ashtakoot score, checks Mangal (Kuja) dosha, and looks at the seventh house and timing, because the number alone does not settle a marriage. Send the birth details of both people.' },
+  { question: 'Do you offer Vastu consultation in Hyderabad for flats, houses and plots?', answer: 'Yes: homes, flats, offices, shops and plots. For a flat, or a property you are thinking of buying, a floor-plan review works. A site visit gives a fuller picture. Ask when you call which one suits your property.' },
+  { question: 'What if I do not know my exact birth time?', answer: 'A reading is still possible. Some timing points get less exact, and a birth near a sign boundary can change the rising sign, which shifts roughly every two hours. Say so when you call and Pandit Ji will tell you which parts of the reading you can lean on.' },
 ];
 
-const crumbs = [{ name: 'Home', url: '/' }];
 const jsonLd = buildGraph(
   organizationSchema(), websiteSchema(), localBusinessSchema(), personSchema(),
-  ...servicesSchema(), faqSchema(faqs, brand.domain + '/'), breadcrumbSchema(crumbs),
+  ...servicesSchema(), faqSchema(faqs, brand.domain + '/'),
 );
 
-// rasi chakra (zodiac) wheel geometry - gold line-art, rotates via CSS
-const wheel = Array.from({ length: 12 }, (_, i) => {
-  const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
-  return {
-    gx: 100 + Math.cos(a) * 82, gy: 100 + Math.sin(a) * 82,
-    x1: 100 + Math.cos(a) * 62, y1: 100 + Math.sin(a) * 62,
-    x2: 100 + Math.cos(a) * 96, y2: 100 + Math.sin(a) * 96,
-  };
-});
-
-const featuredSlug = 'kundli-matching';
-
-const reviews = [
-  { q: 'Pandit Ji explained my daughter’s marriage delay clearly and the remedies were simple and honest.', n: 'Lakshmi P.', a: 'Ameerpet' },
-  { q: 'Very accurate career guidance. He told me the right time for my job change and it worked out well.', n: 'Ravi Teja', a: 'Kukatpally' },
-  { q: 'Kundli matching was done in detail in Telugu. No false promises, only genuine guidance.', n: 'Sridevi M.', a: 'S.R. Nagar' },
-  { q: 'Muhurtham for our house-warming was perfect. Very patient and clear on the phone.', n: 'Anil Kumar', a: 'Miyapur' },
-  { q: 'Consulted for business timing. Honest advice, no fear or upselling. Highly recommend.', n: 'Praveen R.', a: 'Madhapur' },
-  { q: 'Kaal Sarp dosha remedies were explained calmly in Telugu. Felt genuine and caring.', n: 'Divya S.', a: 'Kukatpally' },
+const general = services.filter((s) => s.slug !== 'vastu');
+const router = [
+  { q: 'A marriage is getting delayed, or a proposal has come and the family wants a second look', a: 'Kundli matching', href: '/services/kundli-matching/' },
+  { q: 'You are buying, building or moving into a home, flat, shop or plot', a: 'Vastu consultant', href: '/services/vastu/' },
+  { q: 'A job offer, a stalled career, or a business decision that depends on timing', a: 'Career and business astrology', href: '/services/career-astrology/' },
+  { q: 'A name spelling to settle, or a name for the new business', a: 'Numerology', href: '/services/numerology/' },
+  { q: 'A wedding or Griha Pravesh date has to be fixed', a: 'Muhurtham', href: '/services/muhurtham/' },
+  { q: 'Someone has told you about Kaal Sarp, Mangal or Sade Sati', a: 'Dosha remedies', href: '/services/dosha-remedies/' },
+];
+const worries = [
+  ['\u201CYour marriage will happen in March.\u201D', 'Be careful with a sentence like that. A chart can show which years look supportive and which look slow. It cannot name a day, and nobody can promise an outcome. Ask for the period and the reason behind it, and treat a firm date as a reason to ask more questions.'],
+  ['\u201CThe app says Manglik. Do we drop the match?\u201D', 'Not on that alone. The texts give several conditions under which Mangal dosha is cancelled or reduced, for example when both partners carry it, and a one-line flag does not tell you whether any of them apply. Send both charts and Pandit Ji will tell you what is there.'],
+  ['\u201CYou are running a bad dasha.\u201D', 'A difficult period is a stretch to plan around, so ask which years look slower and what that means for the decision in front of you. A reading that stops at the word bad has not told you much.'],
+  ['\u201CYou need this puja, this stone, this yantra.\u201D', 'A remedy should come with its reason. Ask why someone suggests it, what happens if you skip it, and whether a cheaper way exists. We do not sell gemstones, yantras or any other product, so nobody here has a reason to find a problem that is not in your chart.'],
+];
+const ready = [
+  'Date, time and place of birth. For Kundli matching, the same three for both people.',
+  'Your questions, written down. Three or four is plenty.',
+  'Any earlier chart or reading you already have.',
+  'For Vastu, the floor plan and the compass direction the main door faces. Hold the phone compass away from metal.',
+  'Video call? Pick a quiet corner and test the connection first.',
 ];
 ---
 <BaseLayout
-  title={`Best Astrologer in Hyderabad | ${brand.name}`}
-  description={`Consult Pandit Sri Santosh Sharma Ji - trusted Telugu astrologer in Hyderabad (S.R. Nagar). 35+ years, 5.0 star with 1,640 Google reviews. Kundli matching, marriage, career & Vastu guidance. Call or WhatsApp.`}
+  title="Best Astrologer in Hyderabad | Sri Sai Durga Astrology"
+  description={`Best astrologer in Hyderabad (S.R. Nagar): Pandit Santosh Sharma Ji, 35+ years, ${rating} on ${reviewCount} Google reviews. Vedic astrology and Vastu. Call or WhatsApp.`}
   canonicalPath="/"
   jsonLd={jsonLd}
 >
-  <!-- ==================== HERO ==================== -->
-  <section class="relative overflow-hidden">
-    <div class="aura" style="width:520px;height:520px;top:-160px;right:-120px;"></div>
-    <div class="aura" style="width:360px;height:360px;bottom:-140px;left:-120px;opacity:.5;"></div>
-
-    <div class="container-page relative z-[1] grid items-center gap-10 py-14 md:py-20 lg:grid-cols-[1.05fr_0.95fr]">
-      <!-- copy -->
-      <div class="text-center lg:text-left">
-        <span class="reveal chip !border-gold/40 !bg-gold-soft/60 text-[0.82rem] text-gold-deep">
-          <span aria-hidden="true">★</span> 5.0 &nbsp;·&nbsp; 1,640+ Google reviews
-        </span>
-        <h1 class="reveal-1 mt-5 font-display" style="font-size:clamp(2.5rem,6vw,4.6rem); line-height:1.02;">
-          The Best <span class="shimmer">Astrologer</span><br class="hidden sm:block" /> in Hyderabad
-        </h1>
-        <p class="reveal-1 mt-4 font-telugu text-gold-deep" style="font-size:clamp(1.05rem,2.2vw,1.4rem);">
-          అమ్మవారి ఆశీర్వాదంతో - మీకు సరైన మార్గదర్శనం
+  <!-- ============ HERO ============ -->
+  <section class="band-dark relative overflow-hidden" style="background: radial-gradient(80% 90% at 80% 20%, #1C2658 0%, #0C1230 60%);">
+    <div class="container-page relative grid items-center gap-10 py-10 md:py-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:py-20">
+      <div class="order-2 lg:order-1">
+        <p class="eyebrow hero-in hero-in-1">Astrologer and Vastu consultant · Hyderabad</p>
+        <h1 class="hero-in hero-in-2 mt-5 text-[clamp(2.1rem,1.4rem+2.8vw,3.5rem)]">Best Astrologer in Hyderabad: Vedic Astrology and Vastu Guidance</h1>
+        <p class="lead hero-in hero-in-3 mt-6 max-w-xl">
+          If a marriage is taking longer than it should, or you are about to buy a flat and cannot tell whether the Vastu worries are real, this is a good place to ask.
+          <span class="text-on-dark">{pandit.name}</span> has practised Vedic astrology and Vastu in Hyderabad for more than 35 years. Come to Sanjeeva Reddy Nagar, or do the whole thing by phone or video.
         </p>
-        <p class="reveal-2 mx-auto mt-5 max-w-xl text-[1.08rem] text-ink-2 lg:mx-0">
-          Honest Vedic guidance for marriage, career, business and family from
-          <span class="font-semibold text-ink">Pandit Sri Santosh Sharma Ji</span> - 35 years of experience, in your own language.
+        <div class="hero-in hero-in-4 mt-9 flex flex-wrap gap-3">
+          <a class="btn btn-call" href={telLink()} data-cta="call">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+            Call Pandit Ji
+          </a>
+          <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.4L3 21l4.8-1.2A9 9 0 1 0 12 3Z"/></svg>
+            Chat on WhatsApp
+          </a>
+        </div>
+        <p class="hero-in hero-in-5 mt-7 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.9rem] text-on-dark-muted">
+          <span><span class="text-[#E8B923]" aria-hidden="true">★★★★★</span> <span class="sr-only">5 out of 5 stars,</span> {rating} on Google</span>
+          <span aria-hidden="true">·</span>
+          <a class="underline decoration-brass-500/50 underline-offset-4 hover:text-brass-300" href={reviewsUrl} target="_blank" rel="noopener">{reviewCount} reviews</a>
+          <span aria-hidden="true">·</span>
+          <span>Open 24 hours</span>
         </p>
-
-        <div class="reveal-2 mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.92rem] font-semibold text-ink-2 lg:justify-start">
-          <span class="inline-flex items-center gap-1.5"><span class="text-gold-deep" aria-hidden="true">✦</span> Honest remedies</span>
-          <span class="inline-flex items-center gap-1.5"><span class="text-gold-deep" aria-hidden="true">✦</span> No false promises</span>
-          <span class="inline-flex items-center gap-1.5"><span class="text-gold-deep" aria-hidden="true">✦</span> Telugu · Hindi · Kannada</span>
-        </div>
-
-        <div class="reveal-3 mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-          <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call Pandit Ji</a>
-          <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> WhatsApp</a>
-        </div>
-
-        <div class="reveal-4 mt-9 flex items-center justify-center gap-7 lg:justify-start">
-          <div><span class="block font-display text-[1.8rem] leading-none text-ink"><span data-count-to="35" data-suffix="+">0</span></span><span class="text-[.66rem] font-semibold uppercase tracking-[.16em] text-ink-mute">Years</span></div>
-          <span class="h-9 w-px bg-ink/10"></span>
-          <div><span class="block font-display text-[1.8rem] leading-none text-ink"><span data-count-to="5.0">0</span><span class="text-gold-deep">★</span></span><span class="text-[.66rem] font-semibold uppercase tracking-[.16em] text-ink-mute">Google</span></div>
-          <span class="h-9 w-px bg-ink/10"></span>
-          <div><span class="block font-display text-[1.8rem] leading-none text-ink"><span data-count-to="1640" data-suffix="+">0</span></span><span class="text-[.66rem] font-semibold uppercase tracking-[.16em] text-ink-mute">Reviews</span></div>
-        </div>
       </div>
 
-      <!-- medallion + planets -->
-      <div class="reveal relative mx-auto aspect-square w-full max-w-[440px]">
-        <!-- rotating zodiac wheel -->
-        <svg class="zodiac absolute inset-0 h-full w-full text-gold-deep" viewBox="0 0 200 200" fill="none" aria-hidden="true">
-          <circle cx="100" cy="100" r="96" stroke="currentColor" stroke-width="0.6" opacity="0.5" />
-          <circle cx="100" cy="100" r="88" stroke="currentColor" stroke-width="0.4" opacity="0.3" />
-          <circle cx="100" cy="100" r="62" stroke="currentColor" stroke-width="0.5" opacity="0.28" />
-          {wheel.map((w) => (<line x1={w.x1} y1={w.y1} x2={w.x2} y2={w.y2} stroke="currentColor" stroke-width="0.45" opacity="0.22" />))}
-          {wheel.map((w) => (<rect x={w.gx - 2.2} y={w.gy - 2.2} width="4.4" height="4.4" fill="currentColor" opacity="0.75" transform={`rotate(45 ${w.gx} ${w.gy})`} />))}
-        </svg>
-
-        <!-- deity medallion -->
-        <div class="absolute left-1/2 top-1/2 h-[62%] w-[62%] -translate-x-1/2 -translate-y-1/2">
-          <div class="aura" style="inset:-14%;"></div>
-          <div class="halo relative grid h-full w-full place-content-center overflow-hidden rounded-full text-center"
-               style="border:6px solid var(--color-navy); box-shadow:0 20px 50px -20px rgba(43,38,92,.6), inset 0 0 0 6px var(--color-gold);
-                      background: radial-gradient(70% 60% at 50% 38%, #FFE9A8, #F3B316 60%, #D99A00 100%);">
-            <span class="font-telugu text-[2.6rem] font-semibold leading-none text-navy">శ్రీ<br />దుర్గ</span>
-            <span class="mt-1 block text-[0.62rem] font-bold uppercase tracking-[0.2em] text-navy/70">Amma Varu photo here</span>
+      <figure class="order-1 mx-auto w-full max-w-[22rem] lg:order-2 lg:max-w-none lg:justify-self-end lg:w-[min(100%,28rem)]">
+        <div class="relative">
+          <div class="hero-glow" aria-hidden="true"></div>
+          <div class="hero-frame hero-img-in relative aspect-[4/5]">
+            <Image src={durga} width={860} height={1290} alt="Sri Durga Devi, a close view of the goddess in a gold crown with flower garlands" widths={[420, 640, 860]} sizes="(min-width:1024px) 448px, 352px" format="webp" quality={78} loading="eager" fetchpriority="high" class="h-full w-full object-cover object-top" />
           </div>
         </div>
-
-        <!-- floating planets -->
-        <svg class="planet planet--slow absolute left-[6%] top-[20%] h-12 w-12 drop-shadow" viewBox="0 0 40 40" aria-hidden="true">
-          <defs><radialGradient id="sat" cx="40%" cy="35%"><stop offset="0%" stop-color="#F6D48A"/><stop offset="100%" stop-color="#C6870A"/></radialGradient></defs>
-          <ellipse cx="20" cy="20" rx="18" ry="6" fill="none" stroke="#C6870A" stroke-width="1.6" opacity="0.8" transform="rotate(-18 20 20)"/>
-          <circle cx="20" cy="20" r="9" fill="url(#sat)"/>
-        </svg>
-        <svg class="planet absolute right-[4%] top-[34%] h-9 w-9 drop-shadow" viewBox="0 0 40 40" aria-hidden="true">
-          <defs><radialGradient id="mars" cx="38%" cy="34%"><stop offset="0%" stop-color="#F98B5E"/><stop offset="100%" stop-color="#C1391A"/></radialGradient></defs>
-          <circle cx="20" cy="20" r="13" fill="url(#mars)"/>
-        </svg>
-        <svg class="planet planet--fast absolute bottom-[10%] right-[16%] h-8 w-8 drop-shadow" viewBox="0 0 40 40" aria-hidden="true">
-          <defs><radialGradient id="earth" cx="38%" cy="34%"><stop offset="0%" stop-color="#7CC0F2"/><stop offset="100%" stop-color="#2B5FA8"/></radialGradient></defs>
-          <circle cx="20" cy="20" r="12" fill="url(#earth)"/>
-        </svg>
-      </div>
+        <figcaption class="mt-4 text-center text-[0.75rem] font-semibold uppercase tracking-[0.22em] text-brass-500">Sri Durga Devi</figcaption>
+      </figure>
     </div>
   </section>
 
-  <!-- ==================== DARK COSMIC CONTACT STRIP ==================== -->
-  <section class="band-night">
-    <canvas id="starfield" class="absolute inset-0 block h-full w-full" aria-hidden="true"></canvas>
-    <div class="container-page relative z-[1] py-10">
-      <p class="reveal text-center text-[0.8rem] font-semibold uppercase tracking-[0.2em] text-gold-hi">Reach Pandit Ji directly</p>
-      <div class="mt-6 grid gap-4 md:grid-cols-3">
-        <a href={telLink()} data-cta="call" class="reveal-1 group flex items-center justify-between gap-3 rounded-2xl bg-gold px-6 py-5 text-[#3a2600] transition hover:-translate-y-1">
-          <span class="flex items-center gap-3 font-bold"><span class="grid h-9 w-9 place-items-center rounded-full bg-[#3a2600] text-gold" aria-hidden="true">☎</span> Call Astrologer</span>
-          <span aria-hidden="true" class="text-xl transition group-hover:translate-x-1">→</span>
-        </a>
-        <a href={whatsappLink()} data-cta="whatsapp" class="reveal-2 group flex items-center justify-between gap-3 rounded-2xl border border-white/20 bg-white/5 px-6 py-5 text-white transition hover:-translate-y-1 hover:border-gold/60">
-          <span class="flex items-center gap-3 font-bold"><span class="grid h-9 w-9 place-items-center rounded-full bg-wa text-[#06371c]" aria-hidden="true">✆</span> Chat on WhatsApp</span>
-          <span aria-hidden="true" class="text-xl transition group-hover:translate-x-1">→</span>
-        </a>
-        <a href={contact.gbpUrl} target="_blank" rel="noopener" class="reveal-3 group flex items-center justify-between gap-3 rounded-2xl border border-white/20 bg-white/5 px-6 py-5 text-white transition hover:-translate-y-1 hover:border-gold/60">
-          <span class="flex items-center gap-3 font-bold"><span class="grid h-9 w-9 place-items-center rounded-full bg-navy-2 text-gold-hi" aria-hidden="true">⚲</span> Visit the Centre</span>
-          <span aria-hidden="true" class="text-xl transition group-hover:translate-x-1">→</span>
-        </a>
-      </div>
-    </div>
-  </section>
+  <TrustBand />
 
-  <!-- ==================== SERVICES ==================== -->
-  <section class="section">
+  <!-- ============ WHERE TO BEGIN ============ -->
+  <section class="band-light section">
     <div class="container-page">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="label">Our astrology services</p>
-        <h2 class="mt-3 text-[2.2rem]">Guidance for every important phase of life</h2>
-        <p class="mt-4 text-ink-2">Clear, honest direction with meaningful remedies - never fear or false promises.</p>
-      </div>
-      <div class="mt-11 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((s) => {
-          const featured = s.slug === featuredSlug;
-          return (
-            <a href={`/services/${s.slug}/`}
-               class={`card-glow reveal group rounded-2xl p-6 ${featured ? 'bg-gold text-[#3a2600] shadow-[0_20px_44px_-20px_rgba(243,179,22,.85)]' : 'card'}`}>
-              <div class={`mb-4 grid h-12 w-12 place-items-center rounded-xl text-lg ${featured ? 'bg-[#3a2600]/10 text-[#3a2600]' : 'bg-gold-soft text-gold-deep'}`} aria-hidden="true">✦</div>
-              <h3 class={`text-[1.25rem] ${featured ? '!text-[#3a2600]' : ''}`}>{s.title}</h3>
-              <p class={`mt-2 text-[0.95rem] leading-relaxed ${featured ? 'text-[#3a2600]/85' : 'text-ink-2'}`}>{s.summary}</p>
-              <span class={`mt-4 inline-flex items-center gap-1 text-[0.9rem] font-bold ${featured ? 'text-[#3a2600]' : 'text-flame'}`}>Learn more <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span></span>
-            </a>
-          );
-        })}
-      </div>
-
-      <div class="mx-auto mt-14 grid max-w-3xl gap-6">
-        <p class="reveal leading-relaxed text-ink-2">
-          <strong class="text-ink">Kundli matching</strong> is what most families come in for first -
-          both horoscopes read together against the 36-point Ashtakoot system, with Mangal and Kuja
-          dosha checked properly rather than flagged by an app and left unexplained.
-        </p>
-        <p class="reveal leading-relaxed text-ink-2">
-          <strong class="text-ink">Vastu consultations</strong> cover homes, apartments and offices.
-          For a flat, the direction it faces cannot be changed, but the internal layout - kitchen,
-          pooja room, where the bed and heavy storage sit - is almost entirely within your control, and
-          that is where most of the workable correction lies. Most fixes are placement and direction
-          changes, not construction.
-        </p>
-        <p class="reveal leading-relaxed text-ink-2">
-          <strong class="text-ink">Numerology</strong> is offered alongside a chart reading, not in
-          place of one - it adds a second angle on a name or a number, for someone weighing a spelling
-          change or a new business name.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== METHODOLOGY (E-E-A-T) ====================
-       TODO(client): a competitor names specific classical texts (Brihat
-       Parashara Hora Shastra, Jaimini Sutras etc.) as an authority signal.
-       We deliberately do NOT invent which texts Pandit Ji follows - if he
-       can confirm a specific tradition/text, naming it here would be a
-       real, verifiable upgrade. Ask before adding. -->
-  <section class="section">
-    <div class="container-page">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="label">Methodology</p>
-        <h2 class="mt-3 text-[2.1rem]">How a birth chart is actually read</h2>
-      </div>
-      <div class="reveal mx-auto mt-8 max-w-3xl">
-        <p class="leading-relaxed text-ink-2">
-          A Vedic birth chart maps the planetary positions at the exact moment of birth. Reading
-          begins with the Lagna, the rising sign, since it sets the orientation of every house in
-          the chart. From there, the placement and strength of the nine grahas are considered,
-          followed by the relevant dasha period - this is what gives a sense of timing, not just
-          possibility.
-        </p>
-        <p class="mt-4 leading-relaxed text-ink-2">
-          For Kundli matching, both charts are read together rather than reduced to a single Guna
-          score, and any dosha found is checked against its known cancellation conditions before
-          it is treated as significant.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== MISCONCEPTIONS (myth / fact) ==================== -->
-  <section class="section bg-cream-2">
-    <div class="container-page">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="label">Before you worry</p>
-        <h2 class="mt-3 text-[2.1rem]">Questions families usually get wrong before they call</h2>
-      </div>
-      <div class="reveal mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-gold/25 bg-card">
-        {[
-          ['A good astrologer will give a guaranteed date.', 'A responsible reading discusses likely timing and tendencies, not a fixed guarantee.'],
-          ['A dosha finding is final.', 'Classical texts list several cancellation conditions for Mangal/Kuja dosha, and many charts flagged by an app carry at least one. Bring the chart and we will tell you what is actually there.'],
-          ['Vastu correction means breaking walls.', 'Most concerns in modern apartments are addressed through placement and direction. Structural change is a last resort, not a first suggestion.'],
-          ['A difficult chart period means something bad will happen.', 'Charts contain difficult periods as well as favourable ones, and both are described honestly - not presented as an emergency.'],
-          ['Numerology replaces a birth chart reading.', 'It adds an angle on a name or number. It is not treated as a stand-alone fix on its own.'],
-        ].map(([myth, fact], i) => (
-          <div class={`grid gap-1 p-5 sm:grid-cols-[1fr_1.3fr] sm:gap-6 ${i > 0 ? 'border-t border-gold/15' : ''}`}>
-            <p class="text-[0.9rem] font-bold text-ink-mute">{myth}</p>
-            <p class="text-[0.92rem] leading-relaxed text-ink-2">{fact}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== WHY TRUST ==================== -->
-  <section class="section bg-cream-2">
-    <div class="container-page">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="label">Why families trust us</p>
-        <h2 class="mt-3 text-[2.1rem]">35 years of guidance you can rely on</h2>
-      </div>
-      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          { t: '35+ years', d: 'Decades of Vedic Jyotish practice in Hyderabad.', i: '☉' },
-          { t: '5.0 ★ · 1,640+', d: 'Rated by real families on Google.', i: '★' },
-          { t: 'Honest guidance', d: 'No fear, no false promises, no black magic.', i: '✦' },
-          { t: '4 languages · 24×7', d: 'Telugu, Hindi, Kannada, English - anytime.', i: '☏' },
-        ].map((x, i) => (
-          <div class={`card reveal-${i + 1} p-6`}>
-            <span class="icon-chip mb-4" aria-hidden="true">{x.i}</span>
-            <h3 class="text-[1.15rem]">{x.t}</h3>
-            <p class="mt-1.5 text-[0.92rem] leading-relaxed text-ink-2">{x.d}</p>
-          </div>
-        ))}
-      </div>
-      <p class="reveal mx-auto mt-9 max-w-2xl text-center leading-relaxed text-ink-2">
-        Most families who call have already spoken to one or two astrologers before us, and come wanting
-        a plain second opinion rather than a dramatic one. That is what a consultation here is built
-        around - the chart read as it is, what is well placed and what is not, said directly. The 5.0
-        rating from 1,640+ Google reviews is the same profile you can read before you call, not a number
-        we quote and cannot show.
-      </p>
-    </div>
-  </section>
-
-  <!-- ==================== WHICH GUIDANCE IS RIGHT FOR YOU ==================== -->
-  <section class="section bg-cream-2">
-    <div class="container-page">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="label">Not sure where to start</p>
-        <h2 class="mt-3 text-[2.1rem]">Which guidance is right for you?</h2>
-      </div>
-      <div class="mt-10 grid gap-4 sm:grid-cols-2">
-        {[
-          { q: 'Marriage getting delayed, or a match being considered', a: 'Kundli Matching', href: '/services/kundli-matching/' },
-          { q: 'Confused about a home, office or a property you are considering', a: 'Vastu Consultation', href: '/services/vastu/' },
-          { q: 'Considering a name spelling or a new business name', a: 'Numerology', href: '/services/numerology/' },
-          { q: 'A career decision or a business timing question', a: 'Career or Business Astrology', href: '/services/career-astrology/' },
-        ].map((x) => (
-          <a href={x.href} class="card reveal flex items-center justify-between gap-4 p-6 transition hover:-translate-y-1">
-            <span class="text-[0.98rem] text-ink-2">{x.q}</span>
-            <span class="shrink-0 text-[0.92rem] font-bold text-flame">{x.a} →</span>
+      <SectionHead eyebrow="Start here" title="Not sure whether you need an astrologer or a Vastu consultant?" intro="Pick the line closest to your situation. Each page says what Pandit Ji looks at and what to bring." />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {router.map((x, i) => (
+          <a href={x.href} class="card reveal group flex flex-col justify-between gap-6 no-underline">
+            <span class="numeral text-[1.25rem] !text-[var(--line)]" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="text-[1.0625rem] leading-snug text-[var(--fg)]">{x.q}</span>
+            <span class="link-arrow">{x.a} <span aria-hidden="true">→</span></span>
           </a>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- ==================== ABOUT PANDIT ==================== -->
-  <section class="section">
-    <div class="container-page grid items-center gap-10 md:grid-cols-[0.85fr_1.15fr]">
-      <div class="reveal relative mx-auto w-full max-w-xs">
-        <!-- gold mandala behind -->
-        <svg class="zodiac zodiac--rev absolute -inset-4 -z-10 h-[calc(100%+2rem)] w-[calc(100%+2rem)] text-gold-deep/25" viewBox="0 0 200 200" fill="none" aria-hidden="true">
-          <circle cx="100" cy="100" r="96" stroke="currentColor" stroke-width="1" />
-          {wheel.map((w) => (<line x1="100" y1="100" x2={w.x2} y2={w.y2} stroke="currentColor" stroke-width="0.5" />))}
-        </svg>
-        <div class="halo relative aspect-[4/5] overflow-hidden rounded-3xl grid place-content-center text-center"
-             style="border:1px solid rgba(198,135,10,.4); background: radial-gradient(70% 50% at 50% 30%, #FFE9A8, #F3B316 70%, #D99A00 100%);">
-          <span class="font-display text-6xl text-navy">☉</span>
-          <p class="mt-3 px-4 text-[0.78rem] font-bold uppercase tracking-[0.18em] text-navy/70">Pandit Ji photo here</p>
+  <!-- ============ VASTU BAND ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+      <div>
+        <SectionHead eyebrow="Vastu Shastra" title="Vastu consultant in Hyderabad for homes, flats, offices and plots" />
+        <div class="reveal prose-site mt-6">
+          <p>In a flat, the facing is fixed but the layout inside is not. You can move the bed, the stove and the almirah, and that is usually where the useful changes are. If a structural change ever would help, Pandit Ji will say so, and give you a cheaper way to do it alongside.</p>
+          <p>Choosing a house and worried about which way it faces? Read up on <a href="/services/vastu/west-facing-house/">west facing</a>, <a href="/services/vastu/south-facing-house/">south facing</a>, <a href="/services/vastu/east-facing-house/">east facing</a> and <a href="/services/vastu/north-facing-house/">north facing</a> house Vastu before you rule anything out. The facing alone should not decide it. Send the floor plan.</p>
+          <p>Moving in soon? The <a href="/guides/vastu-for-new-home-checklist/">new home Vastu checklist</a> covers what to check first, and the <a href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham</a> page explains how the date is chosen.</p>
         </div>
-        <div class="card mt-4 p-4 text-center">
-          <p class="font-display text-2xl text-gold-deep">5.0 ★ · 1,640+</p>
-          <p class="text-[0.85rem] text-ink-2">Google reviews</p>
+        <div class="reveal mt-8 flex flex-wrap gap-3">
+          <a class="btn btn-call" href="/services/vastu/">Book a Vastu consultation</a>
+          <a class="btn btn-ghost" href={whatsappLink('Namaste, I would like a Vastu consultation.')} data-cta="whatsapp">Ask about Vastu</a>
         </div>
       </div>
-      <div class="reveal">
-        <p class="label">About Pandit Ji</p>
-        <h2 class="mt-3 text-[2.1rem]">{pandit.name}</h2>
-        <p class="mt-2 font-semibold text-gold-deep">{pandit.jobTitle} · 35+ years in Hyderabad</p>
-        <p class="mt-5 max-w-2xl leading-relaxed text-ink-2">{pandit.bio}</p>
-        <div class="mt-6 flex flex-wrap gap-3">
-          <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Talk to Pandit Ji</a>
-          <a class="btn btn-line" href="/about/">Read his story →</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== REVIEWS (marquee) ==================== -->
-  <section class="section bg-cream-2">
-    <div class="container-page reveal mx-auto max-w-2xl text-center">
-      <p class="label">Client experiences</p>
-      <h2 class="mt-3 text-[2.1rem]">Trusted by thousands of families in Hyderabad</h2>
-      <p class="mt-3 text-ink-2">A 5.0 rating from 1,640+ Google reviews.</p>
-    </div>
-
-    <div class="marquee mt-11">
-      <div class="marquee__track py-2">
-        {reviews.concat(reviews).map((r) => (
-          <figure class="card w-[330px] shrink-0 p-6">
-            <div class="text-gold" aria-hidden="true">★★★★★</div>
-            <blockquote class="mt-3 text-[0.96rem] leading-relaxed text-ink">{r.q}</blockquote>
-            <figcaption class="mt-4 text-[0.9rem] font-bold text-ink">{r.n} <span class="font-normal text-ink-mute">· {r.a}</span></figcaption>
-          </figure>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {vastuPages.map((v) => (
+          <a href={v.path} class="card reveal group flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.375rem]">{v.title}</h3>
+            <p class="text-[0.95rem]">{v.blurb}</p>
+            <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+          </a>
         ))}
       </div>
     </div>
+  </section>
 
-    <div class="container-page mt-9 text-center">
-      <a class="btn btn-line" href={contact.gbpUrl} target="_blank" rel="noopener">Read all 1,640 reviews on Google →</a>
+  <!-- ============ SERVICES ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Astrology services" title="Kundli matching, marriage and career astrology in Hyderabad" intro="Matching, marriage timing, career, business, dates, doshas and numerology. Each page covers what we look at and what to bring." />
+      <div class="mt-12 grid gap-px overflow-hidden rounded-lg border border-[var(--color-line-light)] bg-[var(--color-line-light)] sm:grid-cols-2 lg:grid-cols-3">
+        {general.map((s, i) => (
+          <a href={`/services/${s.slug}/`} class="reveal group flex flex-col gap-3 bg-white p-8 no-underline transition-colors hover:bg-porcelain">
+            <span class="numeral text-[1.5rem] !text-[var(--color-brass-700)]">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="text-[1.5rem]">{s.title}</h3>
+            <p class="text-[0.95rem]">{s.summary}</p>
+            <span class="link-arrow mt-auto pt-2">Learn more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
     </div>
   </section>
 
-  <!-- ==================== HOW IT WORKS ==================== -->
-  <section class="section">
-    <div class="container-page">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="label">How it works</p>
-        <h2 class="mt-3 text-[2.1rem]">A consultation in three simple steps</h2>
+  <!-- ============ ABOUT PANDIT JI ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div class="reveal">
+        <p class="eyebrow">About Pandit Ji</p>
+        <h2 class="mt-3">An astrologer in Hyderabad for more than 35 years</h2>
+        <span class="rule"></span>
+        <!-- INTERVIEW Q1: how Pandit Ji learned Jyotish and Vastu, and from whom, in his own words (only if he is happy for it to appear). -->
+        <p class="mt-6 max-w-md">{pandit.bio}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a class="btn btn-call" href={telLink()} data-cta="call">Talk to Pandit Ji</a>
+          <a class="btn btn-ghost" href="/about/">Read his story</a>
+        </div>
       </div>
-      <ol class="mt-10 grid gap-6 md:grid-cols-3">
+      <dl class="fact-table reveal self-start">
+        <div><dt>Practice</dt><dd>Vedic astrology (Jyotish) and Vastu Shastra, {pandit.yearsExperience}+ years</dd></div>
+        <div><dt>Specialisation</dt><dd>Kundli matching, marriage, career, business, Muhurtham, doshas, Vastu, numerology</dd></div>
+        <div><dt>Languages</dt><dd>{pandit.languages.join(', ')}</dd></div>
+        <div><dt>Consultation</dt><dd>In person in Sanjeeva Reddy Nagar, or by phone and video</dd></div>
+        <div><dt>Location</dt><dd>{contact.locality}, {contact.city} {contact.postalCode}</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ METHOD ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20">
+      <SectionHead eyebrow="Reading a chart" title="How a Kundli reading works: the Lagna, the planets, then timing" />
+      <!-- TODO(client): name the classical texts or tradition Pandit Ji follows, only if he confirms them. -->
+      <!-- INTERVIEW Q7: what Pandit Ji checks first, and in what order, when a chart lands on his table, in his own words. -->
+      <div class="reveal prose-site">
+        <p>A Vedic birth chart is a map of where the planets stood at the moment you were born, which is why the exact time matters, and why a hospital record or an old horoscope is worth digging out. A reading starts with the Lagna, the rising sign, because it decides which house is which. Then come the nine grahas and how strong each one is, and then the dasha you are running now. The dasha is what gives you timing. Without it a chart shows what is possible. It cannot tell you when.</p>
+        <p>For Kundli matching, both charts go on the table together. A Guna score is one line of that reading. If a dosha turns up, it gets checked against its cancellation conditions before anyone treats it as serious. <a href="/services/nadi-dosha/">Nadi dosha</a>, the heaviest single factor in the 36 points, gets its own page.</p>
+        <p>Never had your own chart read? <a href="/services/janam-kundli-reading/">Janam Kundli reading</a> is the place to begin.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TELUGU / LANGUAGES ============ -->
+  <section class="band-light section-sm">
+    <div class="container-page grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Language" title="Telugu astrologer in Hyderabad: consult in Telugu, Hindi, Kannada or English" />
+      <div class="reveal prose-site">
+        <p>Pandit Ji speaks {pandit.languages.slice(0, -1).join(', ')} and {pandit.languages[pandit.languages.length - 1]}, so use the one you think in. A question about a daughter's marriage or a family's new house is easier to put across in the language you grew up with.</p>
+        <p>Say your preference when you call, and if the elders are going to be part of the decision, bring them along to the centre or put them on the call.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead eyebrow="How it works" title="Online astrologer consultation by phone, video or WhatsApp" intro="Come to us in Sanjeeva Reddy Nagar, or do the same thing from home. The steps do not change." />
+      <ol class="mt-14 grid gap-10 md:grid-cols-3 md:gap-0">
         {[
-          { s: '1', t: 'Call or WhatsApp', d: 'Reach us on ' + contact.phoneDisplay + ' - in your own language. Date, time and place of birth is all that is needed; if the exact time is uncertain, say so and we will tell you what a reading can still support.' },
-          { s: '2', t: 'The chart is prepared in advance', d: 'Not generated on the spot from software while you wait - it is worked out before your appointment, so the session itself is spent on the discussion.' },
-          { s: '3', t: 'A clear, honest session', d: 'In person at Sanjeeva Reddy Nagar or over call/video, in your own language. Remedies only where the chart genuinely indicates them, with the reasoning explained.' },
+          { t: 'Call or WhatsApp', d: `Ring or message ${contact.phoneDisplay}. Date, time and place of birth is enough to begin. If you are unsure of the time, say so, and Pandit Ji will tell you which parts of the reading still hold.` },
+          { t: 'The chart is ready before you sit down', d: 'Pandit Ji prepares it before your appointment, so the session goes on your questions and not on working out the chart while you wait.' },
+          { t: 'Talk it through, in person or online', d: 'Sit with him in Sanjeeva Reddy Nagar, or join by phone or video, and if a remedy comes up he gives the reason with it and you can say no.' },
         ].map((x, i) => (
-          <li class={`card-glow card reveal-${i + 1} relative p-7`}>
-            <span class="absolute right-5 top-4 font-display text-5xl text-gold-soft">{x.s}</span>
-            <span class="icon-chip mb-4" aria-hidden="true">{x.s}</span>
-            <h3 class="text-[1.25rem]">{x.t}</h3>
-            <p class="mt-2 text-[0.95rem] text-ink-2">{x.d}</p>
+          <li class="reveal relative md:px-8 md:first:pl-0 md:last:pr-0 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:border-white/12">
+            <span class="numeral text-[3rem]">{i + 1}</span>
+            <h3 class="mt-4 text-[1.5rem]">{x.t}</h3>
+            <p class="mt-3 text-[0.98rem]">{x.d}</p>
           </li>
         ))}
       </ol>
+      <p class="reveal mt-12"><a class="link-arrow" href="/how-a-consultation-works/">What happens in the session, in more detail <span aria-hidden="true">→</span></a></p>
     </div>
   </section>
 
-  <!-- ==================== PREPARING FOR YOUR CONSULTATION ==================== -->
-  <section class="section">
-    <div class="container-page">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="label">Before you call</p>
-        <h2 class="mt-3 text-[2.1rem]">Preparing for your consultation</h2>
+  <!-- ============ NEAR ME / LOCATION ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Visit us" title="Astrologer near me? Visit the centre in S.R. Nagar" intro="Sanjeeva Reddy Nagar is also written S.R. Nagar or SR Nagar. We are in a flat on the 5th floor, not a shop on the street, so call before you come." />
+      <div class="reveal prose-site">
+        <p>Flat No. 502, Ramakrishna Nivas, beside Andhra Bank and opposite Royal College, Bapu Nagar. Find the bank first, then the college across the road. The <a href="/areas/sanjeeva-reddy-nagar/">S.R. Nagar page</a> has the full address and a map, and the <a href="/contact/">contact page</a> has the phone and WhatsApp number.</p>
+        <h3>Astrologer near Ameerpet, Kukatpally or Secunderabad?</h3>
+        <p>The Google listing names {otherAreas.slice(0, -1).join(', ')} and {otherAreas[otherAreas.length - 1]}. If the drive is the obstacle, do it by phone or video. The <a href="/areas/">areas we serve</a> page has the rest.</p>
       </div>
-      <ul class="reveal mx-auto mt-8 grid max-w-2xl gap-3">
-        {[
-          'Keep your exact date, time and place of birth ready - for Kundli matching, the same three for both people.',
-          'Note the specific questions or areas you want to discuss, so the session is spent on them.',
-          'If joining by video, choose a quiet space for the conversation.',
-          'Bring or share any earlier chart or reading you have, if it is relevant.',
-        ].map((item) => (
-          <li class="flex gap-3 text-[0.95rem] leading-relaxed text-ink-2">
-            <span class="mt-1 text-gold-deep" aria-hidden="true">✓</span>
+    </div>
+  </section>
+
+  <!-- ============ REVIEWS (rating + link only; verbatim reviews added only when supplied) ============ -->
+  <section class="band-light section">
+    <div class="container-page grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div class="reveal">
+        <p class="eyebrow">Google reviews</p>
+        <p class="numeral mt-3 text-[clamp(4rem,3rem+4vw,6.5rem)] !text-[var(--color-brass-700)]">{rating}</p>
+        <p class="mt-2 text-[var(--fg)]"><span aria-hidden="true" class="tracking-[0.2em] text-brass-700">★★★★★</span></p>
+        <p class="mt-1 text-[0.95rem]">{reviewCount} reviews on Google Business Profile</p>
+      </div>
+      <div class="reveal">
+        <h2>Best astrologer in Hyderabad? Read the Google reviews and decide</h2>
+        <span class="rule"></span>
+        <p class="lead mt-6 max-w-xl">No website can fairly rank itself above the rest. Reviews written by other people, on a platform we do not control, are a better test of any astrologer, so sort them, search them and read the critical ones first.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a class="btn btn-call" href={reviewsUrl} target="_blank" rel="noopener">Read all reviews on Google</a>
+          <a class="btn btn-ghost" href="/reviews/">About our reviews</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW TO CHOOSE ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Before you book" title="How to choose a genuine astrologer in Hyderabad" intro="Four things you might hear from an astrologer, and what to make of each." />
+      <div class="reveal mt-12 border-t border-[var(--color-line-light)]">
+        {worries.map(([said, answer]) => (
+          <div class="grid gap-2 border-b border-[var(--color-line-light)] py-6 md:grid-cols-[1fr_1.4fr] md:gap-12">
+            <p class="font-medium text-[var(--color-muted-light)]">{said}</p>
+            <p>{answer}</p>
+          </div>
+        ))}
+      </div>
+      <p class="reveal mt-8"><a class="link-arrow" href="/guides/how-to-choose-an-astrologer/">Our guide to choosing an astrologer <span aria-hidden="true">→</span></a></p>
+    </div>
+  </section>
+
+  <!-- ============ PREPARE ============ -->
+  <section class="band-light section-sm">
+    <div class="container-page grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Keep ready" title="Before you call: what to keep ready for a Kundli or Vastu consultation" intro="None of this is a test. Bring what you have and say what is missing." />
+      <ul class="reveal grid gap-4">
+        {ready.map((item) => (
+          <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+            <span class="mt-1 text-brass-700" aria-hidden="true">✓</span>
             <span>{item}</span>
           </li>
         ))}
@@ -411,41 +300,16 @@ const reviews = [
     </div>
   </section>
 
-  <!-- ==================== FAQ ==================== -->
-  <section class="section bg-cream-2">
-    <div class="container-page reveal mx-auto max-w-3xl">
-      <div class="text-center">
-        <p class="label">Questions</p>
-        <h2 class="mt-3 text-[2.1rem]">Frequently asked questions</h2>
-      </div>
-      <div class="mt-9 grid gap-3">
-        {faqs.map((f) => (
-          <details class="card group p-5 open:shadow-[0_18px_44px_-24px_rgba(80,55,10,.4)]">
-            <summary class="flex cursor-pointer items-center justify-between gap-4 font-semibold text-ink marker:content-['']">
-              <span>{f.question}</span>
-              <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gold-soft text-gold-deep transition group-open:rotate-45" aria-hidden="true">+</span>
-            </summary>
-            <p class="mt-3 leading-relaxed text-ink-2">{f.answer}</p>
-          </details>
-        ))}
+  <!-- ============ FAQ ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Questions about astrologers and Vastu consultants in Hyderabad" intro="What people ask before they book. The rest are on the full FAQ page." />
+      <div class="reveal">
+        <FaqList faqs={faqs} openFirst />
+        <p class="mt-8"><a class="link-arrow" href="/faq/">All questions and answers <span aria-hidden="true">→</span></a></p>
       </div>
     </div>
   </section>
 
-  <!-- ==================== FINAL CTA ==================== -->
-  <section class="section pt-0">
-    <div class="container-page">
-      <div class="reveal relative overflow-hidden rounded-[2rem] border border-gold-deep/25 px-8 py-14 text-center"
-           style="background: radial-gradient(120% 130% at 50% -10%, #FFF6DA, #FFE9A8 55%, #FBD879 100%);">
-        <svg class="zodiac absolute -right-10 -top-10 h-48 w-48 text-gold-deep/25" viewBox="0 0 200 200" fill="none" aria-hidden="true"><circle cx="100" cy="100" r="96" stroke="currentColor" stroke-width="1"/>{wheel.map((w) => (<line x1="100" y1="100" x2={w.x2} y2={w.y2} stroke="currentColor" stroke-width="0.5"/>))}</svg>
-        <p class="relative label">Amma Varu's blessings</p>
-        <h2 class="relative mt-3 text-[2.3rem]">Speak to Pandit Ji today</h2>
-        <p class="relative mx-auto mt-3 max-w-xl text-ink-2">Guidance in your own language - in person at Sanjeeva Reddy Nagar, or online across India and abroad. Fees are always shared before booking.</p>
-        <div class="relative mt-7 flex flex-wrap justify-center gap-3">
-          <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call {contact.phoneDisplay}</a>
-          <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> Message on WhatsApp</a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <CtaBand title="Talk to Pandit Ji about your chart or your home" text="Call or WhatsApp and say what is on your mind. Send the birth details, or the floor plan for a Vastu question. A time is fixed after that, at the centre in Sanjeeva Reddy Nagar or online." />
 </BaseLayout>

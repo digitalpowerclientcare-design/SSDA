@@ -1,0 +1,147 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, ids, disclaimer } from '@/data/business';
+import {
+  buildGraph, organizationSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/guides/staircase-vastu/';
+const title = 'Staircase Vastu: Direction, Clockwise Turns and Space Under the Stairs';
+const description = 'Staircase Vastu for a house or flat in Hyderabad: which direction is best, why the turn should be clockwise, what to do with the space under the stairs.';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Guides', url: '/guides/' },
+  { name: 'Staircase Vastu', url: path },
+];
+
+// TODO(client): Pandit Ji to review this guide before it goes live.
+// INTERVIEW Q11: the staircase worries he meets most often, and what he suggests moving or doing without breaking walls.
+// INTERVIEW Q13: how he explains a north-east staircase to a family that has been frightened by it.
+
+const faqs = [
+  { question: 'Which direction is best for a staircase as per Vastu?', answer: 'The south, the west or the south-west side of the house. These are the heavy sides, and a stair adds weight. Most practitioners keep the north-east corner and the middle of the house free of stairs, though schools differ on how strict to be.' },
+  { question: 'Is a staircase in the north-east bad?', answer: 'It is the placement practitioners like least, because the north-east is meant to stay light and open. It is not an emergency. Keep the area around the stair clear and well lit, and have the rest of the plan checked before anyone suggests rebuilding anything.' },
+  { question: 'Should a staircase turn clockwise?', answer: 'Many practitioners prefer that you turn clockwise as you climb, which means the stair rises with turns to the right. Some also like an odd number of steps. If your stair is already built the other way, do not rebuild it for this alone.' },
+  { question: 'Can I use the space under the staircase?', answer: 'Yes, for storage. Practitioners discourage a puja room, a toilet or a kitchen there. If the space is already used for one of them, moving the shrine or the stored items is the easy part, and nobody has to touch the stair.' },
+  { question: 'Is a staircase facing the main door bad?', answer: 'It is discouraged, since the stair is the first thing you meet when you enter. Where you cannot shift it, a clear, well lit entrance and a landing or a screen to break the line help. Send the plan and say what the stair looks like from the door.' },
+  { question: 'Does staircase Vastu apply to a flat?', answer: 'Only partly. The common stair and the lift belong to the building, so the checks move to whether your door faces them directly. In a duplex or a villa with an internal stair, everything on this page applies.' },
+];
+
+const toc = [
+  { id: 'short-answer', label: 'Staircase as per Vastu' },
+  { id: 'direction', label: 'Which direction' },
+  { id: 'turns', label: 'Clockwise turns and steps' },
+  { id: 'under', label: 'Under the stairs' },
+  { id: 'flat-house', label: 'Flat or house' },
+  { id: 'fix', label: 'If it is already built' },
+  { id: 'faq', label: 'Questions' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), personSchema(),
+  {
+    '@type': 'Article',
+    '@id': abs(`${path}#article`),
+    headline: title,
+    description,
+    url: abs(path),
+    mainEntityOfPage: abs(path),
+    datePublished: '2026-10-04',
+    dateModified: '2026-10-04',
+    author: { '@id': ids.person },
+    publisher: { '@id': ids.organization },
+    isPartOf: { '@id': abs('/#website') },
+    about: { '@type': 'Thing', name: 'Staircase Vastu' },
+    inLanguage: 'en-IN',
+  },
+  faqSchema(faqs, abs(path)),
+  breadcrumbSchema(crumbs),
+);
+
+const glance = [
+  ['Best sides', 'South, west or south-west of the house'],
+  ['Keep free of stairs', 'The north-east corner and the middle of the house'],
+  ['Turn', 'Clockwise as you climb'],
+  ['Steps', 'Many practitioners like an odd number'],
+  ['Under the stair', 'Storage is fine, a puja room or toilet is discouraged'],
+];
+---
+<BaseLayout authored
+  title={`Staircase Vastu: Direction and Placement | ${brand.shortName}`}
+  description={description}
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Guide - Vastu"
+    title="Staircase Vastu: Direction, Turns and Under-Stair Space"
+    intro="If someone has told you the staircase is in the wrong place, take a breath first. Here is what the texts say, what you can do about it, and what is only a preference."
+    crumbs={crumbs}
+  />
+
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-16">
+      <article class="prose-site">
+        <h2 id="short-answer" class="scroll-mt-24 !mt-0">Staircase as per Vastu: the short answer</h2>
+        <p><strong>A staircase sits best on the south, west or south-west side of a house, turns clockwise as you go up, and stays out of the north-east corner and the middle of the house.</strong></p>
+        <p>Vastu Shastra traditionally holds these placements, and practitioners differ on how strictly to apply them, so an existing staircase that breaks one of them is no cause for alarm. Most of what follows is about what you can still do.</p>
+        <dl class="fact-table not-prose mt-8">
+          {glance.map(([k, v]) => (
+            <div><dt>{k}</dt><dd>{v}</dd></div>
+          ))}
+        </dl>
+
+        <h2 id="direction" class="scroll-mt-24">Which direction is best for a staircase</h2>
+        <p>A stair is heavy. It is steps, a landing and a wall, and the old texts like the heavy parts of a house on the south and west, where weight is welcome. The north-east is the opposite: open, light and the place for water and prayer. So the stair goes where the weight goes.</p>
+        <h3>Staircase in the north-east</h3>
+        <p>This is the one practitioners discourage most. If you are planning a house on paper, shift the stair. If the house is built, read the last section of this page.</p>
+        <h3>Staircase in the middle of the house</h3>
+        <p>The middle of the house, the brahmasthan, is meant to be open. A stair that rises through it is discouraged, and it also eats floor area, which is reason enough to avoid it.</p>
+
+        <h2 id="turns" class="scroll-mt-24">Staircase vastu: clockwise turns and number of steps</h2>
+        <p>Many practitioners prefer that you turn clockwise as you climb. Walk up and picture your path from above: if you curve to the right, it's clockwise. A straight flight needs no thought about this at all.</p>
+        <p>You'll also hear that the number of steps should be odd, and some schools add a rule about what the count should end on. The schools disagree enough that we wouldn't lose sleep over it, and nobody should recount a staircase that is already built.</p>
+        <p>Whatever the texts say, keep it safe. A handrail, a landing that breaks a long flight, a light that works and a non-slip tread will matter more to your family on an ordinary Tuesday night than any direction ever will.</p>
+
+        <h2 id="under" class="scroll-mt-24">What to do with the space under the staircase</h2>
+        <p>Storage is fine. A small cupboard for suitcases or a shelf for the broom does no harm. Practitioners discourage three uses: a puja room, a toilet and a kitchen. The shrine is the one most families already have there, so see the <a href="/guides/puja-room-vastu/">puja room guide</a> for where else it can go.</p>
+        <p>Say your shrine sits under the stair and the stair is concrete. Nobody asks you to knock anything down. Shift the shrine to a wall on the north or east, keep the under-stair space for storage, and the problem has gone with an afternoon's work.</p>
+
+        <h2 id="flat-house" class="scroll-mt-24">Staircase in a flat or a house</h2>
+        <p>In an independent house or a villa, the staircase is yours and every point above applies. If your house has an outside stair to an upper floor, check where it joins the compound as well, because the same corners count.</p>
+        <p>In a flat it is the building's stair, and its position is not yours to change. What you can check is whether your front door opens straight onto the stair or the lift lobby, and how the inside layout reads. The <a href="/services/vastu/apartment/">apartment Vastu page</a> lists those checks. For a duplex, the internal stair gets the full treatment. For other house questions, see <a href="/services/vastu/home/">Vastu for home</a>.</p>
+
+        <h2 id="fix" class="scroll-mt-24">If your staircase is already in the wrong place</h2>
+        <p>Say the stair sits in the north-east and the house is finished. Start with what you can do yourself. Keep the stair and the landing clear of clutter, light the north-east corner well, move any heavy storage out of it, and keep the area around the stair open. Then have the whole plan reviewed, since a stair is one item and the other rooms may be fine.</p>
+        <p>Pandit Ji starts with moves and placement. Rebuilding a stair comes last, and if it were ever worth considering, you would hear a cheaper alternative alongside it. Ask the fee before you book anything.</p>
+        <p>Planning a new house? Decide the stair at the drawing stage. The <a href="/services/vastu/plot/">plot Vastu page</a> and the <a href="/guides/vastu-for-new-home-checklist/">new home checklist</a> cover the other early decisions, and the <a href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham page</a> covers the date for moving in.</p>
+
+        <h2 id="faq" class="scroll-mt-24">Staircase as per Vastu: questions people ask</h2>
+        <div class="not-prose mt-6"><FaqList faqs={faqs} openFirst /></div>
+
+        <p class="!mt-10">Send the floor plan, mark where the stair is and which way the main door faces, and call or WhatsApp to ask the fee. Pandit Ji speaks Telugu, Hindi, Kannada and English.</p>
+        <p class="!mt-8 text-[0.875rem] text-[var(--muted)]">{disclaimer}</p>
+      </article>
+
+      <aside class="hidden lg:block">
+        <nav class="sticky top-28 border-l border-[var(--color-line-light)] pl-6" aria-label="On this page">
+          <p class="eyebrow">On this page</p>
+          <ul class="mt-4 grid gap-3 text-[0.9rem]">
+            {toc.map((t) => <li><a class="no-underline hover:text-brass-700" href={`#${t.id}`}>{t.label}</a></li>)}
+          </ul>
+        </nav>
+      </aside>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand title="Get your staircase plan looked at" text="Send the floor plan and the direction of the main door by call or WhatsApp, and a consultation time is arranged, in person at Sanjeeva Reddy Nagar or online." />
+</BaseLayout>

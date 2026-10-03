@@ -1,0 +1,130 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, ids, reviewsUrl } from '@/data/business';
+import { buildGraph, organizationSchema, localBusinessSchema, faqSchema, breadcrumbSchema, abs } from '@/lib/schema';
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Reviews', url: '/reviews/' }];
+const reviewCount = brand.reviews.count.toLocaleString('en-IN');
+const rating = brand.reviews.rating.toFixed(1);
+
+const faqs = [
+  { question: 'Where can I read the Google reviews of the astrologer?', answer: `All of them sit on our Google Business Profile, with the rating and all ${reviewCount} reviews open to anyone, so you can read them in full by following the link on this page.` },
+  { question: 'Can you edit or remove the reviews?', answer: 'We cannot change what a reviewer wrote, because reviews are written and published by customers on Google and they appear in their authors\' own words. That is why this site links to them and does not reprint a hand-picked few.' },
+  { question: 'Can I leave a review for Pandit Ji?', answer: 'Yes. Open the Google link on this page, sign in with your Google account, choose a star rating and describe your own experience in your own words, ideally soon after your session while the details are fresh.' },
+  { question: 'Does a good review mean I will get the same result?', answer: 'No. A review describes one person\'s experience of one chart, and yours is a different chart, so no outcome is promised.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(),
+  { '@type': 'WebPage', '@id': abs('/reviews/#webpage'), url: abs('/reviews/'), name: `Reviews of ${brand.name}`, about: { '@id': ids.localBusiness }, isPartOf: { '@id': ids.website } },
+  faqSchema(faqs, abs('/reviews/')),
+  breadcrumbSchema(crumbs),
+);
+
+const steps = [
+  { t: 'Open the Google page', d: 'Use the "Read and write reviews on Google" button on this page. It opens our Google Business Profile.' },
+  { t: 'Sign in to Google', d: 'A review is tied to a Google account, so you will be asked to sign in if you have not already.' },
+  { t: 'Rate and write', d: 'Pick a star rating and write what happened, in your own words.' },
+  { t: 'Post it', d: 'Your review appears under the name on your Google account. We do not edit it, hide it or pick which reviews are shown.' },
+];
+---
+<BaseLayout
+  title="Google Reviews of Sri Sai Durga Astrology Centre, Hyderabad"
+  description={`What people in Hyderabad say about Sri Sai Durga Astrology Centre on Google: ${rating} stars across ${reviewCount} reviews, in the authors' own words, with a link.`}
+  canonicalPath="/reviews/"
+  jsonLd={jsonLd}
+>
+  <PageHero
+    eyebrow="Reviews"
+    title="Google Reviews for the Astrologer in Hyderabad, in Clients' Own Words"
+    intro="Every review of Sri Sai Durga Astrology Centre is public on Google. Read them before you call, the critical ones included."
+    crumbs={crumbs}
+  />
+
+  <!-- ============ RATING ============ -->
+  <section class="band-light section">
+    <div class="container-page grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div class="reveal">
+        <p class="eyebrow">Google Business Profile</p>
+        <p class="numeral mt-3 text-[clamp(4.5rem,3rem+5vw,7.5rem)] !text-[var(--color-brass-700)]">{rating}</p>
+        <p class="mt-2 text-[var(--fg)]"><span aria-hidden="true" class="tracking-[0.2em] text-brass-700">★★★★★</span><span class="sr-only">5 out of 5 stars</span></p>
+        <p class="mt-1 text-[0.95rem]">{reviewCount} reviews on Google</p>
+      </div>
+      <div class="reveal">
+        <h2>What {reviewCount} Google reviews say about the astrologer in Hyderabad</h2>
+        <span class="rule"></span>
+        <div class="prose-site mt-6">
+          <p class="lead">We will not summarise them for you. When you search for the <a href="/">astrologer in Hyderabad</a>, a few quotes picked by the business itself tell you very little, while the full set tells you a good deal more.</p>
+          <h3>Why this page does not reprint reviews</h3>
+          <p>Reprinting a handful would mean choosing them. On Google you can sort the reviews, search them and read the critical ones as easily as the kind ones.</p>
+        </div>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a class="btn btn-call" href={reviewsUrl} target="_blank" rel="noopener">Read and write reviews on Google</a>
+          <a class="btn btn-ghost" href="/about/">About Pandit Ji</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TODO(client): paste 6-9 verbatim Google reviews here (first name + last initial exactly as on Google).
+       Render them as a card grid in a band-white section between the rating band and the policy band. Never paraphrase, shorten or invent. -->
+
+  <!-- ============ POLICY ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="How we handle them" title="How we handle reviews of the astrologer" />
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        {[
+          { t: 'Written by customers', d: 'Reviewers write and publish on Google. We cannot change their wording.' },
+          { t: 'Open to anyone', d: 'You can read the full set without contacting us, so you do not have to rely on this website alone.' },
+          { t: 'Not picked by us', d: 'We do not choose which reviews are shown, and we do not reprint a favourable few.' },
+        ].map((x) => (
+          <div class="card card-static reveal">
+            <h3>{x.t}</h3>
+            <p class="mt-3 text-[0.95rem]">{x.d}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-16 grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+        <SectionHead eyebrow="By service" title="Reviews for Vastu consultation and Kundli matching" />
+        <div class="reveal prose-site">
+          <p>Want to know how people found a particular service? Open the reviews on Google and use its search box to look for a word such as Vastu, Kundli or marriage. Then read the service page: <a href="/services/vastu/">Vastu consultation</a> or <a href="/services/kundli-matching/">Kundli matching</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW TO LEAVE ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead eyebrow="Share your experience" title="How to leave a review on Google" intro="If you have consulted Pandit Ji, a review in your own words helps the next person decide." />
+      <ol class="mt-14 grid gap-10 md:grid-cols-4 md:gap-0">
+        {steps.map((x, i) => (
+          <li class="reveal md:px-6 md:first:pl-0 md:last:pr-0 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:border-white/12">
+            <span class="numeral text-[2.5rem]">{i + 1}</span>
+            <h3 class="mt-4 text-[1.375rem]">{x.t}</h3>
+            <p class="mt-3 text-[0.95rem]">{x.d}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="reveal mt-12">
+        <a class="btn btn-call" href={reviewsUrl} target="_blank" rel="noopener">Open Google reviews</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Questions about the astrologer's Google reviews" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

@@ -1,0 +1,101 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, pandit, contact, reviewsUrl, contentDates, formatDate, telLink, whatsappLink } from '@/data/business';
+import { buildGraph, organizationSchema, localBusinessSchema, personSchema, breadcrumbSchema } from '@/lib/schema';
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Editorial policy', url: '/editorial-policy/' }];
+const jsonLd = buildGraph(organizationSchema(), localBusinessSchema(), personSchema(), breadcrumbSchema(crumbs));
+
+const commitments = [
+  { t: 'No guaranteed outcomes', d: 'Astrology and Vastu are presented here as a way to think about timing and direction. Nothing on this site promises a result, and no page tells you an outcome is certain.' },
+  { t: 'No scare tactics', d: 'Pages do not use fear, curses or false urgency to push a consultation. Where a chart or a layout has a difficult side, the page says so calmly and says what can be done about it.' },
+  { t: 'No black magic', d: 'We do not offer black magic, and no page on this site recommends it.' },
+  { t: 'Remedies only with a reason', d: 'A remedy is mentioned only when a chart or a layout calls for one, and the reason comes with it. No gemstone, yantra or remedy product is sold through this site.' },
+  { t: 'Fees told before you book', d: 'Pandit Ji tells you the fee for a consultation before you book. This site does not publish prices, and no page asks for money up front to "remove" a problem.' },
+  { t: 'No professional advice', d: 'Nothing here is medical, legal, financial or mental-health advice. If your question is one of those, see a qualified professional as well.' },
+];
+---
+<BaseLayout
+  title="Editorial Policy | How We Write | Sri Sai Durga"
+  description="How astrology and Vastu content on this Hyderabad site is written, attributed, dated and corrected, and what Pandit Ji's centre never claims or promises."
+  canonicalPath="/editorial-policy/"
+  jsonLd={jsonLd}
+  authored
+>
+  <PageHero
+    eyebrow="Editorial policy"
+    title="How we write and correct our astrology and Vastu content"
+    intro="Advice on astrology and Vastu is easy to exaggerate. This page says who stands behind the pages on this site, what they will not claim, and how to tell us when something is wrong."
+    crumbs={crumbs}
+    byline
+  />
+
+  <!--
+    TODO(client): every statement below that describes a process (attribution, review before publication,
+    corrections) must be true in practice before launch. Pandit Ji should actually read each page that
+    carries his name, and the centre should confirm it will act on correction requests. Edit this page
+    to match reality; do not leave claims here that are not being followed.
+  -->
+
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Who stands behind the content" title="Authorship and responsibility" />
+      <div class="reveal prose-site">
+        <p>Pages with a byline are published under the name of {pandit.name} ({pandit.jobTitle}), and he is responsible for what appears under his name. The <a href="/about/">About page</a> says what he does and how he reads a chart. Our Google Business Profile is linked from the site, so you can check us somewhere we do not control.</p>
+        <p>Pages without a byline, such as the contact page and the legal pages, are published by {brand.name}, which runs this site.</p>
+        <p>Every page of advice shows a "last updated" date. It moves only when the content changes in a way that matters, and not when a link or the layout is adjusted. This page was last updated on <time datetime={contentDates.updated}>{formatDate(contentDates.updated)}</time>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="What the content is" title="A tradition, presented as one" />
+      <div class="reveal prose-site">
+        <p>Everything here about Vedic astrology (Jyotish Shastra) and Vastu Shastra describes a tradition of interpretation. It is not scientific fact, and it does not stand in for professional advice.</p>
+        <p>When a point comes from the old texts, the page says so, in words such as "the texts say" or "Vastu Shastra holds that", and when practitioners disagree on something, the page says that too and does not quietly pick one view and present it as settled.</p>
+        <p>We write for someone who has never opened a chart. The direct answer comes first, and the <a href="/glossary/">glossary</a> covers the Sanskrit and Hindi words.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead eyebrow="What we commit to" title="What this site will not do" />
+      <div class="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {commitments.map((c) => (
+          <div class="card card-static reveal">
+            <h3 class="text-[1.375rem]">{c.t}</h3>
+            <p class="mt-3 text-[0.95rem]">{c.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Reviews and ratings" title="How we handle reviews" />
+      <div class="reveal prose-site">
+        <p>The rating and the review count shown on this site come from our public Google Business Profile. Customers write and publish those reviews on Google, and we cannot change their wording.</p>
+        <p>No review on this site is invented, paraphrased or paid for. Where one is shown, it is copied word for word from Google. You can read every review yourself on the <a href={reviewsUrl} target="_blank" rel="noopener">Google profile</a>, and the <a href="/reviews/">reviews page</a> says more.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Corrections" title="If something is wrong" />
+      <div class="reveal prose-site">
+        <p>If a page has a mistake, an out-of-date detail or a line that reads as misleading, please tell us, because we would rather fix it than have you wonder about it. Call <a href={telLink()} data-cta="call">{contact.phoneDisplay}</a> or send a message on <a href={whatsappLink('Namaste, I would like to report a correction on your website.')} data-cta="whatsapp">WhatsApp</a>, and say which page it is on.</p>
+        <p>We correct a verified mistake on the page and change its "last updated" date to show it. If you disagree with how a point of tradition is described, say so. The aim is to describe the tradition fairly, and nobody here is trying to win an argument.</p>
+        <p>Business details such as the address, the phone number and the opening hours are kept in one place and match the Google Business Profile. If you find a mismatch between this site and Google, report that too.</p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Questions about how we work?" text="Ask Pandit Ji directly. Before you decide, he will tell you how a consultation runs, what it can and cannot do, and what it costs." />
+</BaseLayout>

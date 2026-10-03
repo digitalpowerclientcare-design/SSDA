@@ -1,0 +1,255 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, pandit, ids, disclaimer, whatsappLink } from '@/data/business';
+import {
+  buildGraph, organizationSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/guides/kundli-matching-explained/';
+const title = 'Kundli Matching (Guna Milan) Explained: The 36 Points';
+const description = 'How Guna Milan works in kundli matching: the eight Ashtakoot factors worth 36 points, how to read the score, Nadi and Mangal dosha, and what to bring.';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Guides', url: '/guides/' },
+  { name: 'Kundli matching explained', url: path },
+];
+
+const koots = [
+  { n: 'Varna', p: 1, test: 'Temperament and ego', plain: 'The old texts grade outlook and attitude to work. Today people take it to mean how the two temperaments sit together, and it ranks nobody’s background.' },
+  { n: 'Vashya', p: 2, test: 'Mutual influence', plain: 'How easily the two adapt to each other, and whether one of them tends to dominate.' },
+  { n: 'Tara', p: 3, test: 'Birth star harmony', plain: 'How the two birth stars (nakshatras) relate to each other. The texts link it to well-being and shared fortune.' },
+  { n: 'Yoni', p: 4, test: 'Physical and instinctive fit', plain: 'Each birth star carries a symbolic animal. The match looks at natural affinity and intimacy between the pair.' },
+  { n: 'Graha Maitri', p: 5, test: 'Mental compatibility', plain: 'Whether the lords of the two Moon signs are friends. Read as how well the two understand and support each other.' },
+  { n: 'Gana', p: 6, test: 'Nature and temperament', plain: 'Birth stars fall into three types: Deva, Manushya and Rakshasa. The labels are old. What the match checks is how alike or different the two natures are.' },
+  { n: 'Bhakoot', p: 7, test: 'Emotional bond and family welfare', plain: 'How the two Moon signs sit against each other. Linked to emotional closeness and the welfare of the household.' },
+  { n: 'Nadi', p: 8, test: 'Health and constitution', plain: 'Birth stars fall into three Nadis. The same Nadi for both partners gets flagged, and Nadi carries the most points of all.' },
+];
+const total = koots.reduce((a, k) => a + k.p, 0);
+
+const bands = [
+  { range: 'Below 18', read: 'Read as weak. Look closely at the charts before going ahead.' },
+  { range: '18 to 24', read: 'Read as acceptable. Families often proceed from here once the other factors have been checked.' },
+  { range: '25 to 32', read: 'Read as good compatibility.' },
+  { range: '33 to 36', read: 'Read as very good.' },
+];
+
+// INTERVIEW Q8: a match scores low on Guna Milan but the two people love each other. What does Pandit Ji tell the parents?
+// INTERVIEW Q9: a match scores 30 or more but he sees a problem in the charts. What is the problem, and how does he say it?
+const faqs = [
+  { question: 'What is a good Guna Milan score?', answer: '18 out of 36 is the usual minimum for an acceptable match, scores from 25 to 32 count as good, and anything above 32 as very good. The score is only part of the reading, because the full charts, any dosha and the timing matter just as much.' },
+  { question: 'Is kundli matching necessary for a love marriage?', answer: 'That is for the couple and the families to decide. Some couples who chose each other still want the charts read, or want a good Muhurtham for the wedding. Treat the result as something to talk over. The couple’s own decision comes first.' },
+  { question: 'Is online kundli matching accurate?', answer: 'An app does the arithmetic correctly when it has the right birth details, and the arithmetic is all it does. It gives you the 36-point score and often a dosha flag. A flag only tells you a rule fired. It cannot tell you whether a cancellation condition applies to your two charts.' },
+  { question: 'What if the score is below 18?', answer: 'That does not end the discussion. Look at which factors lost the points. A zero in Nadi or Bhakoot weighs differently from small losses spread across the other six, and the rest of both charts can balance some of it. Send both charts and ask.' },
+  { question: 'Can matching be done if the birth time is not known?', answer: 'With care. The Moon sign and birth star drive the 36-point score, and they depend on an accurate chart, so a time near a nakshatra boundary can change the result. Say so when you book and Pandit Ji will tell you which findings are firm and which are approximate.' },
+  { question: 'Can kundli matching be done online?', answer: 'Yes. Matching works from the birth details of both people, so it can be done by phone or video as well as in person at Sanjeeva Reddy Nagar. Send the date, time and place of birth for both partners when you book.' },
+];
+
+const toc = [
+  { id: 'what', label: 'What kundli matching checks' },
+  { id: 'eight', label: 'The eight Ashtakoot factors' },
+  { id: 'score', label: 'How to read the score' },
+  { id: 'not-enough', label: 'Why the score does not decide' },
+  { id: 'mangal', label: 'Nadi and Mangal dosha' },
+  { id: 'bring', label: 'What to bring' },
+  { id: 'faq', label: 'Common questions' },
+];
+
+const related = [
+  { href: '/services/kundli-matching/', title: 'Kundli matching', text: 'Your two charts matched by Pandit Ji, with Guna Milan, doshas and dasha timing.' },
+  { href: '/services/nadi-dosha/', title: 'Nadi dosha', text: 'The same-Nadi rule, when the texts cancel it, and what to do before you worry.' },
+  { href: '/services/janam-kundli-reading/', title: 'Janam kundli reading', text: 'One birth chart read against your own questions.' },
+  { href: '/services/marriage-guidance/', title: 'Marriage delay astrology', text: 'For a marriage that is taking longer than it should.' },
+  { href: '/services/muhurtham/', title: 'Muhurtham', text: 'A date and time for the wedding once the match is settled.' },
+  { href: '/services/dosha-remedies/', title: 'Dosha remedies', text: 'Mangal, Kalasarpa and Sade Sati checked against the texts.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), personSchema(),
+  {
+    '@type': 'Article',
+    '@id': abs(`${path}#article`),
+    headline: title,
+    description,
+    url: abs(path),
+    mainEntityOfPage: abs(path),
+    datePublished: '2026-10-04',
+    dateModified: '2026-10-04',
+    author: { '@id': ids.person },
+    publisher: { '@id': ids.organization },
+    isPartOf: { '@id': abs('/#website') },
+    about: { '@type': 'Thing', name: 'Kundli matching (Guna Milan)' },
+    inLanguage: 'en-IN',
+  },
+  faqSchema(faqs, abs(path)),
+  breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout authored
+  title="Kundli Matching (Guna Milan): 36 Points Explained"
+  description={description}
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Guide · Kundli matching"
+    title={title}
+    intro="Kundli matching compares two birth charts across eight factors worth 36 points in all. This guide goes through each factor, shows how to read the score, and explains why a number should never decide a marriage on its own."
+    crumbs={crumbs}
+  >
+    <!-- TODO(client): Pandit Ji to review this guide before it goes live. -->
+  </PageHero>
+
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-16">
+      <article class="prose-site">
+        <h2 id="what" class="!mt-0 scroll-mt-24">What kundli matching and Guna Milan check</h2>
+        <p><strong>Kundli matching, also called Guna Milan or horoscope matching for marriage, compares two birth charts using the Ashtakoot system.</strong> The system scores eight factors, each worth a fixed number of points, up to a maximum of {total}. Every factor comes from the Moon sign and birth star (nakshatra) of the two partners.</p>
+        <p>Nobody passes or fails. The point is to look at temperament, mental understanding, emotional bond, health and family welfare, and to flag the spots that deserve a longer conversation before the families go further. Most add a check for doshas such as Mangal dosha, and once a wedding is being planned, a <a href="/services/muhurtham/">Muhurtham</a> for the date.</p>
+        <p>This page explains the method. To have your own two charts matched, see <a href="/services/kundli-matching/">kundli matching in Hyderabad</a>. If you only have one chart and want it explained, that is a <a href="/services/janam-kundli-reading/">janam kundli reading</a>.</p>
+
+        <h2 id="eight" class="scroll-mt-24">The eight Ashtakoot factors</h2>
+        <p>Here they are in the usual order. Points climb from 1 to 8, so the later factors carry more weight.</p>
+        <div class="not-prose mt-6 overflow-x-auto rounded-lg border border-[var(--color-line-light)]">
+          <table class="w-full min-w-[38rem] text-left text-[0.95rem]">
+            <thead class="bg-porcelain">
+              <tr>
+                <th class="px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-brass-700">Factor</th>
+                <th class="px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-brass-700">Points</th>
+                <th class="px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-brass-700">What it looks at</th>
+                <th class="px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-brass-700">In everyday words</th>
+              </tr>
+            </thead>
+            <tbody>
+              {koots.map((k) => (
+                <tr class="border-t border-[var(--color-line-light)] align-top">
+                  <th scope="row" class="px-4 py-3 font-semibold text-[var(--fg)]">{k.n}</th>
+                  <td class="px-4 py-3 tabular-nums">{k.p}</td>
+                  <td class="px-4 py-3 text-[var(--fg)]">{k.test}</td>
+                  <td class="px-4 py-3">{k.plain}</td>
+                </tr>
+              ))}
+              <tr class="border-t border-[var(--color-line-light)] bg-porcelain">
+                <th scope="row" class="px-4 py-3 font-semibold text-[var(--fg)]">Total</th>
+                <td class="px-4 py-3 font-semibold tabular-nums text-[var(--fg)]">{total}</td>
+                <td class="px-4 py-3" colspan="2">Sum of all eight factors</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 class="text-[1.5rem]">Nadi dosha and Bhakoot dosha: the two heavy factors</h3>
+        <p>Nadi (8) and Bhakoot (7) carry the most points, so a zero on either one pulls the total down hard, and that is why a reading looks at them on their own and not only at the sum. For the Nadi side in full, see <a href="/services/nadi-dosha/">Nadi dosha</a>.</p>
+
+        <h2 id="score" class="scroll-mt-24">How to read a Guna Milan score</h2>
+        <p>These are the ranges most often quoted. Use them to open the conversation. They do not close it.</p>
+        <div class="not-prose mt-6 overflow-x-auto rounded-lg border border-[var(--color-line-light)]">
+          <table class="w-full min-w-[28rem] text-left text-[0.95rem]">
+            <thead class="bg-porcelain">
+              <tr>
+                <th class="px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-brass-700">Score out of {total}</th>
+                <th class="px-4 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-brass-700">How the texts read it</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bands.map((b) => (
+                <tr class="border-t border-[var(--color-line-light)] align-top">
+                  <th scope="row" class="px-4 py-3 font-semibold text-[var(--fg)]">{b.range}</th>
+                  <td class="px-4 py-3">{b.read}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <h3 class="text-[1.5rem]">Is 18 out of 36 enough?</h3>
+        <p>Say your daughter’s match comes back with 24 points. That clears the usual cut-off of 18, so on paper it looks fine. But 24 does not cancel a serious dosha, and a score of 16 can sometimes be balanced by what the charts show elsewhere in the two lives. Treat 18 as a reason to keep reading the charts, and drop the idea of a pass mark.</p>
+        <!-- INTERVIEW Q8: Pandit Ji's own words on a low-scoring match where the two people love each other -->
+
+        <h2 id="not-enough" class="scroll-mt-24">Horoscope matching for marriage: why the score alone does not decide</h2>
+        <p>A Guna Milan score comes from just two things per person, the Moon sign and the birth star, while a full chart holds far more, so a proper reading adds four more things before it says anything about a match.</p>
+        <ul>
+          <li>How strong each chart is on its own. A high score between two weak charts says less than a modest score between two well-supported ones.</li>
+          <li>The doshas: Mangal dosha, and the Nadi and Bhakoot findings, each checked against its cancellation conditions.</li>
+          <li>Dasha timing. The planetary periods running for each partner affect when a marriage is likely to go well.</li>
+          <li>The human side: values, health, money, family expectations and how the two people feel about each other. None of that can be scored.</li>
+        </ul>
+        <p>Pandit Ji reads both charts together, and he checks any dosha against its cancellation conditions before he treats it as serious, because a flag on its own proves very little. No chart can promise how a marriage will go. He does not pretend otherwise. Medical, legal and money questions go to the right professionals.</p>
+
+        <h2 id="mangal" class="scroll-mt-24">Nadi dosha and Mangal dosha: when the texts cancel them</h2>
+        <h3 class="text-[1.5rem]">Can Nadi dosha be cancelled?</h3>
+        <p>Sometimes. If two people share a birth star but have different Moon signs, or share a Moon sign but have different birth stars, several sources treat the dosha as cancelled, although sources differ, so the actual charts decide. The full walk-through is on the <a href="/services/nadi-dosha/">Nadi dosha page</a>.</p>
+        <h3 class="text-[1.5rem]">Mangal dosha and its cancellation conditions</h3>
+        <p><strong>Mangal (Kuja) dosha arises, say the texts, when Mars sits in the first, fourth, seventh, eighth or twelfth house of the birth chart, and in some schools the second as well.</strong> You may have heard the word first from an app. “The app says Manglik. Does that mean we drop the match?” Not on that alone.</p>
+        <p>The texts list several conditions that reduce or cancel it. Which of them apply depends on the actual chart. These are the ones quoted most:</p>
+        <ul>
+          <li>Both partners carry Mangal dosha, which the texts say balances it.</li>
+          <li>Mars sits in its own sign or its sign of exaltation.</li>
+          <li>Mars is joined or aspected by a benefic planet such as Jupiter.</li>
+          <li>Counted from the Lagna, the Moon and Venus, the dosha does not show strongly from all three.</li>
+        </ul>
+        <p>If the dosha is there and nothing cancels it, Pandit Ji may suggest a simple remedy and tell you the reason for it. <a href="/services/dosha-remedies/">Dosha remedies</a> covers how he handles that.</p>
+
+        <h2 id="bring" class="scroll-mt-24">What to bring to a kundli matching in Hyderabad</h2>
+        <ul class="!list-none !pl-0">
+          {[
+            'Date, time and place of birth for both people. Get the time from a hospital record or birth certificate if you can, because the Moon sign and birth star come from it.',
+            'Any kundli or horoscope the family already has for either person.',
+            'A note, in advance, if either birth time is uncertain, so you know which findings are firm.',
+            'The wedding timeline, if there is one, so Muhurtham dates can come next.',
+            'Your own questions.',
+          ].map((item) => (
+            <li class="flex gap-4 !mt-3 border-b border-[var(--color-line-light)] pb-3">
+              <span class="text-brass-700" aria-hidden="true">✓</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <p>Call or <a href={whatsappLink('Namaste, I would like to arrange Kundli matching.')}>message on WhatsApp</a> with those details and ask the fee first. Pandit Ji speaks Telugu, Hindi, Kannada and English, and the session can run by phone or video, which helps when one family lives in another city. The <a href="/how-a-consultation-works/">consultation process</a> page shows what happens next.</p>
+        <p class="!mt-8 text-[0.875rem] text-[var(--muted)]">{disclaimer}</p>
+      </article>
+
+      <aside class="hidden lg:block">
+        <nav class="sticky top-28 border-l border-[var(--color-line-light)] pl-6" aria-label="On this page">
+          <p class="eyebrow">On this page</p>
+          <ul class="mt-4 grid gap-3 text-[0.9rem]">
+            {toc.map((t) => <li><a class="no-underline hover:text-brass-700" href={`#${t.id}`}>{t.label}</a></li>)}
+          </ul>
+        </nav>
+      </aside>
+    </div>
+  </section>
+
+  <section class="band-light section">
+    <div class="container-page">
+      <SectionHead eyebrow="Related" title="Pages that go with this guide" />
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {related.map((r) => (
+          <a href={r.href} class="card reveal flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.375rem]">{r.title}</h3>
+            <p class="text-[0.95rem]">{r.text}</p>
+            <span class="link-arrow mt-auto">Read more <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="band-white section scroll-mt-20">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Kundli matching questions people ask" />
+      <div class="reveal">
+        <FaqList faqs={faqs} openFirst />
+        <p class="mt-8"><a class="link-arrow" href="/faq/">More questions answered <span aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand title="Arrange a Kundli matching" />
+</BaseLayout>

@@ -1,0 +1,137 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, ids, disclaimer } from '@/data/business';
+import {
+  buildGraph, organizationSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/guides/puja-room-vastu/';
+const title = 'Puja Room Vastu: Direction, Idols and Placement at Home';
+const description = 'Puja room Vastu for a Hyderabad home or flat: the best corner, which way to face, where idols go and what to do when there is no spare corner.';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Guides', url: '/guides/' },
+  { name: 'Puja room Vastu', url: path },
+];
+
+// TODO(client): Pandit Ji to review this guide before it goes live.
+// INTERVIEW Q11: the puja room mistakes he meets most often in Hyderabad flats, and what he suggests, step by step.
+// INTERVIEW Q20: a line or saying he repeats to families about keeping a puja space simple.
+
+const faqs = [
+  { question: 'Which direction should the puja room face as per Vastu?', answer: 'The north-east is the preferred corner, with the east or north as alternatives. The more useful rule is for the person: sit or stand facing east or north while you pray, which means the idols face west or south. Practitioners differ on details, so go with the direction that works in your plan.' },
+  { question: 'Can I keep a puja room in the bedroom?', answer: 'A separate space is preferred, but many flats leave no choice. If the shrine must be in the bedroom, put it in a closed cabinet or behind a curtain, keep it off the foot side of the bed, and close it at night.' },
+  { question: 'Can a puja room be under the stairs?', answer: 'The texts discourage it, partly because people walk on the stair above the shrine. If it is already built, you can move the shrine to a nearby wall without breaking anything. The staircase Vastu guide has more.' },
+  { question: 'Is a north-east puja room compulsory?', answer: 'No. It is the first choice and there are others. East or north works, and so does a clean, quiet wall shelf in a flat where the north-east is a bathroom. A calm spot you use every day does more than a perfect corner you skip.' },
+  { question: 'Which way should the God photos face in the puja room?', answer: 'Place them so that you face east or north when you pray. Keep them off the floor on a small platform or shelf, and keep the idols from facing each other directly. If your family has its own order for the deities, follow that.' },
+  { question: 'Can the puja room be next to the kitchen or a toilet?', answer: 'A shared wall with the kitchen is acceptable in most plans. A shared wall with a toilet is the one most practitioners discourage, so move the shrine to the other side of the room where you can.' },
+];
+
+const toc = [
+  { id: 'short-answer', label: 'Puja room as per Vastu' },
+  { id: 'direction', label: 'Direction and facing' },
+  { id: 'idols', label: 'Idols and photos' },
+  { id: 'flat', label: 'A flat with no spare corner' },
+  { id: 'avoid', label: 'Where not to put it' },
+  { id: 'griha-pravesh', label: 'Griha Pravesh' },
+  { id: 'faq', label: 'Questions' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), personSchema(),
+  {
+    '@type': 'Article',
+    '@id': abs(`${path}#article`),
+    headline: title,
+    description,
+    url: abs(path),
+    mainEntityOfPage: abs(path),
+    datePublished: '2026-10-04',
+    dateModified: '2026-10-04',
+    author: { '@id': ids.person },
+    publisher: { '@id': ids.organization },
+    isPartOf: { '@id': abs('/#website') },
+    about: { '@type': 'Thing', name: 'Puja room Vastu' },
+    inLanguage: 'en-IN',
+  },
+  faqSchema(faqs, abs(path)),
+  breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout authored
+  title={`Puja Room Vastu: Direction and Placement | ${brand.shortName}`}
+  description={description}
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Guide - Vastu"
+    title={title}
+    intro="Where the puja room goes, which way you face while you pray, how to place idols, and what to do when the flat has no spare corner."
+    crumbs={crumbs}
+  />
+
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-16">
+      <article class="prose-site">
+        <h2 id="short-answer" class="scroll-mt-24 !mt-0">Puja room as per Vastu: the short answer</h2>
+        <p><strong>The north-east corner is the first choice, with the east or the north next. Face east or north while you pray, keep the space clean and quiet, and keep it away from a toilet wall and the underside of a staircase.</strong></p>
+        <p>That is the whole rule for a puja room (some people write pooja room, or call it the prayer room) in three lines. The rest of this page is what to do when your home doesn't give you that corner, which in a flat can easily happen.</p>
+        <p>Vastu Shastra traditionally holds these placements, but practitioners differ on the details, and no home satisfies every point. Treat what follows as a list to work through. Your house isn't sitting an exam. The overall method is on the <a href="/services/vastu/">Vastu consultation</a> page.</p>
+
+        <h2 id="direction" class="scroll-mt-24">Puja room vastu direction: which corner and which way to face</h2>
+        <h3>North-east, east or north</h3>
+        <p>The north-east is called Ishanya, and the old texts give it to prayer. It's also the corner that gets the first light in many houses. If it's taken, the east wall comes next, then the north. A west or south corner works less well on paper, but a puja room you use daily beats a perfect corner you ignore.</p>
+        <h3>Which way you sit and which way the idols face</h3>
+        <p>This part is easy to get backwards, so slowly: the rule is about you and not the idol. You face east or north as you pray. That puts the idols against the east or north wall, looking back at you, and it is why a shrine on one of those walls works. Can't work it out from your plan? Send it and ask.</p>
+
+        <h2 id="idols" class="scroll-mt-24">Idols and photos: how to place them in the puja room</h2>
+        <p>Keep idols on a small raised platform or a shelf, not on the floor, and leave a little room behind them so you can clean and light the lamp without knocking anything over. Don't crowd the shelf. A handful of idols you pray to every day is easier to look after than twenty.</p>
+        <p>Avoid setting two idols face to face. Keep old, broken or chipped ones out of the room, and treat them as your family does. Photos of ancestors are kept outside the main shrine in many homes, but that is a family custom first and a Vastu point second, so follow what your elders do.</p>
+
+        <h2 id="flat" class="scroll-mt-24">Puja room in a flat with no spare corner</h2>
+        <p>Say your two-bedroom flat has a bathroom in the north-east and a wardrobe wall in the east. No separate room, no free corner. What now?</p>
+        <p>Start with a wall and forget the room. A wall-mounted shelf or a small closed cabinet on the north or east wall of the living room does the job. Put it at about chest height, away from the shoe rack and the main door, and out of the line of the TV. If neither of those walls is free, pick the quietest wall you have and send a photo with the compass direction, because the answer depends on your plan.</p>
+        <p>If the shrine has to share the bedroom, use a cabinet with doors or a curtain, keep it off the foot side of the bed, and close it at night. The <a href="/services/vastu/apartment/">apartment Vastu page</a> covers other flat problems, such as a north-east toilet.</p>
+
+        <h2 id="avoid" class="scroll-mt-24">Where not to put the puja room</h2>
+        <ul>
+          <li>Under a staircase. People walk above it, and it feels cramped. See the <a href="/guides/staircase-vastu/">staircase Vastu guide</a>.</li>
+          <li>Against a toilet wall, or directly below or above one when you have a choice.</li>
+          <li>In the south-west of the house, which is the heavy corner meant for the main bedroom.</li>
+          <li>Inside a store room or beside the shoe rack.</li>
+        </ul>
+        <p>None of these is a disaster. If your shrine is already in one, the usual fix is to move it a few feet, and Pandit Ji starts with moves like that. Breaking a wall comes at the very end.</p>
+
+        <h2 id="griha-pravesh" class="scroll-mt-24">Puja room before Griha Pravesh</h2>
+        <p>An empty house is the easiest time to decide where the shrine goes, since nothing needs to be shifted. Pick the spot before the movers arrive. The date itself comes from the Panchang through Muhurtham, which is a separate question covered on the <a href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham page</a>. The full room-by-room list lives in the <a href="/guides/vastu-for-new-home-checklist/">new home Vastu checklist</a>, and the <a href="/services/vastu/home/">Vastu for home</a> page covers each room of a house.</p>
+
+        <h2 id="faq" class="scroll-mt-24">Questions about the puja room at home</h2>
+        <div class="not-prose mt-6"><FaqList faqs={faqs} openFirst /></div>
+
+        <p class="!mt-10">Sending a photo of the room and the compass direction of the wall is enough for a first look. Call or WhatsApp, and ask the fee before you book. Pandit Ji speaks Telugu, Hindi, Kannada and English.</p>
+        <p class="!mt-8 text-[0.875rem] text-[var(--muted)]">{disclaimer}</p>
+      </article>
+
+      <aside class="hidden lg:block">
+        <nav class="sticky top-28 border-l border-[var(--color-line-light)] pl-6" aria-label="On this page">
+          <p class="eyebrow">On this page</p>
+          <ul class="mt-4 grid gap-3 text-[0.9rem]">
+            {toc.map((t) => <li><a class="no-underline hover:text-brass-700" href={`#${t.id}`}>{t.label}</a></li>)}
+          </ul>
+        </nav>
+      </aside>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand title="Get your puja space looked at" text="Send a photo of the room or wall and the compass direction by call or WhatsApp, and a consultation time is arranged, in person at Sanjeeva Reddy Nagar or online." />
+</BaseLayout>

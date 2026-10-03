@@ -1,48 +1,155 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { brand, contact, pandit, telLink, whatsappLink } from '@/data/business';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import { brand, contact, pandit, ids, telLink, whatsappLink } from '@/data/business';
 import { buildGraph, organizationSchema, localBusinessSchema, personSchema, breadcrumbSchema, abs } from '@/lib/schema';
 
 const crumbs = [{ name: 'Home', url: '/' }, { name: 'Contact', url: '/contact/' }];
 const jsonLd = buildGraph(
   organizationSchema(), localBusinessSchema(), personSchema(), breadcrumbSchema(crumbs),
-  { '@type': 'ContactPage', '@id': abs('/contact/#contactpage'), url: abs('/contact/'), about: { '@id': abs('/#organization') } },
+  { '@type': 'ContactPage', '@id': abs('/contact/#contactpage'), url: abs('/contact/'), name: `Contact ${brand.name}`, about: { '@id': ids.localBusiness }, isPartOf: { '@id': ids.website } },
 );
+
+const ready = [
+  'Date, time and place of birth. For Kundli matching, both people\'s.',
+  'Your questions, written down, so the time goes on them.',
+  'Any earlier chart or reading you have.',
+  'For Vastu: the floor plan, and the compass direction the main door faces.',
+  'Your preferred language, and whether you will visit or join online.',
+];
 ---
 <BaseLayout
-  title={`Contact | ${brand.name} - Astrologer in Hyderabad`}
-  description="Contact Sri Sai Durga Astrology Centre in Sanjeeva Reddy Nagar, Hyderabad. Call or WhatsApp Pandit Sri Santosh Sharma Ji for a Vedic astrology consultation - in person or online."
+  title="Contact an Astrologer in S.R. Nagar | Call or WhatsApp"
+  description="Call or WhatsApp Sri Sai Durga Astrology Centre in Sanjeeva Reddy Nagar, Hyderabad. Address, hours, map and what to keep ready for your visit."
   canonicalPath="/contact/"
   jsonLd={jsonLd}
 >
-  <section class="container-page py-14">
-    <div class="reveal mx-auto max-w-3xl text-center">
-      <p class="label">Get in touch</p>
-      <h1 class="mt-3 text-[2.4rem]">Book a consultation</h1>
-      <p class="mt-4 text-ink-2">The quickest way is to call or WhatsApp. Share your birth details and Pandit Ji's team will help you book a time - in {pandit.languages.join(', ')}.</p>
-    </div>
+  <PageHero
+    eyebrow="Get in touch"
+    title="Contact the Astrologer in S.R. Nagar, Hyderabad: Call or WhatsApp"
+    intro={`Call or WhatsApp and send your birth details, and a time is fixed after that, at our centre in ${contact.locality} or online, in ${pandit.languages.join(', ')}.`}
+    crumbs={crumbs}
+  />
 
-    <div class="reveal-1 mx-auto mt-9 grid max-w-xl gap-3 text-center sm:max-w-md">
-      <a class="btn btn-primary !min-h-12" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call {contact.phoneDisplay}</a>
-      <a class="btn btn-wa !min-h-12" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> Message on WhatsApp</a>
+  <!-- ============ CALL / WHATSAPP / NAP ============ -->
+  <section class="band-light section">
+    <div class="container-page">
+      <SectionHead eyebrow="Book" title="Book an astrologer consultation in Hyderabad by call or WhatsApp" />
     </div>
-
-    <div class="reveal-2 mx-auto mt-12 grid max-w-4xl gap-8 md:grid-cols-2">
-      <div class="rounded-2xl border border-gold/30 bg-card p-6">
-        <h2 class="text-[1.4rem]">Visit our centre</h2>
-        <address class="mt-3 not-italic leading-relaxed text-ink-2">
-          {contact.addressLine},<br />{contact.locality}, {contact.city}, {contact.state} {contact.postalCode}
-        </address>
-        <p class="mt-3 text-[0.92rem] text-ink-2">{contact.landmark}</p>
-        <p class="mt-3 text-[0.92rem]"><strong>Hours:</strong> {contact.hoursDisplay}</p>
-        <p class="mt-1 text-[0.92rem]"><strong>Phone:</strong> <a class="text-flame underline underline-offset-2" href={telLink()}>{contact.phoneDisplay}</a></p>
-        <p class="mt-4 text-[0.9rem] text-ink-2">Areas served: {contact.areasServed.slice(0, 8).join(', ')} and across Hyderabad.</p>
+    <div class="container-page mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+      <div class="grid gap-6 sm:grid-cols-2">
+        <div class="card card-static reveal flex flex-col gap-4">
+          <p class="eyebrow">Call</p>
+          <p class="font-display whitespace-nowrap text-[1.5rem] leading-tight text-[var(--fg)]">{contact.phoneDisplay}</p>
+          <p class="text-[0.95rem]">Best for a quick question, or to fix a time while you are on the line.</p>
+          <a class="btn btn-call mt-auto" href={telLink()} data-cta="call">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+            Call now
+          </a>
+        </div>
+        <div class="card card-static reveal flex flex-col gap-4">
+          <p class="eyebrow">WhatsApp</p>
+          <p class="font-display whitespace-nowrap text-[1.5rem] leading-tight text-[var(--fg)]">{contact.phoneDisplay}</p>
+          <p class="text-[0.95rem]">Message your birth details and your question, and we reply with a time.</p>
+          <a class="btn btn-wa mt-auto" href={whatsappLink()} data-cta="whatsapp">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.4L3 21l4.8-1.2A9 9 0 1 0 12 3Z"/></svg>
+            Chat on WhatsApp
+          </a>
+        </div>
       </div>
-      <div class="overflow-hidden rounded-2xl border border-gold/30">
-        <iframe src={contact.mapEmbed} width="100%" height="100%" style="border:0; min-height:320px" loading="lazy"
-          referrerpolicy="strict-origin-when-cross-origin"
-          title="Map to Sri Sai Durga Astrology Centre"></iframe>
+
+      <dl class="fact-table reveal self-start">
+        <div><dt>Centre</dt><dd>{brand.name}</dd></div>
+        <div>
+          <dt>Address</dt>
+          <dd><address class="not-italic">{contact.addressLine}, {contact.locality}, {contact.city}, {contact.state} {contact.postalCode}</address></dd>
+        </div>
+        <div><dt>Landmark</dt><dd>{contact.landmark}</dd></div>
+        <div><dt>Hours</dt><dd>{contact.hoursDisplay}</dd></div>
+        <div><dt>Languages</dt><dd>{pandit.languages.join(', ')}</dd></div>
+        <div><dt>Fees</dt><dd>Shared before you book</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ MAP (click-to-load facade) ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <div>
+        <SectionHead eyebrow="Visit us" title="Find the astrologer's centre in Sanjeeva Reddy Nagar" />
+        <p class="reveal mt-6">{contact.addressLine}, {contact.locality}, {contact.city} {contact.postalCode}.</p>
+        <p class="reveal mt-3 text-[0.95rem]">Open every day, 24 hours. Call or WhatsApp first, so a time is fixed.</p>
+        <div class="reveal mt-8 flex flex-wrap gap-3">
+          <a class="btn btn-ghost" href={contact.gbpUrl} target="_blank" rel="noopener">Open in Google Maps</a>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div id="map-box" class="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-brass-500/35 bg-indigo-950" style="min-height:18rem">
+          <div id="map-facade" class="absolute inset-0 grid place-content-center gap-4 p-6 text-center" style="background: radial-gradient(70% 80% at 50% 30%, #1C2658 0%, #070B1E 75%);">
+            <p class="font-display text-[1.375rem] text-[var(--fg)]">{contact.locality}, {contact.city}</p>
+            <p class="text-[0.9rem]">{contact.landmark}</p>
+            <div class="flex flex-wrap justify-center gap-3">
+              <button id="map-load" type="button" class="btn btn-call btn-sm" hidden>Load map</button>
+              <a class="btn btn-ghost btn-sm" href={contact.gbpUrl} target="_blank" rel="noopener">Open in Google Maps</a>
+            </div>
+          </div>
+          <iframe id="map-frame" title={`Map to ${brand.name}`} data-src={contact.mapEmbed} class="absolute inset-0 h-full w-full border-0" style="display:none" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
       </div>
     </div>
   </section>
+
+  <!-- ============ HOW TO REACH + WHAT TO HAVE READY ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-14 lg:grid-cols-2 lg:gap-20">
+      <div>
+        <SectionHead eyebrow="How to reach" title="How to reach our centre from Ameerpet, Panjagutta and Begumpet" />
+        <div class="reveal prose-site mt-6">
+          <p>We are on the 5th floor, Flat No. 502, Ramakrishna Nivas, beside Andhra Bank and opposite Royal College, Bapu Nagar. Coming from Ameerpet, Panjagutta or Begumpet, search for our centre by name on Google Maps, follow the pin, and watch for the bank on your side of the road.</p>
+          <p>Lost at the entrance? Call {contact.phoneDisplay} and we will guide you in.</p>
+          <p>The Google listing also names Kukatpally, Secunderabad, Banjara Hills and Madhapur. If the drive is the problem, consult by phone or video instead. The <a href="/areas/">areas we serve</a> page has the full list.</p>
+          <!-- TODO(client): nearest metro station / bus stop, parking and lift availability, so directions can be specific. -->
+        </div>
+      </div>
+      <div>
+        <SectionHead eyebrow="Before you call" title="What to have ready for your astrology or Vastu consultation" />
+        <ul class="reveal mt-8 grid gap-4">
+          {ready.map((item) => (
+            <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+              <span class="mt-1 text-brass-700" aria-hidden="true">✓</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ IN PERSON OR ONLINE ============ -->
+  <section class="band-light section-sm">
+    <div class="container-page grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Two ways" title="Visit in person or consult online" />
+      <div class="reveal prose-site">
+        <p>Both work. Coming in suits a family that wants to sit together and talk with the elders in the room, and online suits you if the drive is the problem or one of you lives in another city.</p>
+        <p>Not sure what a session involves? Read <a href="/how-a-consultation-works/">how a consultation works</a>, or check the <a href="/faq/">frequently asked questions</a> first.</p>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var btn = document.getElementById('map-load');
+      var frame = document.getElementById('map-frame');
+      var facade = document.getElementById('map-facade');
+      if (!btn || !frame || !facade) return;
+      btn.hidden = false;
+      btn.addEventListener('click', function () {
+        frame.src = frame.getAttribute('data-src');
+        frame.style.display = 'block';
+        facade.style.display = 'none';
+      });
+    })();
+  </script>
 </BaseLayout>

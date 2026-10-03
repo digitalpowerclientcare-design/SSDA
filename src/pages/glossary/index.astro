@@ -1,105 +1,130 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { brand, telLink, whatsappLink } from '@/data/business';
+import PageHero from '@/components/PageHero.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { abs } from '@/data/business';
 import { buildGraph, organizationSchema, breadcrumbSchema } from '@/lib/schema';
 
 const crumbs = [{ name: 'Home', url: '/' }, { name: 'Glossary', url: '/glossary/' }];
 
-/* Terms grounded in what this site already talks about - no invented
-   definitions, each links to the real service page it supports. */
-const terms = [
-  {
-    term: 'Ashtakoot / Guna Milan',
-    def: 'The 36-point traditional system for comparing two birth charts before marriage, examining eight factors of compatibility rather than a single score.',
-    href: '/services/kundli-matching/',
-  },
-  {
-    term: 'Dasha',
-    def: 'A planetary time period in a birth chart, used to understand timing - when a change in career, marriage or circumstance is more or less likely.',
-    href: '/services/career-astrology/',
-  },
-  {
-    term: 'Kaal Sarp Dosha',
-    def: 'A chart placement where all seven visible planets sit between Rahu and Ketu. Its significance is often over-stated - many charts carry a mild version with no real remedy required.',
-    href: '/services/dosha-remedies/',
-  },
-  {
-    term: 'Kundli (Janam Kundli)',
-    def: 'A birth chart, prepared from date, time and place of birth. The starting point for every reading offered here.',
-    href: '/services/kundli-matching/',
-  },
-  {
-    term: 'Mangal Dosha (Kuja Dosha)',
-    def: 'A placement of Mars said to affect marriage. Classical texts list several cancellation conditions, so a flagged dosha does not automatically mean a difficult match.',
-    href: '/services/dosha-remedies/',
-  },
-  {
-    term: 'Muhurtham',
-    def: 'An auspicious date and time for an important event - a wedding, a gruhapravesham, a business opening - chosen using the panchangam and the parties\' charts.',
-    href: '/services/muhurtham/',
-  },
-  {
-    term: 'Nakshatra',
-    def: 'One of 27 lunar constellations. A person\'s birth Nakshatra is used alongside their Rashi in marriage matching and chart reading.',
-    href: '/services/kundli-matching/',
-  },
-  {
-    term: 'Navagraha',
-    def: 'The nine planetary bodies used in Vedic astrology - the Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu and Ketu - whose positions form the basis of a chart reading.',
-    href: '/services/dosha-remedies/',
-  },
-  {
-    term: 'Panchangam',
-    def: 'A traditional Hindu calendar combining lunar and solar positions, used to calculate auspicious timings for Muhurtham.',
-    href: '/services/muhurtham/',
-  },
-  {
-    term: 'Rashi (Moon Sign)',
-    def: 'The zodiac sign the Moon occupied at birth. Distinct from a Sun sign, and the basis for the Rashi used in Kundli matching.',
-    href: '/services/kundli-matching/',
-  },
-  {
-    term: 'Vastu Dosha',
-    def: 'A directional imbalance in a home or office layout - a kitchen in the wrong corner, an obstructed entrance. Most have a workable correction that does not involve construction.',
-    href: '/services/vastu/',
-  },
-  {
-    term: 'Birth Number / Destiny Number',
-    def: 'Two core figures in numerology, drawn from a birth date and a full name, used alongside a chart reading rather than in place of one.',
-    href: '/services/numerology/',
-  },
+/* Definitions are general classical knowledge, phrased the way a consultant would say them across a table.
+   Each term links to the service page it supports. Headings carry the common spelling variants. */
+const cats = [
+  { id: 'astrology', short: 'Astrology terms', title: 'Astrology terms A-Z: Kundli, Lagna, Dasha and Nakshatra', intro: 'The words that come up the moment a chart is opened.' },
+  { id: 'matching', short: 'Kundli matching', title: 'Kundli matching terms: Ashtakoot, Guna Milan and Bhakoot', intro: 'What the 36 points are made of.' },
+  { id: 'dosha', short: 'Doshas', title: 'Dosha terms: Mangal, Kaal Sarp, Nadi and Sade Sati', intro: 'Labels that sound worse than they usually are, and what each one means.' },
+  { id: 'muhurtham', short: 'Muhurtham', title: 'Muhurtham and Panchang terms: Griha Pravesh, Rahu Kalam and more', intro: 'Words you meet when a date is being chosen.' },
+  { id: 'vastu', short: 'Vastu', title: 'Vastu terms: Brahmasthan, Vastu Purusha and Vastu dosha', intro: 'Words for how a home or office is laid out.' },
+  { id: 'numerology', short: 'Numerology', title: 'Numerology terms: birth number and destiny number', intro: 'Two numbers worked out from a date of birth.' },
+] as const;
+
+const raw = [
+  { cat: 'matching', term: 'Ashtakoot (Guna Milan, Horoscope Matching)', def: 'The 36-point system for comparing two charts before a marriage. It looks at eight factors, from temperament to health to family, and adds up the points. Nadi alone carries 8 of the 36 and Bhakoot 7, so the total hides more than it shows.', href: '/services/kundli-matching/', cta: 'Kundli matching' },
+  { cat: 'matching', term: 'Bhakoot (Bhakoot Dosha)', def: 'One of the eight Ashtakoot factors, worth 7 of the 36 points. It compares the Moon signs of the two people, and a pairing thought to be poor is called Bhakoot dosha. It has cancellation conditions like most doshas, so a low Bhakoot score is a reason to ask a question and no more.', href: '/services/kundli-matching/', cta: 'Kundli matching' },
+  { cat: 'muhurtham', term: 'Bhoomi Puja (Bhoomi Pooja)', def: 'The ritual before construction starts, to seek blessings on the land. The date is normally picked through Muhurtham.', href: '/services/muhurtham/', cta: 'Muhurtham' },
+  { cat: 'numerology', term: 'Birth Number / Destiny Number', def: 'Two numbers from numerology, both worked out from your date of birth. The birth number comes from the day of the month, the destiny number from the full date. They sit next to a chart reading and do not replace it.', href: '/services/numerology/', cta: 'Numerology' },
+  { cat: 'vastu', term: 'Brahmasthan', def: 'The central zone of a plot or building in Vastu Shastra. The texts want it kept open, light and uncluttered, with no heavy structure, toilet or storage on it.', href: '/services/vastu/', cta: 'Vastu consultation' },
+  { cat: 'astrology', term: 'Dasha (Dasa)', def: 'A planetary time period in your birth chart. The dasha you are in now is the main thing that speaks to timing, such as when a change in work or marriage looks more likely and when it looks less likely.', href: '/services/career-astrology/', cta: 'Career astrology' },
+  { cat: 'astrology', term: 'Graha', def: 'The Sanskrit word for a planet in Jyotish. There are nine grahas, and two of them, Rahu and Ketu, are lunar nodes: calculated points on the Moon\'s path that are not physical bodies at all.', href: '/services/dosha-remedies/', cta: 'Dosha remedies' },
+  { cat: 'muhurtham', term: 'Griha Pravesh (Gruhapravesam, Housewarming)', def: 'The ceremony when a family first enters a new home. The date and time come from Muhurtham. If you are still unsure about the layout, get the Vastu looked at first, because it is far easier to fix a floor plan before you move in.', href: '/griha-pravesh-muhurtham-hyderabad/', cta: 'Griha Pravesh muhurtham' },
+  { cat: 'matching', term: 'Guna', def: 'In Kundli matching, the points given for each of the eight factors, adding up to a total out of 36. A total of 18 is the usual cut-off. The number is the first thing to read. It is never the last.', href: '/services/kundli-matching/', cta: 'Kundli matching' },
+  { cat: 'astrology', term: 'Jyotish (Jyothisham, Vedic Astrology)', def: 'The Sanskrit name for Vedic astrology, spelt Jyotish or Jyothisham depending on who is writing. It reads a life from the positions of the nine grahas at birth. A jyotishi is the person who reads the chart.', href: '/about/', cta: 'About Pandit Ji' },
+  { cat: 'dosha', term: 'Kaal Sarp Dosha (Kalasarpa Dosha)', def: 'A chart placement where all seven visible planets sit between Rahu and Ketu. It sounds alarming. How much it matters depends on the exact placement and the dasha running now, and some versions are mild enough that no remedy is needed.', href: '/services/dosha-remedies/', cta: 'Dosha remedies' },
+  { cat: 'astrology', term: 'Kundli (Kundali, Janam Kundli)', def: 'Your birth chart, drawn from the date, time and place you were born. Every reading starts here, whether the question is about marriage, work or a Muhurtham. Kundli, Kundali and Janam Kundli all mean the same chart.', href: '/services/janam-kundli-reading/', cta: 'Janam Kundli reading' },
+  { cat: 'astrology', term: 'Lagna', def: 'The ascendant: the zodiac sign that was rising on the eastern horizon at the moment you were born. It marks the first house and sets where every other house falls, which is why an uncertain birth time can change a chart.', href: '/services/career-astrology/', cta: 'Career astrology' },
+  { cat: 'astrology', term: 'Mahadasha', def: 'A major planetary period in the Vimshottari dasha system, lasting between 6 and 20 years depending on the planet. Each one is split into shorter sub-periods called antardashas.', href: '/services/career-astrology/', cta: 'Career astrology' },
+  { cat: 'dosha', term: 'Mangal Dosha (Kuja Dosha, Manglik)', def: 'A placement of Mars said to affect marriage. The texts list several conditions that cancel or soften it, so someone flagged as Manglik is not automatically a difficult match.', href: '/services/dosha-remedies/', cta: 'Dosha remedies' },
+  { cat: 'muhurtham', term: 'Muhurtham (Muhurat, Muhurtam)', def: 'A date and time chosen for something important, such as a wedding, a Griha Pravesh or a business opening. It comes from the Panchang and the charts of the people involved.', href: '/services/muhurtham/', cta: 'Muhurtham' },
+  { cat: 'dosha', term: 'Nadi (Nadi Dosha)', def: 'One of the eight Ashtakoot factors, and the heaviest at 8 of the 36 points. When two people fall in the same Nadi, that is Nadi dosha. Because the weight is so high a Nadi flag gets attention, and it too has cancellation conditions that need checking before anyone decides. This is the matching factor, a different thing from Nadi leaf astrology.', href: '/services/nadi-dosha/', cta: 'Nadi dosha' },
+  { cat: 'astrology', term: 'Nakshatra', def: 'One of 27 lunar constellations. Your birth Nakshatra is the star the Moon was in when you were born, and it is used with your Rashi in matching and in reading a chart.', href: '/services/kundli-matching/', cta: 'Kundli matching' },
+  { cat: 'astrology', term: 'Navagraha', def: 'The nine bodies used in Vedic astrology: the Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu and Ketu. Where they stood at your birth is the basis of a chart reading.', href: '/services/dosha-remedies/', cta: 'Dosha remedies' },
+  { cat: 'muhurtham', term: 'Panchang (Panchangam)', def: 'A Hindu calendar that tracks the Moon and the Sun. It has five parts: tithi, weekday, nakshatra, yoga and karana, and Muhurtham dates come from it. Many Telugu families open the new year by listening to the Ugadi Panchangam.', href: '/services/muhurtham/', cta: 'Muhurtham' },
+  { cat: 'muhurtham', term: 'Rahu Kalam', def: 'A stretch of about an hour and a half each day, ruled by Rahu, that people avoid for starting something new. It moves with the weekday and with sunrise and sunset, so the time is different every day.', href: '/services/muhurtham/', cta: 'Muhurtham' },
+  { cat: 'astrology', term: 'Rashi (Moon Sign)', def: 'The zodiac sign the Moon was in when you were born. It is not the Sun sign used in Western astrology, and Kundli matching runs on the Moon sign.', href: '/services/kundli-matching/', cta: 'Kundli matching' },
+  { cat: 'dosha', term: 'Sade Sati', def: 'The seven-and-a-half-year stretch when Saturn passes through the sign before your Moon sign, the sign itself and the one after. The texts call it a testing time. What it means for you depends on the whole chart, and the label says very little by itself.', href: '/services/dosha-remedies/', cta: 'Dosha remedies' },
+  { cat: 'vastu', term: 'Vastu (Vaastu, Vasthu)', def: 'Short for Vastu Shastra, the old Indian system for placing rooms, doors and furniture in a building. Vastu, Vaastu and Vasthu are one word spelt three ways. In a flat you cannot change the facing, but you can change what goes where inside.', href: '/services/vastu/', cta: 'Vastu consultation' },
+  { cat: 'vastu', term: 'Vastu Dosha', def: 'A directional imbalance in a home or office layout, such as a kitchen in the wrong corner or a blocked entrance. Most can be fixed by moving things around, and no builder is needed.', href: '/services/vastu/', cta: 'Vastu consultation' },
+  { cat: 'vastu', term: 'Vastu Purusha', def: 'In Vastu Shastra, the figure drawn within a grid, the Vastu Purusha Mandala, laid over a plot with the head to the north-east. The grid helps work out which zones suit which uses.', href: '/services/vastu/', cta: 'Vastu consultation' },
+  { cat: 'astrology', term: 'Yoga', def: 'In Jyotish, a named combination of planets in a chart, said to point to particular results. It has nothing to do with the exercise.', href: '/services/career-astrology/', cta: 'Career astrology' },
 ];
 
-const jsonLd = buildGraph(organizationSchema(), breadcrumbSchema(crumbs));
+const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const terms = raw
+  .map((t) => ({ ...t, id: slug(t.term) }))
+  .sort((a, b) => a.term.localeCompare(b.term));
+
+const groups = cats.map((c) => ({ ...c, items: terms.filter((t) => t.cat === c.id) }));
+
+const jsonLd = buildGraph(
+  organizationSchema(),
+  {
+    '@type': 'DefinedTermSet',
+    '@id': abs('/glossary/#termset'),
+    name: 'Vedic astrology and Vastu glossary',
+    description: 'Definitions of the Vedic astrology and Vastu terms used in consultations at Sri Sai Durga Astrology Centre.',
+    url: abs('/glossary/'),
+    inLanguage: 'en-IN',
+    publisher: { '@id': abs('/#organization') },
+    hasDefinedTerm: terms.map((t) => ({
+      '@type': 'DefinedTerm',
+      '@id': abs(`/glossary/#${t.id}`),
+      name: t.term,
+      description: t.def,
+      url: abs(`/glossary/#${t.id}`),
+      inDefinedTermSet: abs('/glossary/#termset'),
+    })),
+  },
+  breadcrumbSchema(crumbs),
+);
 ---
 <BaseLayout
-  title={`Vedic Astrology Glossary | ${brand.name}`}
-  description="Plain-language definitions of the Vedic astrology and Vastu terms used across our Hyderabad consultations - Kundli, Guna Milan, Dasha, Muhurtham, Vastu Dosha and more."
+  title="Vedic Astrology and Vastu Glossary | Sri Sai Durga"
+  description={`Meanings of ${terms.length} Vedic astrology and Vastu terms: Lagna, Dasha, Mangal dosha, Nadi, Muhurtham, Griha Pravesh and Brahmasthan, from a Hyderabad astrologer.`}
   canonicalPath="/glossary/"
   jsonLd={jsonLd}
 >
-  <section class="section">
-    <div class="container-page">
-      <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="label">Glossary</p>
-        <h1 class="mt-3 text-[2.2rem]">Terms used in a Vedic astrology consultation</h1>
-        <p class="mt-4 text-ink-2">Plain definitions for the words that come up most in our consultations - each links to the relevant service.</p>
-      </div>
+  <PageHero
+    eyebrow="Glossary"
+    title="Vedic Astrology and Vastu Glossary: Terms in Simple English"
+    intro="The words that come up in a consultation, with the spellings you will see elsewhere. Each one links to the service where it is used."
+    crumbs={crumbs}
+  />
 
-      <div class="mt-11 grid gap-4 sm:grid-cols-2">
-        {terms.map((t) => (
-          <div class="card reveal p-6">
-            <h2 class="text-[1.1rem] text-ink">{t.term}</h2>
-            <p class="mt-2 text-[0.92rem] leading-relaxed text-ink-2">{t.def}</p>
-            <a class="mt-3 inline-flex text-[0.88rem] font-bold text-flame" href={t.href}>Related service →</a>
-          </div>
+  <section class="band-light section">
+    <div class="container-page">
+      <nav aria-label="Jump to a group of terms" class="reveal border-b border-[var(--line)] pb-6">
+        <ul class="flex flex-wrap gap-2.5">
+          {groups.map((g) => (
+            <li><a href={`#${g.id}`} class="inline-block rounded-full border border-[var(--line)] px-4 py-2 text-[0.875rem] font-medium text-[var(--fg)] no-underline transition-colors hover:bg-[var(--color-indigo-900)] hover:text-white">{g.short}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="mt-4">
+        {groups.map((g) => (
+          <section id={g.id} class="grid scroll-mt-28 gap-6 border-b border-[var(--line)] py-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
+            <div class="max-w-md">
+              <h2 class="text-[clamp(1.5rem,1.2rem+1.2vw,2.1rem)]">{g.title}</h2>
+              <p class="mt-3">{g.intro}</p>
+            </div>
+            <dl class="grid gap-8">
+              {g.items.map((t) => (
+                <div id={t.id} class="reveal scroll-mt-28">
+                  <dt><h3 class="text-[1.5rem]">{t.term}</h3></dt>
+                  <dd class="mt-2 max-w-2xl">
+                    <p>{t.def}</p>
+                    <a class="link-arrow mt-3" href={t.href}>{t.cta} <span aria-hidden="true">→</span></a>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
         ))}
       </div>
 
-      <div class="mt-12 flex flex-wrap justify-center gap-3">
-        <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Ask Pandit Ji directly</a>
-        <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> WhatsApp</a>
-      </div>
+      <p class="reveal mt-10 max-w-2xl text-[0.95rem]">These are general meanings. How a term applies to your own chart is something Pandit Ji goes through in a consultation, and <a class="underline decoration-[var(--accent)] underline-offset-4" href="/how-a-consultation-works/">how a consultation works</a> shows how that goes.</p>
     </div>
   </section>
+
+  <CtaBand title="Found a term in your own chart?" text="Call or WhatsApp and Pandit Ji will go through it with you, in Telugu, Hindi, Kannada or English." />
 </BaseLayout>

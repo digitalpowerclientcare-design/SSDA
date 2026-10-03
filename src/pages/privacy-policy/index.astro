@@ -1,15 +1,18 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { brand, contact } from '@/data/business';
+import PageHero from '@/components/PageHero.astro';
+import { brand, contact, telLink } from '@/data/business';
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Privacy Policy', url: '/privacy-policy/' }];
 ---
-<BaseLayout title={`Privacy Policy | ${brand.name}`} description="How Sri Sai Durga Astrology Centre handles your information." canonicalPath="/privacy-policy/" noindex>
-  <section class="container-page py-14">
-    <div class="mx-auto max-w-2xl">
-      <h1 class="text-[2.2rem]">Privacy Policy</h1>
-      <div class="mt-6 space-y-4 leading-relaxed text-ink-2">
+<BaseLayout title={`Privacy Policy | ${brand.name}`} description="How Sri Sai Durga Astrology Centre handles the name, phone number and birth details you share when you contact the centre or use this website." canonicalPath="/privacy-policy/" noindex>
+  <PageHero eyebrow="Legal" title="Privacy Policy" crumbs={crumbs} />
+  <section class="band-light section">
+    <div class="container-page">
+      <div class="prose-site">
         <p>Your privacy matters to us. Any details you share with {brand.name} - such as your name, phone number and birth details - are used only to provide your astrology consultation and to contact you about it. They are never sold or shared with anyone else.</p>
         <p>This website uses standard analytics, including Microsoft Clarity, to understand how visitors use the site (for example, which pages are viewed and where people tap). Clarity may record anonymised interactions such as clicks and scrolling to help us improve the site; it does not capture the birth details or personal information you share when you contact us. Calls and WhatsApp messages you initiate are handled directly by our team.</p>
-        <p>To ask about or remove your information, contact us at <a class="text-flame underline underline-offset-2" href={`tel:${contact.phoneE164}`}>{contact.phoneDisplay}</a>.</p>
+        <p>To ask about or remove your information, contact us at <a href={telLink()}>{contact.phoneDisplay}</a>.</p>
       </div>
     </div>
   </section>

@@ -1,85 +1,179 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { brand, pandit, contact, telLink, whatsappLink } from '@/data/business';
-import { buildGraph, organizationSchema, localBusinessSchema, personSchema, breadcrumbSchema } from '@/lib/schema';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, pandit, contact, ids, reviewsUrl, telLink, whatsappLink } from '@/data/business';
+import { buildGraph, organizationSchema, localBusinessSchema, personSchema, faqSchema, breadcrumbSchema, abs } from '@/lib/schema';
 
 const crumbs = [{ name: 'Home', url: '/' }, { name: 'About Pandit Ji', url: '/about/' }];
-const jsonLd = buildGraph(organizationSchema(), localBusinessSchema(), personSchema(), breadcrumbSchema(crumbs));
+const reviewCount = brand.reviews.count.toLocaleString('en-IN');
+
+const faqs = [
+  { question: 'Who is Pandit Sri Santosh Sharma Ji?', answer: `He is a Vedic astrologer and Vastu consultant who has practised in Hyderabad for more than 35 years. You meet him at Sri Sai Durga Astrology Centre in ${contact.locality}, or speak to him on a phone or video call.` },
+  { question: 'What does Pandit Ji help with?', answer: 'Kundli matching, marriage timing and delay, career and business questions, Muhurtham (auspicious dates), doshas, numerology, and Vastu for homes, flats, offices and plots.' },
+  { question: 'Is a pandit the same as an astrologer?', answer: 'Not always. Pandit is a title of respect for a learned person, and many pandits are priests. A jyotishi (astrologer) is the one who reads charts. Pandit Ji is addressed as Pandit, and the work you come to him for is Jyotish and Vastu.' },
+  { question: 'Do you sell gemstones, yantras or remedy products?', answer: 'No. Nothing is sold here except the consultation. If your chart suggests a remedy, Pandit Ji tells you what it is and why. If it suggests nothing, he says that.' },
+  { question: 'Can Pandit Ji guarantee a result?', answer: 'No, and he will not try. A chart can show which periods look supportive and which look slow. It cannot name a day or promise an outcome. Be careful with anyone who does.' },
+  { question: 'Which languages are consultations held in?', answer: `${pandit.languages.slice(0, -1).join(', ')} and ${pandit.languages[pandit.languages.length - 1]}. Tell us which one you want when you call, and the session is booked in that language.` },
+  { question: 'Can I consult Pandit Ji online from outside Hyderabad?', answer: 'Yes. Sessions run over phone or video as well as in person, so a relative in another city or country can join the call. Call or WhatsApp to fix a time.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  { '@type': 'AboutPage', '@id': abs('/about/#aboutpage'), url: abs('/about/'), name: `About ${pandit.name}`, mainEntity: { '@id': ids.person }, isPartOf: { '@id': ids.website } },
+  faqSchema(faqs, abs('/about/')),
+  breadcrumbSchema(crumbs),
+);
+
+const method = [
+  { t: 'Lagna, the rising sign', d: 'Everything starts with the sign that was rising on the eastern horizon when you were born. It decides which house is which, and a birth time that is off by a couple of hours can change it.' },
+  { t: 'The nine grahas in your chart', d: 'Next come the planets, Rahu and Ketu included: which house each one sits in, which sign, and how strong it is there.' },
+  { t: 'Dasha periods and timing', d: 'Pandit Ji reads the dasha running now against the chart. That is the part that speaks to timing. Without it, a chart only tells you what is possible.' },
+  { t: 'Kundli matching: both charts together', d: 'For a marriage match the two charts go side by side. The 36-point Guna score is one part of that reading.' },
+  { t: 'Dosha checks come first', d: 'If a dosha shows up, Pandit Ji first looks at whether any of its cancellation conditions apply.' },
+];
+
 ---
 <BaseLayout
-  title={`About Pandit Sri Santosh Sharma Ji | ${brand.name}`}
-  description="Pandit Sri Santosh Sharma Ji has guided families in Hyderabad for 35+ years through Vedic astrology - kundli analysis, marriage, career and family guidance, honestly and without false promises."
+  title="Vedic Astrologer in Hyderabad | Pandit Santosh Sharma"
+  description="Meet Pandit Sri Santosh Sharma Ji, a Vedic astrologer and Vastu consultant in Hyderabad with 35+ years of practice. Readings in Telugu, Hindi or English."
   canonicalPath="/about/"
   jsonLd={jsonLd}
 >
-  <section class="container-page grid items-start gap-10 py-14 md:grid-cols-[0.8fr_1.2fr]">
-    <div class="reveal mx-auto w-full max-w-xs">
-      <div class="halo relative aspect-[4/5] overflow-hidden rounded-3xl grid place-content-center text-center" style="border:1px solid rgba(198,135,10,.4); background: radial-gradient(70% 50% at 50% 30%, #FFE9A8, #F3B316 70%, #D99A00 100%);">
-        <span class="font-display text-6xl text-navy">☉</span>
-        <p class="mt-3 px-4 text-[0.8rem] font-bold uppercase tracking-[0.18em] text-navy/70">Pandit Ji photo here</p>
-      </div>
-      <div class="mt-4 rounded-xl border border-gold/30 bg-card p-4 text-center">
-        <p class="font-display text-2xl text-gold-deep">5.0 ★ · 1,640+</p>
-        <p class="text-[0.85rem] text-ink-2">Google reviews</p>
-      </div>
-    </div>
-    <div class="reveal">
-      <p class="label">About Pandit Ji</p>
-      <h1 class="mt-3 text-[2.4rem]">{pandit.name}</h1>
-      <p class="mt-2 font-medium text-gold-deep">{pandit.jobTitle} · 35+ years in Hyderabad</p>
-      <p class="mt-5 leading-relaxed text-ink-2">
-        Families in Hyderabad who come to Pandit Sri Santosh Sharma Ji have usually already spoken to
-        someone else first, and arrive wanting a plain reading rather than a dramatic one. Over 35 years
-        that has stayed the pattern - a marriage taking longer than expected, a career that has stalled,
-        a family question nobody has answered clearly. The chart is read as it is: what it supports, and
-        what it does not, said directly rather than softened or exaggerated either way.
-      </p>
+  <PageHero
+    eyebrow="About Pandit Ji"
+    title="Pandit Sri Santosh Sharma Ji: Vedic Astrologer in Hyderabad"
+    intro="Pandit Ji has read charts and floor plans in Hyderabad for more than 35 years. You can meet him at the centre in Sanjeeva Reddy Nagar, or speak to him on a call."
+    crumbs={crumbs}
+    ctas
+  />
 
-      <h2 class="mt-9 text-[1.5rem]">How a chart is actually read</h2>
-      <p class="mt-3 leading-relaxed text-ink-2">
-        A Kundli is prepared from date, time and place of birth. For marriage matters, the 36-point
-        Ashtakoot system compares both charts together - not a score read in isolation, but the fuller
-        picture behind it, including whether a flagged dosha is genuinely significant or one of the
-        common cases where classical texts already account for it. For career, business and family
-        questions, the relevant dasha periods are read against the chart to understand timing, not just
-        possibility.
-      </p>
+  <!-- ============ PROFILE ============ -->
+  <section class="band-light section">
+    <div class="container-page grid items-start gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+      <!-- typographic profile panel (no photo yet) -->
+      <aside class="band-dark reveal relative overflow-hidden rounded-lg border border-brass-500/35 p-8 md:p-10" aria-label="Profile summary">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="relative">
+          <p class="eyebrow">Vedic astrologer and Vastu consultant</p>
+          <p class="mt-4 font-display text-[clamp(1.75rem,1.4rem+1.4vw,2.4rem)] font-medium leading-[1.14] text-[var(--fg)]">{pandit.name}</p>
+          <span class="rule"></span>
+          <p class="numeral mt-8 text-[clamp(4rem,3rem+4vw,6rem)]">35+</p>
+          <p class="mt-2 text-[0.95rem] uppercase tracking-[0.14em] text-on-dark-muted">Years of practice</p>
+          <p class="mt-8 text-[1rem]">{contact.locality}, {contact.city}, {contact.state}</p>
+          <p class="mt-1 text-[0.95rem] text-on-dark-muted">{pandit.languages.join(' · ')}</p>
+          <p class="mt-6 border-t border-white/12 pt-5 text-[0.95rem]">
+            <span class="text-[#E8B923]" aria-hidden="true">★★★★★</span>
+            <span class="sr-only">5 out of 5 stars,</span>
+            {brand.reviews.rating.toFixed(1)} on Google ·
+            <a class="underline decoration-brass-500/50 underline-offset-4 hover:text-brass-300" href={reviewsUrl} target="_blank" rel="noopener">{reviewCount} reviews</a>
+          </p>
+        </div>
+      </aside>
 
-      <h2 class="mt-9 text-[1.5rem]">Areas of guidance</h2>
-      <div class="mt-4 flex flex-wrap gap-2">
-        {pandit.knowsAbout.map((k) => (
-          <span class="rounded-full border border-gold/40 bg-card px-3 py-1 text-[0.88rem] text-gold-deep">{k}</span>
-        ))}
-      </div>
-
-      <h2 class="mt-9 text-[1.5rem]">Our approach</h2>
-      <p class="mt-3 leading-relaxed text-ink-2">
-        Astrology here is not about fear or false promises. It is about understanding the right timing, the right direction, and the lessons life is teaching us. Guidance is given plainly, in your own language, and remedies are suggested only where the chart genuinely indicates them. Where nothing is required, that is said as readily as anything else - and no gemstone, yantra or remedy product is sold here.
-      </p>
-
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Talk to Pandit Ji</a>
-        <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp"><span aria-hidden="true">✆</span> WhatsApp</a>
+      <div class="reveal">
+        <p class="eyebrow">Who you will be speaking to</p>
+        <h2 class="mt-3">Vedic astrologer and Vastu consultant: meet Pandit Ji</h2>
+        <span class="rule"></span>
+        <div class="prose-site mt-6">
+          <p class="lead">People pick up the phone for a handful of reasons. A marriage that has not happened yet. A job that has stopped moving. A house they are about to buy, or about to walk into for the first time. A decision the family cannot agree on.</p>
+          <!-- INTERVIEW Q3: who calls first and what they are most afraid of, in Pandit Ji's own words (1-2 sentences, no numbers) -->
+          <p>Whichever it is, you talk to Pandit Sri Santosh Sharma Ji himself. He reads the chart and tells you what it shows. If it shows something difficult, he says so. If it shows nothing to worry about, he says that too, and he doesn't dress it up either way.</p>
+          <p>If you are looking for an experienced astrologer in Hyderabad, the fact to go on is 35 years of practice in Jyotish and Vastu Shastra. Whether he is the right person for your question is for the first call to settle, so ask what you want to know and see if the answers make sense to you.</p>
+          <!-- INTERVIEW Q4: do people usually see someone else before him, and what do they tell him about it? Only publish if he confirms and is happy for it to be quoted -->
+        </div>
+        <dl class="fact-table mt-10">
+          <div><dt>Practice</dt><dd>Vedic astrology (Jyotish Shastra) and Vastu Shastra, {pandit.yearsExperience}+ years</dd></div>
+          <div><dt>Specialisation</dt><dd>Kundli matching, marriage, career, business, Muhurtham, doshas, Vastu, numerology</dd></div>
+          <div><dt>Languages</dt><dd>{pandit.languages.join(', ')}</dd></div>
+          <div><dt>Consultation</dt><dd>In person at Sanjeeva Reddy Nagar, or by phone and video</dd></div>
+          <div><dt>Location</dt><dd>{contact.locality}, {contact.city} {contact.postalCode}</dd></div>
+          <div><dt>Fees</dt><dd>Not listed on the site. Ask when you call, and you hear the amount before you book.</dd></div>
+        </dl>
       </div>
     </div>
   </section>
+
+  <!-- ============ METHOD ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Reading the chart" title="Jyotish (Jyothisham): how Pandit Ji reads a Vedic birth chart, step by step" intro="A birth chart is a map of where the planets stood at the moment you were born. Reading it follows an order, and this is the order." />
+      <!-- TODO(client): name the classical texts or tradition Pandit Ji follows, only if he confirms them. -->
+      <!-- INTERVIEW Q1: how he learned Jyotish and Vastu, and from whom (names or relationships only if he is happy for them to appear) -->
+      <!-- INTERVIEW Q2: the first chart he remembers reading for someone and what he learned from it -->
+      <ol class="mt-14 grid gap-px overflow-hidden rounded-lg border border-[var(--color-line-light)] bg-[var(--color-line-light)] sm:grid-cols-2 lg:grid-cols-5">
+        {method.map((m, i) => (
+          <li class="reveal flex flex-col gap-3 bg-white p-7">
+            <span class="numeral text-[1.5rem] !text-[var(--color-brass-700)]">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="text-[1.375rem]">{m.t}</h3>
+            <p class="text-[0.95rem]">{m.d}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="reveal prose-site mt-12">
+        <p>You will see the same craft spelled Jyotish, Jyotishi, Jyothisham or Jyothishyam, depending on who is writing. It is one tradition. If a word in a reading is new to you, the <a href="/glossary/">astrology glossary</a> covers most of them, and <a href="/how-a-consultation-works/">how a consultation works</a> walks through a session from the first call.</p>
+        <p>Where Pandit Ji trained, and which texts he works from, is something to ask him directly. We would rather you hear it in his words than read our summary of it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ APPROACH ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <SectionHead eyebrow="How he works" title="How Pandit Ji works in Hyderabad: nothing to sell but the consultation" />
+      <div class="reveal grid gap-5">
+        <p>We do not sell gemstones, yantras or any other product. Nothing here is for sale except the consultation, so nobody has a reason to find a problem in your chart that is not there.</p>
+        <p>When the chart shows nothing that needs fixing, Pandit Ji says so. When a remedy does make sense, he tells you what it is and why he suggests it, and you can say no. A chart can show which years look supportive and which look slow, but it cannot guarantee an outcome, and he won't pretend it can.</p>
+        <p>He speaks {pandit.languages.slice(0, -1).join(', ')} and {pandit.languages[pandit.languages.length - 1]}, so use the one you think in.</p>
+        <!-- INTERVIEW Q15: what he refuses to do or say (fixed dates, illness advice, rituals he does not believe in), in his own words -->
+        <!-- INTERVIEW Q16: when he tells someone there is nothing wrong in the chart and no remedy is needed, and what happens next -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHAT TO EXPECT ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="What to expect" title="What an astrology consultation with Pandit Ji looks like, in person or online" />
+      <div class="reveal prose-site">
+        <p>Pandit Ji works out your chart before the session, from the date, time and place of birth you give when you call. You don't sit and wait while it is calculated.</p>
+        <p>In the session, Pandit Ji goes through what the chart supports and what it does not, then moves to the question you came with and tells you which periods look better for it and which look slower, with the reason behind each. You get periods. You don't get a date. If a remedy makes sense he explains it, and if not he says that.</p>
+        <p>Come to Sanjeeva Reddy Nagar, or take the session by phone or video. Write your questions down beforehand, because it is easy to forget the important one once you are talking.</p>
+        <!-- INTERVIEW Q5: what a normal week looks like (people seen, phone or video, how he prepares a chart). Do not publish numbers unless he confirms them -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Questions about Pandit Ji, his Jyotish and Vastu work, and booking" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <CtaBand />
 </BaseLayout>
 
 <!--
   TODO(client) - E-E-A-T gap, confirmed by SEO audit 2026-09-29.
   The highest-value additions to this page for search and AI-citation trust
-  need real facts from Pandit Ji - nothing above is invented, and nothing
+  need real facts from Pandit Ji. Nothing above is invented, and nothing
   further should be either. Specifically:
     1. Who trained him (family member's name/relationship, or guru/institution),
-       and whether he follows a named lineage or classical text/school.
+       and whether he follows a named lineage or classical text/school. (INTERVIEW Q1)
     2. Any formal title, certification, astrology-association membership,
-       felicitation or media mention - or confirmation there are none.
-    3. Roughly how many consultations he sees in a typical week/month.
+       felicitation or media mention, or confirmation there are none.
+    3. Roughly how many consultations he sees in a typical week/month. (INTERVIEW Q5)
     4. Confirmation of the real founding year (business.ts has foundedYear
-       flagged TODO - "35+ years" currently implies ~1990, unconfirmed).
-    5. 1-2 real, anonymisable recurring patterns from 35 years of practice.
+       flagged TODO, "35+ years" currently implies ~1990, unconfirmed).
+    5. 1-2 real, anonymisable recurring patterns from 35 years of practice. (INTERVIEW Q3, Q4, Q6, Q7)
     6. A real hi-res photo (pandit.photo is currently a placeholder path).
-  Once supplied, add a "Training and background" section and a real photo -
-  do not fabricate names, institutions or credentials to fill this gap.
+       When supplied, replace the typographic profile panel above with the photo.
+  Once supplied, add a "Training and background" section and a real photo.
+  Do not fabricate names, institutions or credentials to fill this gap.
+  The two sentences removed on 2026-10-04 ("have usually already spoken to someone else first",
+  "that has stayed the pattern") were unverified claims about his clientele; restore only in his words (Q3, Q4).
 -->
-

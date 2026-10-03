@@ -1,4 +1,4 @@
-/* Conversion signals — calls & WhatsApp only (the entire funnel).
+/* Conversion signals - calls & WhatsApp only (the entire funnel).
    Pushes clean events to dataLayer + gtag. Phase 2 wires GTM/Google Ads to these. */
 (function () {
   var fired = {};

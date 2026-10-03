@@ -1,0 +1,12 @@
+---
+interface Props { faqs: { question: string; answer: string }[]; openFirst?: boolean }
+const { faqs, openFirst = false } = Astro.props;
+---
+<div class="faq border-t border-[var(--line)]">
+  {faqs.map((f, i) => (
+    <details open={openFirst && i === 0}>
+      <summary>{f.question}</summary>
+      <div class="faq-a"><p>{f.answer}</p></div>
+    </details>
+  ))}
+</div>

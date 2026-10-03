@@ -1,0 +1,171 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, contact } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/vastu/east-facing-house/';
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Vastu consultation', url: '/services/vastu/' },
+  { name: 'East facing house Vastu', url: path },
+];
+
+// TODO(client): confirm whether home site visits are offered across all of Hyderabad.
+// INTERVIEW Q11: the Vastu mistakes Pandit Ji meets most often even in east facing houses, and what he moves first.
+// INTERVIEW Q12: what he looks at first on an east facing floor plan, in his own words.
+
+const faqs = [
+  { question: 'Is an east facing house good as per Vastu?', answer: 'Vastu Shastra rates the east highly because of the rising sun and the morning light. But the facing is only the front of the house. A kitchen in the wrong corner or a toilet in the north-east can spoil a good facing, so the rooms behind the door still need checking.' },
+  { question: 'Which is better, an east facing or a north facing house?', answer: 'The old texts speak well of both, and neither beats a well planned house of the other. Choose between two houses by their plans, light and position, and weigh the compass last. If you are comparing the two, our north facing page sets out what to check.' },
+  { question: 'Where should the main door be in an east facing house?', answer: 'Many practitioners prefer the north-east half of the east wall and avoid the south-east end. Take a compass reading at the door and mark where it falls on the plan, because schools differ on the exact stretch.' },
+  { question: 'Where should the kitchen be in an east facing house?', answer: 'South-east is the first choice and north-west the second. In an east facing house the south-east is a front corner, so check where the stove stands, which way the cook faces and whether the kitchen opens straight onto the entrance.' },
+  { question: 'Do I need a Vastu check if my house already faces east?', answer: 'It is worth one look at the plan. A good facing does not fix a toilet in the north-east or a staircase in the middle of the house. If the plan is clean, Pandit Ji will say so, and you can ask the fee before you book.' },
+  { question: 'Is an east facing flat good for Vastu?', answer: 'It gets morning light, which is a real advantage, and its facing is fixed. What you can change is inside: the bed, the stove, the shrine. The apartment page lists the checks for a flat, including balcony and shared walls.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `East facing house Vastu in ${contact.city}`,
+    serviceType: 'Vastu consultation for an east facing house',
+    description: 'Vastu review for east facing houses in Hyderabad: main door position on the east wall, kitchen, bedrooms, puja room and the layout mistakes that spoil a good facing.',
+    url: abs(path),
+    isPartOf: { '@id': abs('/services/vastu/#service') },
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)), breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout authored
+  title={`East Facing House Vastu in Hyderabad | ${brand.shortName}`}
+  description="East facing house Vastu in Hyderabad: why the east is rated highly, where the main door sits, kitchen and bedroom positions, and the slips that spoil it."
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="Vastu for a house that faces east"
+    title="East Facing House Vastu: A Good Facing Still Needs a Good Plan"
+    intro="Say you are about to buy an east facing house because everyone agrees east is the best side. They have a point. Here is what the rest of the plan has to do to deserve it."
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ WHY EAST ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+      <div class="reveal">
+        <h2>Why people ask for an east facing house</h2>
+        <span class="rule"></span>
+        <p class="lead mt-6">The east is where the sun comes up, and Vastu Shastra treats it as the direction of light, health and new beginnings. A house with its door on the east takes the first sun into the front rooms.</p>
+        <p class="mt-5">That is a real comfort, whatever you believe about Vastu. Morning light in the front room and the puja corner is pleasant in any city, and in a Hyderabad summer it comes before the heat does.</p>
+        <p class="mt-5">Now the caution. Vastu Shastra traditionally rates the east highly, yet practitioners differ on the finer points, and a facing alone does not make a house sound.</p>
+      </div>
+      <aside class="card card-static reveal self-start">
+        <h3>What the facing cannot do</h3>
+        <p class="mt-4 text-[0.95rem]">It can't move a toilet out of the north-east, clear a staircase from the middle of the house, or fix a kitchen that opens onto the front door. Those are decided inside the plan, and they are what a review looks at.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ DOOR ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead title="East facing house Vastu: where the door sits on the wall" />
+      <div class="mt-10 grid gap-8 lg:grid-cols-2 lg:gap-16">
+        <div class="reveal prose-site">
+          <p class="!mt-0">Many practitioners prefer the door in the north-east half of the east wall. The south-east end is the one they like least. That's the usual advice, and some schools split the wall into nine parts and argue over each, so treat any single number you hear with caution.</p>
+          <p>Take the compass reading at the door, not from the road, and keep the phone away from metal and gates. Then mark the door on the plan.</p>
+        </div>
+        <div class="reveal prose-site">
+          <p class="!mt-0">If the door falls at the south-east end, nobody is asking you to sell. Look at what stands in front of it, whether it opens freely, and how the passage inside runs. A clear, well lit entrance helps in any facing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROOMS ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead title="Rooms in an east facing house" intro="Three rooms decide most of a Vastu review of an east facing plan." />
+      <div class="mt-12 grid gap-10 lg:grid-cols-3 lg:gap-8">
+        <div class="reveal">
+          <h3>Kitchen in an east facing house</h3>
+          <p class="mt-3 text-[0.95rem]">South-east is the first choice, north-west the second. In an east facing house the south-east is a front corner, so ask where the smoke and the smell go, and whether the stove can be seen from the door. The cook faces east. Keep the sink away from the burners.</p>
+        </div>
+        <div class="reveal">
+          <h3>Master bedroom and children's rooms</h3>
+          <p class="mt-3 text-[0.95rem]">The south-west corner is the heavy one, and in this plan it is at the back, quiet and well away from the road. That suits a master bedroom. The head goes towards the south or east. Children's rooms go west or north-west, and the study table is turned east or north.</p>
+        </div>
+        <div class="reveal">
+          <h3>Puja room in an east facing house</h3>
+          <p class="mt-3 text-[0.95rem]">The north-east is the old puja corner, and here it is a front corner that gets the first light. That is a gift. Keep it clear of a toilet wall and out from under a staircase. For idols and what to do in a flat, see the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/guides/puja-room-vastu/">puja room guide</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHERE IT GOES WRONG ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div class="reveal">
+        <h2>Where an east facing plan goes wrong</h2>
+        <span class="rule"></span>
+        <p class="mt-6 max-w-md">Three slips we'd look for first. None of them is rare, and none needs a hammer.</p>
+      </div>
+      <div class="reveal prose-site !mt-0">
+        <p class="!mt-0"><strong>A toilet in the north-east.</strong> The texts discourage it more than almost any other placement, and in an east facing house it sits at the front. Whether it can be softened depends on the plan, and the first thing to ask is whether a different bathroom can carry the daily use.</p>
+        <p><strong>A staircase in the middle of the house.</strong> The middle of the house, the brahmasthan, is meant to stay open. If the stair is already built, keep the space around it clear and read the <a href="/guides/staircase-vastu/">staircase Vastu guide</a> before you do anything.</p>
+        <p><strong>Everything heavy in the north-east.</strong> Water and light belong there. A loaded store room, a stack of old furniture or a big almirah do not. Move the weight to the south and west, which costs you an afternoon.</p>
+        <p>Pandit Ji starts with moves like these. Changing the structure of the house is the last thing on the list.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLOT, FLAT, GRIHA PRAVESH ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-3 lg:gap-10">
+      <div class="reveal">
+        <h2>East facing plot or flat</h2>
+        <span class="rule"></span>
+        <p class="mt-6 text-[0.95rem]">Building from scratch? The <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/plot/">plot Vastu page</a> covers shape and road direction. Buying a flat? A flat's facing is fixed, so see <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/apartment/">Vastu for flats and apartments</a> for what you can change inside.</p>
+      </div>
+      <div class="reveal">
+        <h2>Griha Pravesh in an east facing house</h2>
+        <span class="rule"></span>
+        <p class="mt-6 text-[0.95rem]">The date is a Panchang matter, handled through <a class="underline decoration-[var(--accent)] underline-offset-4" href="/griha-pravesh-muhurtham-hyderabad/">Griha Pravesh muhurtham</a>. The layout is a separate matter, and it is easiest to adjust before the furniture moves in.</p>
+      </div>
+      <div class="reveal">
+        <h2>Other facings, side by side</h2>
+        <span class="rule"></span>
+        <p class="mt-6 text-[0.95rem]">Compare with <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/west-facing-house/">west facing</a>, <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/south-facing-house/">south facing</a> or <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/north-facing-house/">north facing</a> houses, or go to <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/home/">Vastu for home</a> and the <a class="underline decoration-[var(--accent)] underline-offset-4" href="/services/vastu/">Vastu hub</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title="East facing home: questions people ask" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand
+    title="Check the plan of your east facing house"
+    text="Call or WhatsApp with the floor plan and the compass direction of the door. If your plan is clean, Pandit Ji will say so, and he will say if it is not."
+  />
+</BaseLayout>

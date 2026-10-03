@@ -1,12 +1,15 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
 import { brand, disclaimer } from '@/data/business';
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Terms of Use', url: '/terms/' }];
 ---
-<BaseLayout title={`Terms | ${brand.name}`} description="Terms of use for Sri Sai Durga Astrology Centre." canonicalPath="/terms/" noindex>
-  <section class="container-page py-14">
-    <div class="mx-auto max-w-2xl">
-      <h1 class="text-[2.2rem]">Terms of Use</h1>
-      <div class="mt-6 space-y-4 leading-relaxed text-ink-2">
+<BaseLayout title={`Terms of Use | ${brand.name}`} description="Terms of use for Sri Sai Durga Astrology Centre: astrology guidance is offered for perspective and clarity, and fees are shared before any booking." canonicalPath="/terms/" noindex>
+  <PageHero eyebrow="Legal" title="Terms of Use" crumbs={crumbs} />
+  <section class="band-light section">
+    <div class="container-page">
+      <div class="prose-site">
         <p>{disclaimer}</p>
         <p>By using this website and our consultation services, you acknowledge that astrological guidance is for perspective and clarity, and that decisions you make remain your own responsibility.</p>
         <p>Consultation fees are always shared before any booking is confirmed.</p>

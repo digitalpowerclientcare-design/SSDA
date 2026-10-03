@@ -1,0 +1,159 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, pandit, contact, ids, telLink, whatsappLink } from '@/data/business';
+import { buildGraph, organizationSchema, localBusinessSchema, faqSchema, breadcrumbSchema, abs } from '@/lib/schema';
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'How a Consultation Works', url: '/how-a-consultation-works/' }];
+
+const steps = [
+  { t: 'Step 1: Call or WhatsApp', d: `Ring or message ${contact.phoneDisplay} and say what you want to ask. Say too whether you would rather come to us or do it online. If you are not sure yet, ask first and decide after.` },
+  { t: 'Step 2: Send your birth details', d: 'Date, time and place of birth is all a chart needs. For Kundli matching, send the same three for both people. If the birth time is only a guess, say so, and Pandit Ji will tell you which parts of the reading still hold and which will be rougher.' },
+  { t: 'Step 3: The chart is ready before you are', d: 'Pandit Ji works it out before your appointment. That way the session goes on talking, and you are not sitting there while someone calculates.' },
+  { t: 'Step 4: The session, in person or online', d: `Come to ${contact.locality}, or take it on a phone or video call. The reading is the same either way. Pandit Ji goes through what the chart shows and what it does not, and the likely periods for what you asked. Interrupt him whenever a point matters to you.` },
+  { t: 'Step 5: A remedy, if there is one', d: 'If the chart points to a remedy, he tells you what it is and why, and you can say no. If it does not, he says so.' },
+  { t: 'Step 6: Follow-up questions', d: 'Something unclear when you get home? Call or message us and ask. It is better to ask than to leave with half an answer.' },
+];
+
+const bring = [
+  { t: 'For a birth chart reading', items: ['Date, time and place of birth', 'Your questions, written down before the call', 'Any earlier chart or reading you already have'] },
+  { t: 'For Kundli matching', items: ['Date, time and place of birth for both people', 'Any dosha or low score someone has already mentioned', 'What the two families are most concerned about, if anything'] },
+  { t: 'For Muhurtham', items: ['The event: a wedding, Griha Pravesh, an opening or something else', 'Birth details of the people involved', 'The dates you are already considering, and any that cannot work'] },
+];
+
+const faqs = [
+  { question: 'How do I book an astrologer consultation?', answer: `Call or WhatsApp ${contact.phoneDisplay}. Send your birth details and what you want to ask, and we fix a time, in person or online.` },
+  { question: 'What if I do not know my exact birth time?', answer: 'A reading is still possible, but timing points get rougher without an exact time. Tell us when you call, and Pandit Ji will say which parts of the reading you can lean on and which you should hold loosely.' },
+  { question: 'Is an online astrologer consultation as good as visiting?', answer: 'The chart reading is the same. The session runs on a phone or video call, which works well if you live in another part of the city, in another city altogether, or cannot travel.' },
+  { question: 'Will I be given a guaranteed date for my marriage or job?', answer: 'No. You get likely periods and the reason for them. Be careful with anyone who gives you a firm date.' },
+  { question: 'Will I be asked to buy gemstones or products?', answer: 'No. Nothing is sold here except the consultation. If a remedy makes sense, Pandit Ji explains it. If none is needed, he says that.' },
+  { question: 'What do I need for a Vastu consultation?', answer: 'The floor plan and the compass direction the main door faces. A floor-plan review works for a flat you live in and for one you are thinking of buying. A site visit shows more, but you can begin without one.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(),
+  {
+    '@type': 'HowTo',
+    '@id': abs('/how-a-consultation-works/#howto'),
+    name: 'How to book and prepare for an astrologer consultation in Hyderabad, in person or online',
+    description: 'The steps from first call to follow-up for a Vedic astrology or Vastu consultation with Pandit Sri Santosh Sharma Ji at Sri Sai Durga Astrology Centre.',
+    inLanguage: 'en-IN',
+    step: steps.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, name: s.t, text: s.d, url: `${abs('/how-a-consultation-works/')}#step-${i + 1}` })),
+  },
+  { '@type': 'WebPage', '@id': abs('/how-a-consultation-works/#webpage'), url: abs('/how-a-consultation-works/'), name: 'Online astrologer in Hyderabad: how a consultation works', about: { '@id': ids.localBusiness }, isPartOf: { '@id': ids.website } },
+  faqSchema(faqs, abs('/how-a-consultation-works/')),
+  breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout authored
+  title="Online Astrologer in Hyderabad: How a Consultation Works"
+  description="How to consult an astrologer in Hyderabad, in person or online: call or WhatsApp, a chart prepared in advance, an unhurried session, and what to bring."
+  canonicalPath="/how-a-consultation-works/"
+  jsonLd={jsonLd}
+>
+  <PageHero byline
+    eyebrow="How it works"
+    title="Online Astrologer in Hyderabad: How a Consultation Works"
+    intro={`Call or WhatsApp ${contact.phoneDisplay}. Pandit Ji prepares your chart before the session, and you can come to Sanjeeva Reddy Nagar or take it online.`}
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ STEPS ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="The process" title="Consult an astrologer online or in Hyderabad: from first call to follow-up" intro="Six steps, in the order they happen." />
+      <ol class="grid">
+        {steps.map((s, i) => (
+          <li id={`step-${i + 1}`} class="reveal grid scroll-mt-28 grid-cols-[3.5rem_1fr] gap-4 border-t border-[var(--color-line-light)] py-8 last:border-b">
+            <span class="numeral text-[2.25rem] !text-[var(--color-brass-700)]">{i + 1}</span>
+            <div>
+              <h3 class="text-[1.5rem]">{s.t}</h3>
+              <p class="mt-2">{s.d}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ WHAT TO BRING ============ -->
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead eyebrow="What to bring" title="Details to have ready for your astrology consultation" intro="The more exact your details, the firmer the reading." />
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        {bring.map((b) => (
+          <div class="card card-static reveal">
+            <h3>{b.t}</h3>
+            <ul class="mt-4 grid gap-3">
+              {b.items.map((it) => (
+                <li class="flex gap-3 text-[0.95rem]"><span class="text-brass-500" aria-hidden="true">✓</span><span>{it}</span></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ONLINE ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Online" title="Online astrologer consultation by phone or video, booked on WhatsApp" />
+      <div class="reveal prose-site">
+        <p>You do not have to travel for this. If you live in another part of Hyderabad, in another city or in another country, send your birth details on WhatsApp, fix a time, and take the session on a phone or video call. The chart is the same and so is the reading.</p>
+        <p>If you were hoping for an instant automated reading, this is not that. Online jyothisham here means a booked conversation with Pandit Ji about your own chart, which is why it starts with a call.</p>
+        <p>Prefer to sit across from him? We are in a 5th floor flat in Sanjeeva Reddy Nagar, beside Andhra Bank. <a href="/areas/sanjeeva-reddy-nagar/">Directions are here</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LANGUAGES / FEES ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Good to know" title="Language and fees for an astrologer consultation in Hyderabad" intro="Two things worth settling before you book." />
+      <div class="mt-12 grid gap-4 md:grid-cols-2">
+        <div class="card card-static reveal">
+          <h3>Language options</h3>
+          <p class="mt-3 text-[0.95rem]">{pandit.languages.slice(0, -1).join(', ')} and {pandit.languages[pandit.languages.length - 1]}. Say which one you want when you call, and we hold the session in it.</p>
+        </div>
+        <div class="card card-static reveal">
+          <h3>Fees</h3>
+          <p class="mt-3 text-[0.95rem]">Not listed on the website. Ask when you call or message, and you hear the amount before you book.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VASTU VARIANT ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <SectionHead eyebrow="Vastu" title="A Vastu consultation online works slightly differently" />
+      <div class="reveal grid gap-5">
+        <p>It starts with the property, and no birth chart is needed. Keep the floor plan ready, with the compass direction of the main door marked on it.</p>
+        <p>A flat's facing is fixed. The layout inside it is not, so most of what Pandit Ji suggests is about where the bed, the stove, the puja shelf and the heavy storage go.</p>
+        <p>A floor-plan review works for a flat you live in and for one you are thinking of buying, and it can be done on a call. A site visit shows more, but you do not need one to begin.</p>
+        <div class="flex flex-wrap gap-3 pt-2">
+          <a class="btn btn-call" href="/services/vastu/">Vastu consultation</a>
+          <a class="btn btn-ghost" href={whatsappLink('Namaste, I would like a Vastu consultation.')} data-cta="whatsapp">Ask about Vastu</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Before you book an astrologer consultation" intro="Short answers before you call." />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand />
+</BaseLayout>

@@ -1,0 +1,184 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { contact, pandit, disclaimer } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/services/janam-kundli-reading/';
+const title = 'Janam Kundli Reading in Hyderabad | Birth Chart by Pandit Ji';
+const description = 'Janam kundli reading in Hyderabad: your birth chart (janma kundali) read by Pandit Ji. What he reads, what to bring, and what if the birth time is unknown.';
+const answer = 'A janam kundli reading explains your birth chart: where the planets stood when you were born, what that says about your strengths and tendencies, and which periods ahead look easier or slower. Pandit Ji goes through the chart with you in Telugu, Hindi, Kannada or English, so you leave understanding it.';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: 'Janam kundli reading', url: path },
+];
+
+// INTERVIEW Q5: how does Pandit Ji prepare a chart before a session, and what does a normal reading look like from start to finish?
+// INTERVIEW Q10: when someone does not know the exact birth time, what does he do, and how much can he still tell them?
+// TODO(client): confirm whether Pandit Ji offers birth time rectification, and how he describes it.
+const faqs = [
+  { question: 'What is a janam kundli?', answer: 'A janam kundli, also called janma kundali or birth chart, is a map of the sky for the exact moment and place you were born. It shows the rising sign, the Moon sign and star, the planets in their houses, and the dasha periods that run through your life.' },
+  { question: 'What details do I need for a janma kundali reading?', answer: 'Your date of birth, the time of birth as exactly as you can get it, and the place, meaning the town or city. A hospital record or birth certificate is better than memory for the time. If you already have a kundli, bring that as well.' },
+  { question: 'Can a kundali be read without an exact birth time?', answer: 'Partly. The Moon sign and birth star can often still be worked out from the date, but the rising sign, the houses and the exact dasha dates depend on the time. Tell us up front, and Pandit Ji will say which parts of the reading are firm and which are approximate.' },
+  { question: 'Is a kundli reading the same as kundli matching?', answer: 'No. A reading looks at one person’s chart and their own questions. Matching compares two charts before a marriage and scores them out of 36. The two often go together, and you can start with either.' },
+  { question: 'How is a kundali reading different from an online kundli?', answer: 'An online kundli draws the chart. A reading goes on from there, tying the chart to your question, checking the timing and telling you what the chart cannot say. Two apps can also place a planet a few degrees apart, so the chart itself is worth checking.' },
+  { question: 'Can I get my birth chart read online?', answer: 'Yes. A reading works from your birth details, so it can be done by phone or video as well as in person at Sanjeeva Reddy Nagar. Send the details on WhatsApp first and ask the fee before you book.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `Janam kundli reading in ${contact.city}`,
+    serviceType: 'Birth chart (janam kundli) reading',
+    description: answer,
+    url: abs(path),
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
+  },
+  faqSchema(faqs, abs(path)),
+  breadcrumbSchema(crumbs),
+);
+
+const parts = [
+  ['Lagna', 'The sign rising on the eastern horizon when you were born. It changes about every two hours, which is why the birth time matters so much.'],
+  ['Moon sign and star', 'Where the Moon stood, and which of the 27 nakshatras it was in. Matching and the dasha system both start from here.'],
+  ['Twelve houses', 'Self, money, siblings, home, children, health, marriage, career and the rest, each ruled by a sign and a planet.'],
+  ['Nine planets', 'The Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu and Ketu, each sitting in a sign and a house.'],
+  ['Navamsa', 'A finer divisional chart, read mainly for marriage and for how strong a planet is.'],
+  ['Dasha periods', 'The planetary periods running through your life, set by the Moon’s star at birth. They tell you when each part of the chart speaks.'],
+];
+
+const bring = [
+  'Date of birth, and the time as exactly as you can get it.',
+  'Place of birth: the town or city.',
+  'A birth certificate or hospital record for the time, if the family kept one. Memory drifts by an hour without anyone noticing.',
+  'Any old kundli or earlier reading, even a handwritten one.',
+  'Your questions, written down, with the most important one first.',
+];
+---
+<BaseLayout authored title={title} description={description} canonicalPath={path} jsonLd={jsonLd}>
+  <PageHero byline
+    eyebrow="Birth chart · Janam kundli"
+    title="Janam Kundli Reading in Hyderabad: Your Birth Chart Explained"
+    intro={answer}
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ WHAT IS A KUNDLI ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div>
+        <SectionHead eyebrow="The chart itself" title="What a janam kundli is, and what goes into one" />
+        <div class="prose-site reveal mt-6">
+          <p>Your janam kundli, also written kundali or janma kundali, is a map of the sky for the minute and the place you were born, and astrologers draw it as a square or diamond with twelve boxes. Six things go into it.</p>
+        </div>
+      </div>
+      <dl class="fact-table reveal">
+        {parts.map(([k, v]) => (
+          <div><dt>{k}</dt><dd>{v}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ WHAT IS READ ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="The reading" title="What Pandit Ji reads from your birth chart" />
+      <div class="prose-site reveal !mt-0">
+        <p class="!mt-0">A reading starts with the question you came with. A marriage that has not happened. A job you are thinking of leaving. A business decision, a child’s studies, a house move. Pandit Ji looks at the houses and planets that govern that part of life, then at the dasha running now and the ones coming, because the same planet says very different things in different periods of the same life.</p>
+        <p>A chart can show which years look supportive and which look slow. It cannot name a day. If you want a day for an event, that is a <a href="/services/muhurtham/">Muhurtham</a>.</p>
+        <p>Some questions have a page of their own. Two charts for a marriage go to <a href="/services/kundli-matching/">kundli matching</a>, a delay to <a href="/services/marriage-guidance/">marriage guidance</a>, a job to <a href="/services/career-astrology/">career astrology</a>, and a dosha you were told about to <a href="/services/dosha-remedies/">dosha remedies</a> or the <a href="/services/nadi-dosha/">Nadi dosha</a> page. Start with a general reading when you do not yet know which question matters most, and let the chart show where to look first.</p>
+        <!-- INTERVIEW Q5: what the first ten minutes of a birth chart reading look like, in Pandit Ji's own words -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DASHA ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Timing" title="Janma kundali and the dasha: how Pandit Ji reads timing" />
+      <div class="prose-site reveal !mt-0">
+        <p class="!mt-0">The common system, Vimshottari, splits a life into planetary periods that last from 6 to 20 years inside a 120-year cycle, and which period you were born into depends on the Moon’s star at birth. Inside each one sit smaller sub-periods.</p>
+        <p>That is how a reading ends up saying something like this: the next few years look slower for work and kinder for family. A tendency. Nothing in it is a promise.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHAT TO BRING ============ -->
+  <section class="band-light section-sm">
+    <div class="container-page grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Before you call" title="What to bring for a kundli reading" />
+      <div class="reveal">
+        <ul class="grid gap-4">
+          {bring.map((item) => (
+            <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+              <span class="mt-1 text-brass-700" aria-hidden="true">✓</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-6 text-[0.95rem]">Pandit Ji speaks {pandit.languages.join(', ')}. Ask the fee first, before you share any details. See <a class="link-arrow" href="/how-a-consultation-works/">how a consultation works</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NO BIRTH TIME ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="If the time is missing" title="No birth time? What a kundali can still show" />
+      <div class="prose-site reveal !mt-0">
+        <p class="!mt-0">Plenty of families only remember “early morning” or “just after lunch”. For a kundli that is a real gap. It is not a total one.</p>
+        <h3 class="text-[1.5rem]">What you can still read</h3>
+        <p>The Moon takes about two and a quarter days to cross a sign and about a day to cross a star, so with the date alone the Moon sign and birth star are often settled, unless the Moon changed sign or star that day. Broad themes that rest on the Moon and the slower planets can still be discussed.</p>
+        <h3 class="text-[1.5rem]">What stays uncertain</h3>
+        <p>The Lagna and the houses move with the time, since a sign rises roughly every two hours, and the Moon’s exact position inside its star is unknown too, so the dasha dates turn approximate. Some astrologers work backwards from major life events to estimate a birth time. Treat what comes out as an estimate.</p>
+        <!-- INTERVIEW Q10: Pandit Ji's own answer on what he does with an unknown birth time and how much he can tell -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READING VS PRINTOUT ============ -->
+  <section class="band-light section">
+    <div class="container-page">
+      <SectionHead eyebrow="Reading or printout" title="Kundali reading by an astrologer vs a software printout" intro="An app draws the chart in seconds. What it cannot do is hear your question." />
+      <div class="mt-12 grid gap-4 md:grid-cols-2">
+        <div class="card card-static reveal">
+          <h3>What a printout gives you</h3>
+          <p class="mt-3 text-[0.95rem]">Planet positions in a table, a dasha list, and a block of general paragraphs. Different software uses different zodiac settings (the ayanamsa), so two apps can place a planet a few degrees apart. Now and then they put it in different signs.</p>
+        </div>
+        <div class="card card-static reveal">
+          <h3>What a reading gives you</h3>
+          <p class="mt-3 text-[0.95rem]">A chart prepared before your appointment, tied to the question you came with, with the timing worked out and the limits said aloud, so that you can ask why at any point and get an answer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-white section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Janam kundli reading: questions people ask" />
+      <div class="reveal">
+        <FaqList faqs={faqs} openFirst />
+        <p class="mt-8 text-[0.85rem] text-[var(--color-muted-light)]">{disclaimer}</p>
+      </div>
+    </div>
+  </section>
+
+  <AuthorBox />
+
+  <CtaBand title="Book a birth chart reading with Pandit Ji" text="Call or WhatsApp with your date, time and place of birth, and the one question you most want answered. Ask the fee first." />
+</BaseLayout>

@@ -7,23 +7,23 @@
  */
 
 export const brand = {
-  /** Canonical name - MATCHES the Google Business Profile exactly (1,640 reviews)
+  /** Canonical name - MATCHES the Google Business Profile exactly (1,647 reviews)
    *  so Google resolves the site + GBP as one entity. */
   name: 'Sri Sai Durga Astrology Centre',
   shortName: 'Sri Sai Durga',
   legalName: 'Sri Sai Durga Astrology Centre',
-  tagline: 'Trusted Vedic astrology guidance in Hyderabad - honest, without fear or false promises.',
+  tagline: 'Vedic astrology and Vastu consultation in Hyderabad with Pandit Sri Santosh Sharma Ji, for more than 35 years.',
   domain: 'https://srisaidurgaastrologer.com',
   email: 'info@srisaidurgaastrologer.com', // TODO(client): confirm working inbox
   foundedYear: 1990, // TODO(client): confirm. "35+ years" implies ~1990.
   /** Every other spelling in the wild - emitted as schema alternateName. */
-  alternateNames: ['Sri Sai Durga Astrologer', 'Sri Sai Durga Jyotishyalayam'],
+  alternateNames: ['Sri Sai Durga Astrologer'],
   /** Off-site profiles - schema sameAs. Add verified URLs only. */
   sameAs: [
     'https://maps.app.goo.gl/3hHZXUGGmFQWj5J18', // GBP
     // TODO(client): add Justdial, Sulekha, Facebook, Instagram, YouTube if owned.
   ] as string[],
-  reviews: { rating: 5.0, count: 1640, source: 'Google' },
+  reviews: { rating: 5.0, count: 1647, source: 'Google' }, // TODO(client): confirm live GBP count
 } as const;
 
 export const pandit = {
@@ -31,12 +31,11 @@ export const pandit = {
   plainName: 'Santosh Sharma',
   jobTitle: 'Vedic Astrologer & Vastu Consultant',
   yearsExperience: 35,
+  // INTERVIEW Q1, Q3: how Pandit Ji learned Jyotish and Vastu, and who usually calls first; add one line in his own words if he approves.
   bio:
-    'Pandit Sri Santosh Sharma Ji has guided individuals and families in Hyderabad for more than 35 years ' +
-    'through the wisdom of traditional Vedic astrology (Jyotish Shastra). People come to him when life feels ' +
-    'uncertain - a delayed marriage, a stuck career, or family matters that create stress - and his guidance is ' +
-    'based on careful Kundli analysis and sincere, practical advice. Astrology here is about the right timing and ' +
-    'the right direction, never fear or false promises.',
+    'Pandit Sri Santosh Sharma Ji has practised Vedic astrology (Jyotish Shastra) and Vastu in Hyderabad for more than 35 years. ' +
+    'People come to him when something is stuck: a marriage that has not happened, a career that has stopped moving, a family matter that will not settle. ' +
+    'He works from your Kundli, tells you what it shows, and says so when it shows nothing that needs fixing.',
   knowsAbout: [
     'Vedic astrology', 'Kundli matching', 'Guna Milan', 'Birth chart analysis',
     'Career astrology', 'Business astrology', 'Vastu Shastra', 'Muhurtham', 'Numerology',
@@ -83,76 +82,84 @@ export const services: Service[] = [
   {
     slug: 'kundli-matching',
     title: 'Kundli Matching',
-    summary: 'Guna Milan compatibility before marriage - 36-point analysis and dosha check.',
+    summary: 'Two charts, a 36-point score and a Mangal dosha check, before the families go any further.',
     leadAnswer:
-      'Kundli matching (Guna Milan) compares the birth charts of both partners to check compatibility before marriage. ' +
-      'Pandit Sri Santosh Sharma Ji examines the 36-point Ashtakoot system, emotional harmony, long-term compatibility and any doshas, and explains the result plainly.',
-    bullets: ['Horoscope compatibility (36 gunas)', 'Mangal / Kuja dosha check', 'Marriage timing guidance'],
+      'Kundli matching compares the birth charts of two people before a marriage is fixed. ' +
+      'Pandit Sri Santosh Sharma Ji works through the 36-point Guna Milan score, checks for Mangal dosha and other doshas, ' +
+      'and then looks at what the score cannot show: the seventh house, long-term compatibility and timing.',
+    bullets: ['36-point Guna Milan score', 'Mangal (Kuja) dosha check', 'Marriage timing from both charts'],
     icon: 'heart',
   },
   {
     slug: 'marriage-guidance',
     title: 'Marriage & Delay Guidance',
-    summary: 'Reasons behind marriage delay and practical remedies from the birth chart.',
+    summary: 'Why a marriage is taking its time, and which years the chart favours.',
     leadAnswer:
-      'Marriage guidance reads the seventh house and dasha periods to understand why a marriage is getting delayed and what the chart indicates. ' +
-      'The focus is on clear timing and sincere remedies, not fear.',
-    bullets: ['Marriage timing from the chart', 'Reasons behind delay', 'Simple, honest remedies'],
+      'Marriage delay astrology looks at the seventh house, Venus, Jupiter and the dasha you are running, to see why a marriage has not happened yet and which periods favour it. ' +
+      'Pandit Ji gives you the likely years and the reasons behind them. A chart cannot name a day, and he will not pretend it can.',
+    bullets: ['Likely marriage years, with reasons', 'Seventh house and dasha review', 'A remedy only if the chart shows one'],
     icon: 'rings',
   },
   {
     slug: 'career-astrology',
     title: 'Career & Job Guidance',
-    summary: 'Direction on career, job change and professional growth by planetary timing.',
+    summary: 'A job change, a stalled career or a study choice, read against your planetary periods.',
     leadAnswer:
-      'Career astrology analyses your birth chart and planetary timing to guide job changes, career direction and professional growth. ' +
-      'It helps you act at the right time with a clear head.',
-    bullets: ['Career path prediction', 'Job-change timing', 'Growth & study guidance'],
+      'Career astrology reads the tenth house, the planets that govern it and your running dasha, to judge when a job change, a move or a new direction is likely to go well. ' +
+      'It will not name a company or a salary. It helps you decide when to act and when to wait.',
+    bullets: ['Which career direction the chart supports', 'Timing for a job change', 'Study and growth choices'],
     icon: 'career',
   },
   {
     slug: 'business-astrology',
     title: 'Business Astrology',
-    summary: 'Favourable timings, partnerships and growth for entrepreneurs.',
+    summary: 'Timing for a launch, a partnership or an expansion, read from your chart and your partner\'s.',
     leadAnswer:
-      'Business astrology helps entrepreneurs and owners understand favourable timings, partnership compatibility and growth opportunities through Vedic chart analysis.',
-    bullets: ['Business growth timing', 'Partnership compatibility', 'Muhurtham for openings'],
+      'Business astrology looks at the owner\'s chart for the periods that favour starting, partnering or expanding, and compares charts when two people go into a venture together. ' +
+      'Muhurtham for an opening date is part of it. It sits beside your own numbers and professional advice and does not replace them.',
+    bullets: ['Timing for growth and expansion', 'Partner chart comparison', 'Opening-day muhurtham'],
     icon: 'business',
   },
   {
     slug: 'muhurtham',
-    title: 'Muhurtham',
-    summary: 'Auspicious dates for marriage, gruhapravesham and new beginnings.',
+    title: 'Muhurtham (Auspicious Dates)',
+    summary: 'Wedding, Griha Pravesh and opening dates, picked from the Panchang and your charts.',
     leadAnswer:
-      'Muhurtham is the selection of an auspicious date and time for important events - weddings, gruhapravesham, business openings and naming ceremonies - based on the panchangam and the chart.',
-    bullets: ['Wedding & gruhapravesham dates', 'Business opening muhurtham', 'Naming & travel timing'],
+      'Muhurtham means choosing an auspicious date and time for an important event. ' +
+      'Pandit Ji uses the Panchang and, where it matters, the charts of the people involved, to pick dates for weddings, Griha Pravesh (housewarming), business openings and naming ceremonies. ' +
+      'Tell him which days your family can manage.',
+    bullets: ['Wedding and Griha Pravesh dates', 'Business opening muhurtham', 'Naming ceremony and travel dates'],
     icon: 'calendar',
   },
   {
     slug: 'vastu',
     title: 'Vastu Consultation',
-    summary: 'Vastu guidance for homes and offices, without demolition-first advice.',
+    summary: 'Vastu for your flat, house, shop or plot, starting with what you can move before anything is broken.',
     leadAnswer:
-      'Vastu consultation reviews the layout and energy of a home or office and suggests practical, sensible corrections - never fear-based demolition. Guidance covers direction, placement and simple remedies.',
-    bullets: ['Home & office Vastu', 'Practical corrections', 'New-property guidance'],
+      'A Vastu consultation looks at the layout of a home, flat, office, shop or plot against the directions Vastu Shastra gives to each room and function. ' +
+      'Pandit Ji suggests changes in placement and direction first: where the bed, the stove or the cash counter sits. ' +
+      'Structural change comes up only when nothing simpler works.',
+    bullets: ['Home, flat and apartment Vastu', 'Office and shop layouts', 'Checks before you buy or build'],
     icon: 'home',
   },
   {
     slug: 'dosha-remedies',
     title: 'Dosha Remedies',
-    summary: 'Kaal Sarp, Mangal and Navagraha dosha guidance and parihara.',
+    summary: 'Kaal Sarp, Mangal and Navagraha doshas: what your chart shows and what, if anything, to do.',
     leadAnswer:
-      'Dosha guidance identifies Kaal Sarp, Mangal (Kuja) and Navagraha doshas in the chart and suggests appropriate parihara (remedies) where the chart genuinely indicates them.',
-    bullets: ['Kaal Sarp dosha', 'Mangal / Kuja dosha', 'Navagraha shanti guidance'],
+      'A dosha reading checks the chart for Kaal Sarp, Mangal (Kuja) and Navagraha doshas, and for the conditions that cancel or reduce them. ' +
+      'A dosha flagged by an app is not the final word. Where one does need a remedy, Pandit Ji tells you what it is, why he suggests it, and that the choice is yours.',
+    bullets: ['Kaal Sarp dosha', 'Mangal / Kuja dosha', 'Navagraha shanti'],
     icon: 'dosha',
   },
   {
     slug: 'numerology',
     title: 'Numerology',
-    summary: 'Birth and destiny numbers, and name analysis for clarity.',
+    summary: 'Birth and destiny numbers, and what the numbers in a name add beside your chart.',
     leadAnswer:
-      'Numerology derives your birth number and destiny number from your date of birth and analyses the numerical values in a name to add clarity alongside the birth chart.',
-    bullets: ['Birth & destiny number', 'Name analysis', 'Guidance for decisions'],
+      'Numerology works out your birth number and destiny number from your date of birth, and looks at the numerical value of a name. ' +
+      'Pandit Ji uses it as a second angle beside the birth chart, for a name spelling or a business name, and not in place of the chart.',
+    bullets: ['Birth and destiny number', 'Name and spelling analysis', 'A second angle on big decisions'],
     icon: 'numerology',
   },
 ];
@@ -180,3 +187,54 @@ export const ids = {
 export const disclaimer =
   'Astrology guidance is offered for clarity and perspective. It is not a substitute for medical, legal, ' +
   'financial or mental-health advice, and no outcome is guaranteed. Remedies are suggested only where the chart indicates them.';
+
+/** Google review page for the centre (GBP). Reviews are shown ONLY as verbatim Google text. */
+export const reviewsUrl = contact.gbpUrl;
+
+/** Vastu is the client's priority line. Hub lives at /services/vastu/ (existing URL kept, no redirect). */
+export const vastuPages = [
+  { slug: 'home', path: '/services/vastu/home/', title: 'Vastu for Home', blurb: 'Houses, villas and independent homes: entrance, kitchen, bedrooms, puja room and more.' },
+  { slug: 'apartment', path: '/services/vastu/apartment/', title: 'Vastu for Apartments & Flats', blurb: 'Facing, floor, balcony and layout checks for flats and gated-community apartments.' },
+  { slug: 'office', path: '/services/vastu/office/', title: 'Vastu for Office & Shop', blurb: 'Seating, cash counter, entrance and layout guidance for offices, shops and clinics.' },
+  { slug: 'plot', path: '/services/vastu/plot/', title: 'Vastu for Plot & New Construction', blurb: 'Plot shape, road direction and layout planning before you build.' },
+] as const;
+
+/** Primary navigation (header + footer + sitemap-style pages). Every path here must exist. */
+export const nav = {
+  main: [
+    { label: 'About Pandit Ji', href: '/about/' },
+    { label: 'Services', href: '/services/', children: 'services' as const },
+    { label: 'Vastu', href: '/services/vastu/', children: 'vastu' as const },
+    { label: 'Areas', href: '/areas/' },
+    { label: 'Guides', href: '/guides/', children: 'guides' as const },
+    { label: 'Contact', href: '/contact/' },
+  ],
+  guides: [
+    { label: 'Frequently asked questions', href: '/faq/' },
+    { label: 'Astrology glossary', href: '/glossary/' },
+    { label: 'How a consultation works', href: '/how-a-consultation-works/' },
+    { label: 'Reviews', href: '/reviews/' },
+    { label: 'Editorial policy', href: '/editorial-policy/' },
+  ],
+} as const;
+
+/** Content dates shown as "Last updated" and emitted in WebPage schema. Bump `updated` only when a page materially changes. */
+export const contentDates = { published: '2026-10-04', updated: '2026-10-04' } as const;
+export const formatDate = (iso: string): string =>
+  new Date(iso + 'T00:00:00Z').toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+export const editorialPolicyPath = '/editorial-policy/';
+
+/** Direction-specific Vastu pages (header dropdown + footer). The 4 property-type pages stay in `vastuPages`. */
+export const vastuFacingPages = [
+  { path: '/services/vastu/west-facing-house/', title: 'West Facing House Vastu' },
+  { path: '/services/vastu/south-facing-house/', title: 'South Facing House Vastu' },
+  { path: '/services/vastu/east-facing-house/', title: 'East Facing House Vastu' },
+  { path: '/services/vastu/north-facing-house/', title: 'North Facing House Vastu' },
+] as const;
+
+/** Extra service pages that sit beside the 7 core services. */
+export const extraServices = [
+  { path: '/services/janam-kundli-reading/', title: 'Janam Kundli Reading' },
+  { path: '/services/nadi-dosha/', title: 'Nadi Dosha' },
+  { path: '/griha-pravesh-muhurtham-hyderabad/', title: 'Griha Pravesh Muhurtham' },
+] as const;

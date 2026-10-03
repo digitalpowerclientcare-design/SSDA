@@ -1,0 +1,22 @@
+---
+import { pandit, contact, telLink, whatsappLink, editorialPolicyPath } from '@/data/business';
+---
+<section class="band-light section-sm" aria-labelledby="author-box-title">
+  <div class="container-page">
+    <div class="reveal grid gap-8 rounded-lg border border-[var(--line)] bg-white p-8 md:grid-cols-[auto_1fr] md:gap-10 md:p-10">
+      <div class="hidden h-20 w-20 place-items-center rounded-full bg-indigo-900 font-display text-[1.75rem] text-brass-300 md:grid" aria-hidden="true">PS</div>
+      <div>
+        <p class="eyebrow">About the author</p>
+        <h2 id="author-box-title" class="mt-2 !text-[1.625rem]">{pandit.name}</h2>
+        <p class="mt-1 text-[0.95rem] font-medium text-[var(--accent)]">{pandit.jobTitle} · {pandit.yearsExperience}+ years in {contact.city}</p>
+        <p class="mt-4 max-w-2xl">{pandit.name} has guided individuals and families in {contact.city} for more than {pandit.yearsExperience} years through traditional Vedic astrology (Jyotish Shastra) and Vastu Shastra. He consults at {contact.locality} and online, in {pandit.languages.join(', ')}.</p>
+        <p class="mt-4 text-[0.95rem]">This page presents traditional guidance and is not a guarantee of any outcome. <a class="font-medium text-[var(--fg)] underline decoration-[var(--accent)] underline-offset-4" href={editorialPolicyPath}>How content on this site is written and corrected</a>.</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a class="btn btn-call btn-sm" href="/about/">Read his full profile</a>
+          <a class="btn btn-ghost btn-sm" href={telLink()} data-cta="call">Call</a>
+          <a class="btn btn-ghost btn-sm" href={whatsappLink()} data-cta="whatsapp">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

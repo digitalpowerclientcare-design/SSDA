@@ -1,0 +1,155 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, pandit, contact, telLink, whatsappLink } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Areas', url: '/areas/' }];
+
+const otherAreas = contact.areasServed.filter((a) => !['Sanjeeva Reddy Nagar', 'SR Nagar'].includes(a));
+
+const faqs = [
+  { question: 'Where is the astrologer\'s centre in Hyderabad?', answer: `In ${contact.locality}, ${contact.city}, ${contact.state} ${contact.postalCode}: ${contact.addressLine}. Look for ${contact.landmark.toLowerCase()}. It is a flat on the 5th floor and has no shop front.` },
+  { question: 'Which areas of Hyderabad does the astrologer serve?', answer: `The Google listing names ${otherAreas.slice(0, -1).join(', ')} and ${otherAreas[otherAreas.length - 1]}, besides Sanjeeva Reddy Nagar itself, and if you live anywhere else in Hyderabad, or outside it, you can consult by phone or video.` },
+  { question: 'Can I consult an astrologer online instead of visiting?', answer: 'Yes. Consultations happen in person or by phone and video. Pandit Ji prepares the chart from your birth details before the appointment, so an online session covers the same ground as a visit.' },
+  { question: 'Do I need an appointment to visit?', answer: `Our listing says ${contact.hoursDisplay.toLowerCase()}. Even so, call or WhatsApp ${contact.phoneDisplay} before you come, so that a time is fixed and Pandit Ji is free to sit with you.` },
+  { question: 'Is a Vastu site visit possible, or is a floor plan enough?', answer: 'For a flat, or a property you are thinking of buying, a floor-plan review works. A site visit gives a fuller picture. Ask when you call which one suits your property.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'WebPage',
+    '@id': abs('/areas/#webpage'),
+    url: abs('/areas/'),
+    name: 'Hyderabad astrologer and Vastu consultant: areas served',
+    isPartOf: { '@id': abs('/#website') },
+    about: { '@id': abs('/#localbusiness') },
+    inLanguage: 'en-IN',
+  },
+  faqSchema(faqs, abs('/areas/')),
+  breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout
+  title="Hyderabad Astrologer and Vastu Consultant | Areas Served"
+  description="Hyderabad astrologer and Vastu consultant in Sanjeeva Reddy Nagar, serving Ameerpet, Kukatpally, Secunderabad, Banjara Hills and online across the city."
+  canonicalPath="/areas/"
+  jsonLd={jsonLd}
+>
+  <PageHero
+    eyebrow="Areas served"
+    title="Hyderabad Astrologer and Vastu Consultant: Areas We Serve"
+    intro={`${brand.name} is in ${contact.locality}, where ${pandit.name} sees people in person, and he speaks to families in any other part of Hyderabad, or outside it, by phone or video.`}
+    crumbs={crumbs}
+    ctas
+  />
+
+  <!-- ============ WHERE THE CENTRE IS ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
+      <div>
+        <SectionHead eyebrow="Where we are" title="The astrologer's centre is in Sanjeeva Reddy Nagar" intro="Looking for an astrologer near me in Hyderabad? The centre is in S.R. Nagar, also written SR Nagar. The locality page has the full address, directions and a map." />
+        <dl class="fact-table reveal mt-10">
+          <div><dt>Address</dt><dd>{contact.addressLine}, {contact.locality}, {contact.city}, {contact.state} {contact.postalCode}</dd></div>
+          <div><dt>Landmark</dt><dd>{contact.landmark}</dd></div>
+          <div><dt>Hours</dt><dd>{contact.hoursDisplay}</dd></div>
+          <div><dt>Phone</dt><dd><a class="underline decoration-brass-700 underline-offset-4" href={telLink()}>{contact.phoneDisplay}</a></dd></div>
+          <div><dt>On the map</dt><dd><a class="link-arrow" href={contact.gbpUrl} target="_blank" rel="noopener">Open the Google Business Profile <span aria-hidden="true">→</span></a></dd></div>
+        </dl>
+        <p class="reveal mt-8"><a class="link-arrow" href="/areas/sanjeeva-reddy-nagar/">Astrologer in Sanjeeva Reddy Nagar: full details <span aria-hidden="true">→</span></a></p>
+      </div>
+      <div class="reveal overflow-hidden rounded-lg border border-[var(--line)] bg-white">
+        <iframe src={contact.mapEmbed} width="100%" height="100%" style="border:0; min-height:24rem" loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin" title={`Map to ${brand.name}`}></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NEIGHBOURHOODS ============ -->
+  <section class="band-dark section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Neighbourhoods" title="Astrologer for families across Hyderabad and Secunderabad" />
+      <div class="reveal">
+        <p>These are the neighbourhoods named on our Google Business Profile.</p>
+        <h3 class="mt-7 text-[1.25rem]">Astrologer and Vastu consultant near Ameerpet, Kukatpally and Banjara Hills</h3>
+        <ul class="mt-5 flex flex-wrap gap-2.5">
+          {contact.areasServed.map((a) => (
+            <li class="rounded-full border border-white/20 px-4 py-2 text-[0.9rem] text-on-dark">{a}</li>
+          ))}
+        </ul>
+        <p class="mt-7">Search for an astrologer in Hyd, Hyderabad or Secunderabad and you land on the same flat in S.R. Nagar. If your own neighbourhood is missing from the list, that changes nothing, because online consultations cover the rest of the city and beyond.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ IN PERSON VS ONLINE + WHAT TO EXPECT ============ -->
+  <section class="band-white section">
+    <div class="container-page">
+      <SectionHead eyebrow="Two ways to consult" title="In person in S.R. Nagar, or online by phone and video" intro="The reading is the same either way. Pick whichever suits your family's week." />
+      <div class="mt-12 grid gap-4 md:grid-cols-2">
+        <div class="card card-static reveal flex flex-col gap-3">
+          <h3>At our centre</h3>
+          <p>Visit Pandit Ji at {contact.locality}, {contact.landmark.toLowerCase()}. The chart is ready before you arrive, so the time goes on talking. It suits a family that wants to sit together and go through things slowly, with the elders in the room and nobody watching the clock.</p>
+        </div>
+        <div class="card card-static reveal flex flex-col gap-3">
+          <h3>Online by phone or video</h3>
+          <p>Share your birth details by call or WhatsApp and a time is fixed, and Kundli matching, career and marriage questions, Muhurtham and numerology all work well online. For Vastu, send a floor plan with the direction of the main door, and Pandit Ji can review it without a visit.</p>
+        </div>
+      </div>
+
+      <div class="mt-16 grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+        <SectionHead eyebrow="Visiting" title="What to expect when you visit us in S.R. Nagar" />
+        <ul class="reveal grid gap-4">
+          {[
+            `Call or WhatsApp ${contact.phoneDisplay} first, so a time is fixed and Pandit Ji expects you.`,
+            `Look for ${contact.landmark.toLowerCase()}. We are on the 5th floor, Flat No. 502, Ramakrishna Nivas.`,
+            'Bring your birth details, any earlier chart, and the questions you want covered.',
+            'Ask the fee when you call. We share it before you book.',
+            'Parking and public transport are not listed on this page yet, so ask when you call.',
+          ].map((item) => (
+            <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+              <span class="mt-1 text-brass-700" aria-hidden="true">✓</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <!-- TODO(client): add parking, nearest public transport / metro, and whether there is a lift, only once confirmed. Do not guess. -->
+      </div>
+
+      <div class="reveal mt-16 border-t border-[var(--line)] pt-8">
+        <p class="eyebrow">What you can ask about</p>
+        <ul class="mt-4 flex flex-wrap gap-x-7 gap-y-3">
+          {[
+            ['Kundli matching', '/services/kundli-matching/'],
+            ['Marriage guidance', '/services/marriage-guidance/'],
+            ['Career guidance', '/services/career-astrology/'],
+            ['Business astrology', '/services/business-astrology/'],
+            ['Muhurtham', '/services/muhurtham/'],
+            ['Vastu', '/services/vastu/'],
+            ['Dosha remedies', '/services/dosha-remedies/'],
+            ['Numerology', '/services/numerology/'],
+          ].map(([label, href]) => (
+            <li><a class="link-arrow" href={href}>{label} <span aria-hidden="true">→</span></a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Questions about visiting an astrologer in Hyderabad" intro="Short answers on where we are and how to get here." />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <CtaBand title="Visit in person or consult online" />
+</BaseLayout>

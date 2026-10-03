@@ -1,21 +1,70 @@
 ---
-import { brand, contact, telLink } from '@/data/business';
+import { brand, contact, nav, services, vastuPages, vastuFacingPages, extraServices, telLink, whatsappLink } from '@/data/business';
+import Logo from '@/components/Logo.astro';
+const path = Astro.url.pathname;
+const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
-<header class="sticky top-0 z-40 border-b border-ink/5 bg-cream/85 backdrop-blur-md">
-  <div class="container-page flex items-center justify-between gap-4 py-3.5">
-    <a href="/" class="flex items-center gap-2.5" aria-label={`${brand.name} - home`}>
-      <img src="/images/logo.png" alt={brand.name} width="150" height="56" class="h-10 w-auto" />
-    </a>
+<header class="site-header sticky top-0 z-50">
+  <div class="container-page flex h-[4.5rem] items-center justify-between gap-6">
+    <a href="/" class="shrink-0" aria-label={`${brand.name} - home`}><Logo /></a>
 
-    <nav class="hidden items-center gap-8 text-[0.93rem] font-semibold text-ink-2 lg:flex" aria-label="Primary">
-      <a class="transition-colors hover:text-flame" href="/">Home</a>
-      <a class="transition-colors hover:text-flame" href="/services/">Services</a>
-      <a class="transition-colors hover:text-flame" href="/about/">About Pandit Ji</a>
-      <a class="transition-colors hover:text-flame" href="/contact/">Contact</a>
+    <nav class="hidden items-center gap-7 xl:gap-9 lg:flex" aria-label="Primary">
+      {nav.main.map((item) => (
+        <div class:list={['dd', item.children && 'dd']}>
+          <a class="nav-link" href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>
+          {item.children === 'services' && (
+            <div class="dd-panel">
+              {services.filter((s) => s.slug !== 'vastu').map((s) => <a href={`/services/${s.slug}/`}>{s.title}</a>)}
+              {extraServices.map((s) => <a href={s.path}>{s.title}</a>)}
+              <a href="/services/">All services</a>
+            </div>
+          )}
+          {item.children === 'vastu' && (
+            <div class="dd-panel">
+              <a href="/services/vastu/">Vastu consultant in Hyderabad</a>
+              {vastuPages.map((v) => <a href={v.path}>{v.title}</a>)}
+              {vastuFacingPages.map((v) => <a href={v.path}>{v.title}</a>)}
+            </div>
+          )}
+          {item.children === 'guides' && (
+            <div class="dd-panel">
+              {nav.guides.map((g) => <a href={g.href}>{g.label}</a>)}
+            </div>
+          )}
+        </div>
+      ))}
     </nav>
 
-    <a class="btn btn-gold hidden !min-h-11 !px-5 !py-2 !text-[0.9rem] sm:inline-flex" href={telLink()} data-cta="call">
-      <span aria-hidden="true">☎</span> {contact.phoneDisplay}
-    </a>
+    <div class="flex items-center gap-3">
+      <a class="btn btn-ghost btn-sm hidden xl:inline-flex" href={whatsappLink()} data-cta="whatsapp">WhatsApp</a>
+      <a class="btn btn-call btn-sm hidden sm:inline-flex" href={telLink()} data-cta="call">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+        {contact.phoneDisplay}
+      </a>
+
+      <details class="mobile-nav lg:hidden">
+        <summary class="grid h-11 w-11 place-items-center rounded-full border border-white/20 text-on-dark" aria-label="Open menu">
+          <svg class="mn-icon-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg class="mn-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </summary>
+        <div class="mobile-panel">
+          <a class="mp-link" href="/">Home</a>
+          {nav.main.map((item) => (
+            <>
+              <a class="mp-link" href={item.href}>{item.label}</a>
+              {item.children === 'services' && (
+                <div class="mp-sub">{services.filter((s) => s.slug !== 'vastu').map((s) => <a href={`/services/${s.slug}/`}>{s.title}</a>)}{extraServices.map((s) => <a href={s.path}>{s.title}</a>)}</div>
+              )}
+              {item.children === 'vastu' && (
+                <div class="mp-sub">{vastuPages.map((v) => <a href={v.path}>{v.title}</a>)}{vastuFacingPages.map((v) => <a href={v.path}>{v.title}</a>)}</div>
+              )}
+              {item.children === 'guides' && (
+                <div class="mp-sub">{nav.guides.map((g) => <a href={g.href}>{g.label}</a>)}</div>
+              )}
+            </>
+          ))}
+        </div>
+      </details>
+    </div>
   </div>
 </header>

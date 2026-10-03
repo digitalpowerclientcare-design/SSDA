@@ -1,91 +1,230 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { brand, contact, pandit, services, getService, telLink, whatsappLink, disclaimer } from '@/data/business';
-import { buildGraph, organizationSchema, localBusinessSchema, personSchema, faqSchema, breadcrumbSchema, abs } from '@/lib/schema';
+import AuthorBox from '@/components/AuthorBox.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { contact, services, getService, disclaimer } from '@/data/business';
+import { serviceContent, type Block } from '@/data/serviceContent';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
 
+// Vastu is built as static pages at /services/vastu/ (src/pages/services/vastu/),
+// so it is excluded here to avoid duplicate generation.
 export const getStaticPaths = (() =>
-  services.map((s) => ({ params: { slug: s.slug }, props: { slug: s.slug } }))
+  services
+    .filter((s) => s.slug !== 'vastu' && serviceContent[s.slug])
+    .map((s) => ({ params: { slug: s.slug }, props: { slug: s.slug } }))
 ) satisfies GetStaticPaths;
 
 const { slug } = Astro.props as { slug: string };
 const s = getService(slug)!;
+const c = serviceContent[slug];
 const path = `/services/${s.slug}/`;
 
-const faqs = [
-  { question: `How do I book ${s.title.toLowerCase()} in Hyderabad?`, answer: `Call or WhatsApp ${contact.phoneDisplay}. Share your birth details and Pandit Sri Santosh Sharma Ji's team will arrange a time - in person at Sanjeeva Reddy Nagar or online.` },
-  { question: `Which languages is the consultation available in?`, answer: `Telugu, Hindi, Kannada and English. Mention your preferred language when you call.` },
-  { question: `Are guaranteed results promised?`, answer: `No. Guidance is honest and practical, with remedies suggested only where the chart genuinely indicates them - never fear or false promises.` },
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+  { name: s.title, url: path },
 ];
 
-const other = services.filter((x) => x.slug !== s.slug).slice(0, 4);
-const crumbs = [{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/' }, { name: s.title, url: path }];
+/** Content strings are authored by us: escape, then turn [text](/path/) into links. */
+const rich = (text: string): string =>
+  text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\[([^\]]+)\]\((\/[^)\s]*)\)/g, '<a href="$2">$1</a>');
+
+// Section bands cycle light, white, dark so every service page keeps the same rhythm
+// even though the blocks (and their order) differ per service.
+const cycle = ['light', 'white', 'dark'] as const;
+type BandName = (typeof cycle)[number];
+const sections: { b: Block; band: BandName }[] = c.blocks.map((b, i) => ({ b, band: cycle[i % 3] }));
+const lastBand = sections[sections.length - 1].band;
+const relatedBand: BandName = lastBand === 'dark' ? 'white' : 'dark';
+const faqBand: BandName = relatedBand === 'light' ? 'white' : 'light';
+
+const gridCols = (n: number) => (n % 3 === 0 || n > 4 ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2');
+
 const jsonLd = buildGraph(
   organizationSchema(), localBusinessSchema(), personSchema(),
   {
-    '@type': 'Service', '@id': abs(`${path}#service`), name: `${s.title} in ${contact.city}`,
-    description: s.leadAnswer, serviceType: s.title, url: abs(path),
-    provider: { '@id': abs('/#localbusiness') }, areaServed: { '@type': 'City', name: contact.city },
+    '@type': 'Service',
+    '@id': abs(`${path}#service`),
+    name: `${s.title} in ${contact.city}`,
+    description: c.answer,
+    serviceType: s.title,
+    url: abs(path),
+    provider: { '@id': abs('/#localbusiness') },
+    areaServed: { '@type': 'City', name: contact.city },
   },
-  faqSchema(faqs, abs(path)), breadcrumbSchema(crumbs),
+  faqSchema(c.faqs, abs(path)),
+  breadcrumbSchema(crumbs),
 );
 ---
-<BaseLayout
-  title={`${s.title} in Hyderabad | ${brand.name}`}
-  description={`${s.leadAnswer.slice(0, 155)}`}
-  canonicalPath={path}
-  jsonLd={jsonLd}
->
-  <nav class="container-page pt-6 text-[0.85rem] text-ink-2" aria-label="Breadcrumb">
-    <a class="hover:text-flame" href="/">Home</a> ·
-    <a class="hover:text-flame" href="/services/">Services</a> ·
-    <span class="text-gold-deep">{s.title}</span>
-  </nav>
+<BaseLayout authored title={c.metaTitle} description={c.metaDescription} canonicalPath={path} jsonLd={jsonLd}>
+  <PageHero byline
+    eyebrow={c.eyebrow}
+    title={c.h1}
+    intro={c.answer}
+    crumbs={crumbs}
+    ctas
+  />
 
-  <section class="container-page pb-10 pt-6">
-    <div class="mx-auto max-w-3xl">
-      <p class="label reveal">{contact.locality}, Hyderabad</p>
-      <h1 class="reveal-1 mt-3 text-[2.3rem] sm:text-[2.7rem]">{s.title} in Hyderabad</h1>
+  {sections.map(({ b, band }) => (
+    <section class={`band-${band} ${b.kind === 'list' ? 'section-sm' : 'section'}`}>
+      <div class={`container-page ${b.kind === 'prose' && b.layout === 'split' || b.kind === 'list' ? 'grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20' : ''}`}>
 
-      <!-- answer-first block (AEO) -->
-      <div class="reveal-2 mt-6 rounded-2xl border border-gold/40 bg-card p-6">
-        <p class="text-[1.06rem] leading-relaxed text-ink">{s.leadAnswer}</p>
+        {/* ---------- prose ---------- */}
+        {b.kind === 'prose' && (
+          <>
+            <SectionHead eyebrow={b.eyebrow} title={b.title} intro={b.intro} />
+            <div class:list={['prose-site reveal rich', b.layout === 'split' ? '!mt-0' : 'mt-8']}>
+              {b.paragraphs.map((p, i) => <p class={i === 0 ? '!mt-0' : ''} set:html={rich(p)} />)}
+              {(b.sub ?? []).map((sub) => (
+                <>
+                  <h3 class="text-[1.375rem]">{sub.title}</h3>
+                  {sub.paragraphs.map((p) => <p set:html={rich(p)} />)}
+                </>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* ---------- cards ---------- */}
+        {b.kind === 'cards' && (
+          <>
+            <SectionHead eyebrow={b.eyebrow} title={b.title} intro={b.intro} />
+            {band === 'dark' ? (
+              <div class={`mt-12 grid gap-4 ${gridCols(b.cards.length)}`}>
+                {b.cards.map((item) => (
+                  <div class="card card-static reveal flex flex-col gap-3">
+                    <h3 class="text-[1.375rem]">{item.title}</h3>
+                    <p class="rich text-[0.95rem]" set:html={rich(item.text)} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div class={`mt-12 grid gap-px overflow-hidden rounded-lg border border-[var(--color-line-light)] bg-[var(--color-line-light)] ${gridCols(b.cards.length)}`}>
+                {b.cards.map((item) => (
+                  <div class="reveal flex flex-col gap-3 bg-white p-8">
+                    <h3 class="text-[1.375rem]">{item.title}</h3>
+                    <p class="rich text-[0.95rem]" set:html={rich(item.text)} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ---------- list ---------- */}
+        {b.kind === 'list' && (
+          <>
+            <SectionHead eyebrow={b.eyebrow} title={b.title} intro={b.intro} />
+            <div class="reveal rich">
+              <ul class="grid gap-4">
+                {b.items.map((item, i) => (
+                  <li class="flex gap-4 border-b border-[var(--line)] pb-4">
+                    {b.marker === 'number'
+                      ? <span class="numeral mt-1 w-6 flex-none text-[1.25rem] !text-[var(--accent)]" aria-hidden="true">{i + 1}</span>
+                      : <span class="mt-1 text-[var(--accent)]" aria-hidden="true">✓</span>}
+                    <span set:html={rich(item)} />
+                  </li>
+                ))}
+              </ul>
+              {b.note && <p class="mt-6 text-[0.95rem]" set:html={rich(b.note)} />}
+            </div>
+          </>
+        )}
+
+        {/* ---------- heard: the worry in the family's words, then the answer ---------- */}
+        {b.kind === 'heard' && (
+          <>
+            <SectionHead eyebrow={b.eyebrow} title={b.title} intro={b.intro} />
+            <div class="reveal rich mt-12 border-t border-[var(--line)]">
+              {b.items.map((item) => (
+                <div class="grid gap-3 border-b border-[var(--line)] py-7 md:grid-cols-[1fr_1.4fr] md:gap-12">
+                  <p class="font-display text-[1.3rem] italic leading-snug text-[var(--fg)]">&ldquo;{item.worry}&rdquo;</p>
+                  <p set:html={rich(item.answer)} />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* ---------- table: a reference set ---------- */}
+        {b.kind === 'table' && (
+          <>
+            <SectionHead eyebrow={b.eyebrow} title={b.title} intro={b.intro} />
+            <dl class="fact-table reveal rich mt-12">
+              {b.rows.map(([term, text]) => (
+                <div><dt>{term}</dt><dd set:html={rich(text)} /></div>
+              ))}
+            </dl>
+            {b.outro && <p class="reveal rich mt-8 max-w-3xl" set:html={rich(b.outro)} />}
+          </>
+        )}
+
+        {/* ---------- steps: numbered sequence ---------- */}
+        {b.kind === 'steps' && (
+          <>
+            <SectionHead eyebrow={b.eyebrow} title={b.title} intro={b.intro} />
+            <ol class="mt-12 grid max-w-4xl gap-0 border-t border-[var(--line)]">
+              {b.steps.map((step, i) => (
+                <li class="reveal rich grid gap-3 border-b border-[var(--line)] py-8 md:grid-cols-[4.5rem_1fr] md:gap-8">
+                  <span class="numeral text-[1.75rem] !text-[var(--accent)]" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3 class="text-[1.375rem]">{step.title}</h3>
+                    <p class="mt-3" set:html={rich(step.text)} />
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </>
+        )}
       </div>
+    </section>
+  ))}
 
-      <div class="mt-7 flex flex-wrap gap-3">
-        <a class="btn btn-primary" href={telLink()} data-cta="call"><span aria-hidden="true">☎</span> Call {contact.phoneDisplay}</a>
-        <a class="btn btn-wa" href={whatsappLink(`Namaste, I would like guidance on ${s.title}.`)} data-cta="whatsapp"><span aria-hidden="true">✆</span> WhatsApp</a>
-      </div>
-
-      <h2 class="reveal mt-12 text-[1.6rem]">What this consultation covers</h2>
-      <ul class="mt-4 grid gap-3">
-        {s.bullets.map((b) => (
-          <li class="flex gap-3"><span class="mt-1 text-gold-deep" aria-hidden="true">✦</span><span>{b}</span></li>
+  <!-- ============ RELATED SERVICES ============ -->
+  <section class={`band-${relatedBand} section`}>
+    <div class="container-page">
+      <SectionHead title={c.relatedTitle} />
+      <div class={`mt-12 grid gap-4 ${gridCols(c.related.length)}`}>
+        {c.related.map((r) => (
+          <a href={r.href} class="card reveal group flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.375rem]">{r.title}</h3>
+            <p class="text-[0.95rem]">{r.why}</p>
+            <span class="link-arrow mt-auto pt-2">Read more <span aria-hidden="true">→</span></span>
+          </a>
         ))}
-      </ul>
-
-      <p class="mt-8 leading-relaxed text-ink-2">
-        Consultations are held with {pandit.name} - 35+ years of Vedic astrology experience - in Telugu, Hindi, Kannada or English, at our {contact.locality} centre in Hyderabad or online by phone and video. {disclaimer}
-      </p>
-
-      <h2 class="reveal mt-12 text-[1.6rem]">Questions</h2>
-      <div class="mt-4 divide-y divide-gold/25 border-y border-gold/25">
-        {faqs.map((f) => (
-          <details class="group py-4">
-            <summary class="flex cursor-pointer items-center justify-between gap-4 font-medium text-ink marker:content-['']">
-              <span>{f.question}</span><span class="text-gold-deep transition group-open:rotate-45" aria-hidden="true">+</span>
-            </summary>
-            <p class="mt-3 leading-relaxed text-ink-2">{f.answer}</p>
-          </details>
-        ))}
       </div>
+      <p class="reveal mt-10"><a class="link-arrow" href="/services/">All astrology and Vastu services <span aria-hidden="true">→</span></a></p>
+    </div>
+  </section>
 
-      <div class="mt-12">
-        <p class="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-gold-deep">Other services</p>
-        <div class="mt-4 flex flex-wrap gap-3">
-          {other.map((o) => (<a class="btn btn-line !min-h-10 !py-2 !text-[0.9rem]" href={`/services/${o.slug}/`}>{o.title}</a>))}
-        </div>
+  <!-- ============ FAQ ============ -->
+  <section class={`band-${faqBand} section`}>
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead title={c.faqTitle} intro={c.faqIntro} />
+      <div class="reveal">
+        <FaqList faqs={c.faqs} openFirst />
+        <p class="mt-8 text-[0.85rem] text-[var(--color-muted-light)]">{disclaimer}</p>
       </div>
     </div>
   </section>
+
+  <AuthorBox />
+
+  <CtaBand title={c.ctaTitle} text={c.ctaText} />
 </BaseLayout>
+
+<style is:global>
+  .rich a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .rich a:hover { text-decoration-thickness: 2px; }
+</style>

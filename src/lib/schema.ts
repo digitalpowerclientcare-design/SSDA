@@ -25,9 +25,7 @@ export const organizationSchema = (): Json => ({
   alternateName: [...brand.alternateNames],
   legalName: brand.legalName,
   url: brand.domain,
-  email: brand.email,
   description: brand.tagline,
-  foundingDate: String(brand.foundedYear),
   founder: { '@id': ids.person },
   ...(brand.sameAs.length ? { sameAs: [...brand.sameAs] } : {}),
   logo: { '@type': 'ImageObject', url: abs('/images/logo.png') },
@@ -51,8 +49,7 @@ export const localBusinessSchema = (): Json => ({
   parentOrganization: { '@id': ids.organization },
   employee: { '@id': ids.person },
   telephone: contact.phoneE164,
-  email: brand.email,
-  image: abs('/images/deity-hero.webp'),
+  image: abs('/images/og-default.jpg'),
   address: {
     '@type': 'PostalAddress',
     streetAddress: `${contact.addressLine}, ${contact.locality}`,
@@ -85,7 +82,8 @@ export const personSchema = (): Json => ({
   knowsAbout: [...pandit.knowsAbout],
   worksFor: { '@id': ids.organization },
   url: abs('/about/'),
-  image: abs(pandit.photo),
+  ...(brand.sameAs.length ? { sameAs: [...brand.sameAs] } : {}),
+  // image omitted until a real photo of Pandit Ji is supplied (TODO(client))
 });
 
 export const servicesSchema = (): Json[] =>
@@ -99,6 +97,21 @@ export const servicesSchema = (): Json[] =>
     provider: { '@id': ids.localBusiness },
     areaServed: { '@type': 'City', name: contact.city },
   }));
+
+export interface WebPageInput { path: string; name: string; description: string; authored?: boolean; published?: string; updated?: string; }
+export const webPageSchema = (w: WebPageInput): Json => ({
+  '@type': 'WebPage',
+  '@id': `${abs(w.path)}#webpage`,
+  url: abs(w.path),
+  name: w.name,
+  description: w.description,
+  inLanguage: 'en-IN',
+  isPartOf: { '@id': ids.website },
+  publisher: { '@id': ids.organization },
+  ...(w.authored ? { author: { '@id': ids.person } } : {}),
+  ...(w.published ? { datePublished: w.published } : {}),
+  ...(w.updated ? { dateModified: w.updated } : {}),
+});
 
 export interface Faq { question: string; answer: string; }
 export const faqSchema = (faqs: Faq[], pageUrl: string): Json => ({
