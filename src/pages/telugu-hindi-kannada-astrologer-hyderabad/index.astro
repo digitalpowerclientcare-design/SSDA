@@ -1,0 +1,114 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { brand, pandit, services, whatsappLink } from '@/data/business';
+import {
+  buildGraph, organizationSchema, localBusinessSchema, personSchema,
+  faqSchema, breadcrumbSchema, abs,
+} from '@/lib/schema';
+
+const path = '/telugu-hindi-kannada-astrologer-hyderabad/';
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Telugu, Hindi and Kannada astrologer', url: path },
+];
+
+const words = [
+  ['Jyothisham, jyotish, jyotishi', 'Astrology, and the person who practises it. Same subject, spelled the way your family says it.', '/'],
+  ['Jathakam, janma kundali, kundli', 'Your birth chart. Pandit Ji reads it from your date, time and place of birth.', '/services/janam-kundli-reading/'],
+  ['Jathakam matching, kundali milan, gun milan', 'Matching two charts before a marriage, including the Mangal dosha check.', '/services/kundli-matching/'],
+  ['Pelli, vivah', 'Wedding. A marriage that is delayed, or a match the families want checked.', '/services/marriage-guidance/'],
+  ['Gruhapravesam, griha pravesh', 'The housewarming ceremony, and choosing the muhurtham for it.', '/griha-pravesh-muhurtham-hyderabad/'],
+  ['Vasthu, vastu, vaastu', 'Directions and layout of a home, flat, office or plot.', '/services/vastu/'],
+];
+
+const faqs = [
+  { question: 'Can I consult a Telugu astrologer in Hyderabad in Telugu?', answer: `Yes. Pandit Ji consults in ${pandit.languages.join(', ')}. Say which you prefer when you call or message, and the whole conversation follows that language.` },
+  { question: 'Do you consult in Hindi and Kannada as well?', answer: 'Yes. Hindi and Kannada consultations are held the same way as Telugu ones, in person at the centre or by phone or video. Tell us your language when you book.' },
+  { question: 'Does the language change the reading?', answer: 'No. The chart and the method are the same. What changes is how comfortable you and your family are asking questions and following the answer, which matters most when parents are joining the call.' },
+  { question: 'Can I send my details in English letters and speak in Telugu?', answer: 'Yes. Most people message their birth details in English letters and then talk in the language they prefer. You do not need to write anything in Telugu, Hindi or Kannada script.' },
+];
+
+const jsonLd = buildGraph(
+  organizationSchema(), localBusinessSchema(), personSchema(),
+  {
+    '@type': 'WebPage',
+    '@id': abs(path + '#webpage'),
+    url: abs(path),
+    name: 'Telugu, Hindi and Kannada astrologer in Hyderabad',
+    isPartOf: { '@id': abs('/#website') },
+    about: { '@id': abs('/#localbusiness') },
+    inLanguage: 'en-IN',
+  },
+  faqSchema(faqs, abs(path)),
+  breadcrumbSchema(crumbs),
+);
+---
+<BaseLayout
+  title="Telugu, Hindi and Kannada Astrologer in Hyderabad | Sri Sai Durga"
+  description="Consult an astrologer in Hyderabad in Telugu, Hindi, Kannada or English. Jathakam, kundli matching and Vastu with Pandit Santosh Sharma Ji, in person or online."
+  canonicalPath={path}
+  jsonLd={jsonLd}
+>
+  <PageHero
+    eyebrow="Consult in your language"
+    title="Telugu, Hindi and Kannada astrologer in Hyderabad"
+    intro="Ask your questions in the language you think in. Pandit Sri Santosh Sharma Ji consults in Telugu, Hindi, Kannada and English, at the centre in Sanjeeva Reddy Nagar or by phone and video."
+    crumbs={crumbs}
+    ctas
+  />
+
+  <section class="band-light section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="Why it matters" title="A Telugu astrologer in Hyderabad you can speak to in Telugu" />
+      <div class="reveal prose-site">
+        <p>A chart reading is a conversation. You describe the worry, the astrologer asks about dates and family, and then explains what the chart shows. That goes better when nobody is translating in their head.</p>
+        <p>In many families the person who most needs to hear the answer is a parent who speaks Telugu, Hindi or Kannada at home. So pick the language when you book, and bring them along, in person or on the call.</p>
+        <p>{pandit.name} has practised in Hyderabad for more than 35 years. The method does not change with the language. A Mangal dosha check, a kundli match or a Vastu review is done the same way in all four.</p>
+        <p class="mt-6"><a class="btn btn-wa" href={whatsappLink('Namaste Pandit Ji, I would like a consultation in Telugu. Can we fix a time?')} data-cta="whatsapp">Message us on WhatsApp</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-dark section">
+    <div class="container-page">
+      <SectionHead eyebrow="Words you may know" title="Jathakam, jyothisham, kundali: what each one means here" intro="Families use different words for the same things. Here is how they map to what we do." />
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {words.map(([w, d, href]) => (
+          <a href={href} class="card reveal flex flex-col gap-3 no-underline">
+            <h3 class="text-[1.15rem]">{w}</h3>
+            <p class="text-[0.92rem]">{d}</p>
+            <span class="link-arrow mt-auto pt-2">See the service <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band-white section">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <SectionHead eyebrow="How to book" title="Booking a Telugu, Hindi or Kannada consultation" />
+      <div class="reveal prose-site">
+        <ol>
+          <li>Call or WhatsApp and say which language you prefer.</li>
+          <li>Send date, time and place of birth in English letters. For kundli matching, send both persons' details.</li>
+          <li>Choose a visit to Sanjeeva Reddy Nagar, or a phone or video consultation.</li>
+          <li>Pandit Ji prepares the chart in advance, so the time is spent on your questions.</li>
+        </ol>
+        <p>Looking for something specific? See <a href="/services/kundli-matching/">kundli matching</a>, <a href="/services/vastu/">Vastu consultation</a> or the <a href="/how-a-consultation-works/">consultation steps</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-light section">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+      <SectionHead eyebrow="Questions" title="Consulting in Telugu, Hindi or Kannada" />
+      <div class="reveal"><FaqList faqs={faqs} openFirst /></div>
+    </div>
+  </section>
+
+  <CtaBand title="Book in Telugu, Hindi, Kannada or English" />
+</BaseLayout>
