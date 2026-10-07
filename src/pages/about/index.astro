@@ -14,7 +14,7 @@ const faqs = [
   { question: 'Who is Pandit Sri Santosh Sharma Ji?', answer: `He is a Vedic astrologer and Vastu consultant who has practised in Hyderabad for more than 35 years. You meet him at Sri Sai Durga Astrology Centre in ${contact.locality}, or speak to him on a phone or video call.` },
   { question: 'What does Pandit Ji help with?', answer: 'Kundli matching, marriage timing and delay, career and business questions, Muhurtham (auspicious dates), doshas, numerology, and Vastu for homes, flats, offices and plots.' },
   { question: 'Is a pandit the same as an astrologer?', answer: 'Not always. Pandit is a title of respect for a learned person, and many pandits are priests. A jyotishi (astrologer) is the one who reads charts. Pandit Ji is addressed as Pandit, and the work you come to him for is Jyotish and Vastu.' },
-  { question: 'Do you sell gemstones, yantras or remedy products?', answer: 'No. Nothing is sold here except the consultation. If your chart suggests a remedy, Pandit Ji tells you what it is and why. If it suggests nothing, he says that.' },
+  { question: 'Will I be pushed into remedies or purchases?', answer: 'No. If your chart suggests a remedy, Pandit Ji tells you what it is and why, and you can decline. If it suggests nothing, he says that.' },
   { question: 'Can Pandit Ji guarantee a result?', answer: 'No, and he will not try. A chart can show which periods look supportive and which look slow. It cannot name a day or promise an outcome. Be careful with anyone who does.' },
   { question: 'Which languages are consultations held in?', answer: `${pandit.languages.slice(0, -1).join(', ')} and ${pandit.languages[pandit.languages.length - 1]}. Tell us which one you want when you call, and the session is booked in that language.` },
   { question: 'Can I consult Pandit Ji online from outside Hyderabad?', answer: 'Yes. Sessions run over phone or video as well as in person, so a relative in another city or country can join the call. Call or WhatsApp to fix a time.' },
@@ -124,7 +124,7 @@ const method = [
     <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
       <SectionHead eyebrow="How he works" title="How Pandit Ji works in Hyderabad: nothing to sell but the consultation" />
       <div class="reveal grid gap-5">
-        <p>We do not sell gemstones, yantras or any other product. Nothing here is for sale except the consultation, so nobody has a reason to find a problem in your chart that is not there.</p>
+        <p>Pandit Ji does not go looking for a problem that is not in your chart. If the chart shows nothing that needs fixing, he says so.</p>
         <p>When the chart shows nothing that needs fixing, Pandit Ji says so. When a remedy does make sense, he tells you what it is and why he suggests it, and you can say no. A chart can show which years look supportive and which look slow, but it cannot guarantee an outcome, and he won't pretend it can.</p>
         <p>He speaks {pandit.languages.slice(0, -1).join(', ')} and {pandit.languages[pandit.languages.length - 1]}, so use the one you think in.</p>
         <!-- INTERVIEW Q15: what he refuses to do or say (fixed dates, illness advice, rituals he does not believe in), in his own words -->

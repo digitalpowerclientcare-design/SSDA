@@ -47,7 +47,7 @@ const worries = [
   ['\u201CYour marriage will happen in March.\u201D', 'Be careful with a sentence like that. A chart can show which years look supportive and which look slow. It cannot name a day, and nobody can promise an outcome. Ask for the period and the reason behind it, and treat a firm date as a reason to ask more questions.'],
   ['\u201CThe app says Manglik. Do we drop the match?\u201D', 'Not on that alone. The texts give several conditions under which Mangal dosha is cancelled or reduced, for example when both partners carry it, and a one-line flag does not tell you whether any of them apply. Send both charts and Pandit Ji will tell you what is there.'],
   ['\u201CYou are running a bad dasha.\u201D', 'A difficult period is a stretch to plan around, so ask which years look slower and what that means for the decision in front of you. A reading that stops at the word bad has not told you much.'],
-  ['\u201CYou need this puja, this stone, this yantra.\u201D', 'A remedy should come with its reason. Ask why someone suggests it, what happens if you skip it, and whether a cheaper way exists. We do not sell gemstones, yantras or any other product, so nobody here has a reason to find a problem that is not in your chart.'],
+  ['\u201CYou need this puja, this stone, this yantra.\u201D', 'A remedy should come with its reason. Ask why someone suggests it, what happens if you skip it, and whether a cheaper way exists.'],
 ];
 const ready = [
   'Date, time and place of birth. For Kundli matching, the same three for both people.',
@@ -66,14 +66,10 @@ const ready = [
   <!-- ============ HERO ============ -->
   <section class="band-dark relative overflow-hidden" style="background: radial-gradient(80% 90% at 80% 20%, #1C2658 0%, #0C1230 60%);">
     <div class="container-page relative grid items-center gap-10 py-10 md:py-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:py-20">
-      <div class="order-2 lg:order-1">
+      <div class="order-1">
         <p class="eyebrow hero-in hero-in-1">Astrologer and Vastu consultant · Hyderabad</p>
         <h1 class="hero-in hero-in-2 mt-5 text-[clamp(2.1rem,1.4rem+2.8vw,3.5rem)]">Best Astrologer in Hyderabad: Vedic Astrology and Vastu Guidance</h1>
-        <p class="lead hero-in hero-in-3 mt-6 max-w-xl">
-          If a marriage is taking longer than it should, or you are about to buy a flat and cannot tell whether the Vastu worries are real, this is a good place to ask.
-          <span class="text-on-dark">{pandit.name}</span> has practised Vedic astrology and Vastu in Hyderabad for more than 35 years. Come to Sanjeeva Reddy Nagar, or do the whole thing by phone or video.
-        </p>
-        <div class="hero-in hero-in-4 mt-9 flex flex-wrap gap-3">
+        <div class="hero-in hero-in-3 mt-6 flex flex-wrap gap-3">
           <a class="btn btn-call" href={telLink()} data-cta="call">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
             Call Pandit Ji
@@ -83,6 +79,11 @@ const ready = [
             Chat on WhatsApp
           </a>
         </div>
+        <p class="hero-in hero-in-3 mt-4 text-[0.9rem] font-semibold tracking-wide text-on-dark">Consult in {pandit.languages.join(' · ')}</p>
+        <p class="lead hero-in hero-in-4 mt-6 max-w-xl">
+          If a marriage is taking longer than it should, or you are about to buy a flat and cannot tell whether the Vastu worries are real, this is a good place to ask.
+          <span class="text-on-dark">{pandit.name}</span> has practised Vedic astrology and Vastu in Hyderabad for more than 35 years. Come to Sanjeeva Reddy Nagar, or do the whole thing by phone or video.
+        </p>
         <p class="hero-in hero-in-5 mt-7 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.9rem] text-on-dark-muted">
           <span><span class="text-[#E8B923]" aria-hidden="true">★★★★★</span> <span class="sr-only">5 out of 5 stars,</span> {rating} on Google</span>
           <span aria-hidden="true">·</span>
@@ -92,7 +93,7 @@ const ready = [
         </p>
       </div>
 
-      <figure class="order-1 mx-auto w-full max-w-[22rem] lg:order-2 lg:max-w-none lg:justify-self-end lg:w-[min(100%,28rem)]">
+      <figure class="order-2 mx-auto w-full max-w-[22rem] lg:max-w-none lg:justify-self-end lg:w-[min(100%,28rem)]">
         <div class="relative">
           <div class="hero-glow" aria-hidden="true"></div>
           <div class="hero-frame hero-img-in relative aspect-[4/5]">

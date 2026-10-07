@@ -695,7 +695,7 @@ export const serviceContent: Record<string, ServiceContent> = {
         layout: 'stack',
         title: `Dosha remedies in Hyderabad: what is optional and what is not`,
         paragraphs: [
-          `Start with what we don't do. We don't sell gemstones, yantras or any other product, so nobody here has a reason to find a dosha that isn't in your chart. If the chart shows nothing that needs fixing, Pandit Ji says so, and the conversation ends there.`,
+          `If the chart shows nothing that needs fixing, Pandit Ji says so, and the conversation ends there. He does not go looking for a dosha that is not in your chart.`,
           `When a remedy does come up, you hear what it is, why he suggests it and what it cannot do. The remedies the texts describe are mostly simple: prayer, mantra recitation, charity, a temple visit. A costly ritual presented as urgent is a good moment to walk away from any astrologer, this one included.`,
           // INTERVIEW Q15: what Pandit Ji refuses to do or say (fixed dates, illness advice, promises, rituals he does not believe in)
           // INTERVIEW Q16: when he tells someone there is nothing wrong in the chart and what happens next
