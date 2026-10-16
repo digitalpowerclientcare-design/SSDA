@@ -206,7 +206,7 @@
 .mobile-nav summary::-webkit-details-marker { display: none; }
 .mobile-nav[open] .mn-icon-open { display: none; }
 .mobile-nav:not([open]) .mn-icon-close { display: none; }
-.mobile-panel { position: fixed; inset: 4.5rem 0 0 0; z-index: 60; overflow-y: auto; background: var(--color-indigo-950); padding: 1.5rem 1.25rem 7rem; }
+.mobile-panel { position: fixed; inset: 5.25rem 0 0 0; z-index: 60; overflow-y: auto; background: var(--color-indigo-950); padding: 1.5rem 1.25rem 7rem; }
 .mobile-panel a.mp-link { display: block; padding: .9rem 0; font-family: var(--font-display); font-size: 1.75rem; color: var(--color-on-dark); text-decoration: none; border-bottom: 1px solid rgb(255 255 255 / .1); }
 .mobile-panel .mp-sub { padding-left: 1rem; }
 .mobile-panel .mp-sub a { display: block; padding: .5rem 0; font-size: 1rem; color: var(--color-on-dark-body); text-decoration: none; }
@@ -258,4 +258,10 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
+}
+
+/* Logo: large and phone-friendly. Height tracks the screen width; width follows the 292x132 aspect. */
+@layer components {
+  .logo-img { height: clamp(60px, 16vw, 68px); width: auto; display: block; }
+  .logo-wrap-lg .logo-img { height: clamp(84px, 24vw, 104px); }
 }

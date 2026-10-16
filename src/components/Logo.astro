@@ -1,9 +1,10 @@
 ---
 interface Props { size?: 'md' | 'lg' }
 const { size = 'md' } = Astro.props;
-const h = size === 'lg' ? 76 : 52;
+// Raster is 292x132 (aspect 2.21). Height is set in CSS (.logo-img) so it scales with the phone width.
+const h = size === 'lg' ? 96 : 68;
 const w = Math.round(h * (292 / 132));
 ---
-<span class="inline-flex items-center rounded-md bg-porcelain px-2.5 py-1 ring-1 ring-brass-500/40">
-  <img src="/images/logo-trim.png" alt="Sri Sai Durga Astrology Centre" width={w} height={h} style={`height:${h}px;width:auto`} />
+<span class:list={['logo-wrap inline-flex items-center rounded-md bg-porcelain px-2.5 py-1 ring-1 ring-brass-500/40', size === 'lg' && 'logo-wrap-lg']}>
+  <img class="logo-img" src="/images/logo-trim.png" alt="Sri Sai Durga Astrology Centre" width={w} height={h} />
 </span>
