@@ -7,6 +7,8 @@ import FaqList from '@/components/FaqList.astro';
 import CtaBand from '@/components/CtaBand.astro';
 // Hero image: Unsplash (photo Haa-xBjLzWA, Sonika Agarwal), Unsplash License. Stand-in until the client supplies his own temple murti photo.
 import durga from '@/assets/durga-devi.jpg';
+// Yellamma Talli image supplied by the client (Pinterest pin 1087197166319127536). Confirm the source and rights before keeping it long term.
+import yellamma from '@/assets/yellamma-talli.jpg';
 import { brand, pandit, contact, services, vastuPages, reviewsUrl, telLink, whatsappLink } from '@/data/business';
 import {
   buildGraph, organizationSchema, websiteSchema, localBusinessSchema,
@@ -84,6 +86,20 @@ const ready = [
           If a marriage is taking longer than it should, or you are about to buy a flat and cannot tell whether the Vastu worries are real, this is a good place to ask.
           <span class="text-on-dark">{pandit.name}</span> has practised Vedic astrology and Vastu in Hyderabad for more than 35 years. Come to Sanjeeva Reddy Nagar, or do the whole thing by phone or video.
         </p>
+        <div class="hero-in hero-in-4 mt-6 grid max-w-xl grid-cols-2 gap-3 sm:gap-4">
+          <figure class="m-0">
+            <div class="hero-frame aspect-[3/4] overflow-hidden rounded-xl">
+              <Image src={durga} width={480} height={640} alt="Sri Durga Devi, a close view of the goddess in a gold crown with flower garlands" widths={[240, 360, 480]} sizes="(max-width: 640px) 45vw, 240px" format="webp" quality={72} loading="lazy" decoding="async" class="h-full w-full object-cover object-top" />
+            </div>
+            <figcaption class="mt-2 text-center text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-brass-500 sm:text-[0.75rem]">Sri Durga Devi</figcaption>
+          </figure>
+          <figure class="m-0">
+            <div class="hero-frame aspect-[3/4] overflow-hidden rounded-xl">
+              <Image src={yellamma} width={480} height={853} alt="Yellamma Talli Ammavaru, the goddess adorned with flower garlands and lemon garlands" widths={[240, 360, 480]} sizes="(max-width: 640px) 45vw, 240px" format="webp" quality={72} loading="lazy" decoding="async" class="h-full w-full object-cover object-[50%_12%]" />
+            </div>
+            <figcaption class="mt-2 text-center text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-brass-500 sm:text-[0.75rem]">Yellamma Talli</figcaption>
+          </figure>
+        </div>
         <p class="hero-in hero-in-5 mt-7 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.9rem] text-on-dark-muted">
           <span><span class="text-[#E8B923]" aria-hidden="true">★★★★★</span> <span class="sr-only">5 out of 5 stars,</span> {rating} on Google</span>
           <span aria-hidden="true">·</span>
@@ -93,14 +109,14 @@ const ready = [
         </p>
       </div>
 
-      <figure class="order-2 mx-auto w-full max-w-[22rem] lg:max-w-none lg:justify-self-end lg:w-[min(100%,28rem)]">
+      <figure class="order-2 mx-auto hidden w-full max-w-[22rem] lg:block lg:max-w-none lg:justify-self-end lg:w-[min(100%,28rem)]">
         <div class="relative">
           <div class="hero-glow" aria-hidden="true"></div>
           <div class="hero-frame hero-img-in relative aspect-[4/5]">
-            <Image src={durga} width={860} height={1290} alt="Sri Durga Devi, a close view of the goddess in a gold crown with flower garlands" widths={[420, 640, 860]} sizes="(min-width:1024px) 448px, 352px" format="webp" quality={78} loading="eager" fetchpriority="high" class="h-full w-full object-cover object-top" />
+            <Image src={yellamma} width={860} height={1529} alt="Yellamma Talli Ammavaru, the goddess adorned with flower garlands, lemon garlands and a golden gada" widths={[420, 640, 860]} sizes="448px" format="webp" quality={78} loading="lazy" decoding="async" class="h-full w-full object-cover object-[50%_12%]" />
           </div>
         </div>
-        <figcaption class="mt-4 text-center text-[0.75rem] font-semibold uppercase tracking-[0.22em] text-brass-500">Sri Durga Devi</figcaption>
+        <figcaption class="mt-4 text-center text-[0.75rem] font-semibold uppercase tracking-[0.22em] text-brass-500">Yellamma Talli Ammavaru</figcaption>
       </figure>
     </div>
   </section>
