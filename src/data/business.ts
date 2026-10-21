@@ -57,7 +57,7 @@ export const contact = {
   landmark: 'Beside Andhra Bank, opposite Royal College, Bapu Nagar',
   geo: { lat: 17.4234886, lng: 78.4479286 }, // TODO(client): confirm from GBP pin
   mapEmbed:
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60908.09764019252!2d78.36792859698001!3d17.42348856807638!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb912fdda12d2b%3A0x9876c11387de0fe3!2sSri%20Sai%20Durga%20Astrology%20Centre!5e0!3m2!1sen!2sin!4v1788027469906!5m2!1sen!2sin',
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.357397017888!2d78.43947627516619!3d17.442599983453988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb912fdda12d2b%3A0x9876c11387de0fe3!2sSri%20Sai%20Durga%20Astrology%20Centre!5e0!3m2!1sen!2sin!4v1792582213802!5m2!1sen!2sin',
   gbpUrl: 'https://maps.app.goo.gl/3hHZXUGGmFQWj5J18',
   hoursDisplay: 'Open every day, 24 hours', // GBP shows "Open 24 hours"
   hours: [{ days: 'Mo,Tu,We,Th,Fr,Sa,Su', opens: '00:00', closes: '23:59' }],

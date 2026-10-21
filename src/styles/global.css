@@ -265,3 +265,12 @@
   .logo-img { height: clamp(60px, 16vw, 68px); width: auto; display: block; }
   .logo-wrap-lg .logo-img { height: clamp(84px, 24vw, 104px); }
 }
+
+/* Footer map: on touch screens the map must not trap the page scroll, so a tap opens Google Maps instead. */
+@layer components {
+  .map-tap { display: none; }
+  @media (hover: none) {
+    .map-frame iframe { pointer-events: none; }
+    .map-tap { display: block; position: absolute; inset: 0; }
+  }
+}
