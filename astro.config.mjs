@@ -28,6 +28,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      // Bump when site content materially changes; gives crawlers a real freshness signal.
+      lastmod: new Date('2026-11-12'),
       filter: (page) =>
         !page.includes('/privacy-policy/') &&
         !page.includes('/terms/') &&

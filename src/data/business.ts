@@ -7,7 +7,7 @@
  */
 
 export const brand = {
-  /** Canonical name - MATCHES the Google Business Profile exactly (1,647 reviews)
+  /** Canonical name - MATCHES the Google Business Profile exactly (1,669 reviews)
    *  so Google resolves the site + GBP as one entity. */
   name: 'Sri Sai Durga Astrology Centre',
   shortName: 'Sri Sai Durga',
@@ -23,7 +23,7 @@ export const brand = {
     'https://maps.app.goo.gl/3hHZXUGGmFQWj5J18', // GBP
     // TODO(client): add Justdial, Sulekha, Facebook, Instagram, YouTube if owned.
   ] as string[],
-  reviews: { rating: 5.0, count: 1647, source: 'Google' }, // TODO(client): confirm live GBP count
+  reviews: { rating: 5.0, count: 1669, source: 'Google' }, // confirmed against live GBP 2026-11-12
 } as const;
 
 export const pandit = {
