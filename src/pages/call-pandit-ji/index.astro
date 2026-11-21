@@ -1,0 +1,162 @@
+---
+/**
+ * Ad landing page (Google Ads, calls only). noindex, not in the sitemap.
+ * One action on the page: call Pandit Ji. No WhatsApp button here on purpose.
+ * Reviews are shown as the Google rating and count only (site rule: no picked quotes).
+ * TODO(client): add Pandit Ji's photo to the hero when a real one is supplied.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import durga from '@/assets/durga-tiger.webp';
+import { brand, pandit, contact, reviewsUrl, telLink, disclaimer } from '@/data/business';
+
+const rating = brand.reviews.rating.toFixed(1);
+const reviewCount = brand.reviews.count.toLocaleString('en-IN');
+const phoneIcon = 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2';
+
+const topics = [
+  { t: 'Marriage getting delayed', te: 'పెళ్లి ఆలస్యం', d: 'Which years the jathakam favours, and why it has taken this long.' },
+  { t: 'Jathakam matching', te: 'జాతక పొంతన', d: 'Both charts read together before the families decide.' },
+  { t: 'Kuja dosham doubts', te: 'కుజ దోషం', d: 'Whether it is really there, and whether it is cancelled.' },
+  { t: 'Job and business', te: 'ఉద్యోగం, వ్యాపారం', d: 'When to move, when to wait, and what the chart supports.' },
+  { t: 'Family matters', te: 'కుటుంబ విషయాలు', d: 'A calm reading when the house cannot agree.' },
+  { t: 'Vastu and muhurtham', te: 'వాస్తు, ముహూర్తం', d: 'A flat you are about to buy, or a date you need to fix.' },
+];
+const steps = [
+  { t: 'You call', d: 'Pandit Ji picks up the phone himself. There is no call centre and no app.' },
+  { t: 'You say what is on your mind', d: 'Share the date, time and place of birth. He tells you the fee before anything starts.' },
+  { t: 'He reads the chart and explains', d: 'In Telugu, Hindi or English, with the reasons, on the phone or in person at S.R. Nagar.' },
+];
+---
+<BaseLayout
+  title="Call Pandit Ji | Sri Sai Durga Astrology Centre, Hyderabad"
+  description={`Speak to ${pandit.name} directly. ${pandit.yearsExperience}+ years in Hyderabad, ${rating} on ${reviewCount} Google reviews. Open 9 AM to 10 PM.`}
+  canonicalPath="/call-pandit-ji/"
+  noindex
+  callOnly
+>
+  <!-- HERO: one screen, one action -->
+  <section class="band-dark relative overflow-hidden" style="background: radial-gradient(90% 80% at 50% 0%, #1C2658 0%, #0C1230 62%);">
+    <div class="container-page relative grid items-center gap-10 py-9 md:py-16 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+      <div class="text-center lg:text-left">
+        <p class="eyebrow hero-in hero-in-1">{brand.name} · {contact.locality}</p>
+        <h1 class="hero-in hero-in-2 mt-4 text-[clamp(2.1rem,1.5rem+2.6vw,3.4rem)]">Speak to Pandit Ji today. He answers the phone himself.</h1>
+        <p class="hero-in hero-in-2 mt-3 text-[1.15rem] font-medium text-brass-300" lang="te">పండిట్ గారితో నేరుగా మాట్లాడండి</p>
+
+        <p class="hero-in hero-in-3 mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[0.98rem] text-on-dark lg:justify-start">
+          <span><span class="text-[#E8B923]" aria-hidden="true">★★★★★</span> <span class="sr-only">5 out of 5 stars,</span> <strong>{rating}</strong> on Google</span>
+          <span aria-hidden="true">·</span>
+          <a class="underline decoration-brass-500/50 underline-offset-4" href={reviewsUrl} target="_blank" rel="noopener">{reviewCount} reviews</a>
+          <span aria-hidden="true">·</span>
+          <span>{pandit.yearsExperience}+ years</span>
+        </p>
+
+        <a class="btn btn-call call-hero hero-in hero-in-3 mt-7 w-full sm:w-auto" href={telLink()} data-cta="call">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={phoneIcon}/></svg>
+          <span class="flex flex-col items-start leading-tight">
+            <span class="text-[0.78rem] font-semibold uppercase tracking-[0.14em] opacity-75">Call Pandit Ji now</span>
+            <span class="text-[1.45rem] font-semibold tracking-wide">{contact.phoneDisplay}</span>
+          </span>
+        </a>
+
+        <ul class="hero-in hero-in-4 mt-6 grid gap-2.5 text-left text-[0.98rem] text-on-dark-body sm:grid-cols-3 sm:gap-4">
+          <li class="call-fact"><strong>9 AM to 10 PM</strong>every day</li>
+          <li class="call-fact"><strong>Telugu, Hindi, English</strong>and Kannada</li>
+          <li class="call-fact"><strong>Fee told first</strong>before you start</li>
+        </ul>
+      </div>
+
+      <figure class="mx-auto hidden w-full max-w-[24rem] lg:block">
+        <div class="hero-frame aspect-[4/5]">
+          <Image src={durga} width={640} height={800} alt="Sri Durga Devi seated on a tiger" widths={[320, 480, 640]} sizes="384px" format="webp" quality={72} loading="eager" class="h-full w-full object-cover object-top" />
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- WHAT PEOPLE CALL ABOUT -->
+  <section class="band-light section-sm">
+    <div class="container-page">
+      <p class="eyebrow">What people call about</p>
+      <h2 class="mt-3 max-w-2xl">Whatever is stuck, ask him directly</h2>
+      <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {topics.map((x) => (
+          <a class="topic-tile" href={telLink()} data-cta="call">
+            <span class="min-w-0">
+              <span class="block text-[1.08rem] font-semibold text-ink">{x.t}</span>
+              <span class="mt-0.5 block text-[0.9rem] text-brass-700" lang="te">{x.te}</span>
+              <span class="mt-1.5 block text-[0.93rem] text-body-light">{x.d}</span>
+            </span>
+            <span class="topic-call" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={phoneIcon}/></svg>
+            </span>
+            <span class="sr-only">Call Pandit Ji about {x.t.toLowerCase()}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT HAPPENS WHEN YOU CALL -->
+  <section class="band-white section-sm">
+    <div class="container-page grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+      <div>
+        <p class="eyebrow">When you call</p>
+        <h2 class="mt-3">Three steps, no surprises</h2>
+        <p class="mt-5 max-w-md">{pandit.name} has read charts in Hyderabad for more than {pandit.yearsExperience} years. He tells you what the chart shows, and says so when it shows nothing that needs fixing.</p>
+        <a class="btn btn-call mt-7" href={telLink()} data-cta="call">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={phoneIcon}/></svg>
+          Call {contact.phoneDisplay}
+        </a>
+      </div>
+      <ol class="grid gap-4">
+        {steps.map((s, i) => (
+          <li class="flex gap-4 rounded-lg border border-line-light bg-porcelain p-5">
+            <span class="numeral text-[2rem]">{i + 1}</span>
+            <span>
+              <span class="block text-[1.08rem] font-semibold text-ink">{s.t}</span>
+              <span class="mt-1 block text-[0.97rem]">{s.d}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- VISIT -->
+  <section class="band-light section-sm">
+    <div class="container-page grid gap-8 lg:grid-cols-2 lg:gap-14">
+      <div>
+        <p class="eyebrow">Prefer to come in person?</p>
+        <h2 class="mt-3">{contact.locality}, {contact.city}</h2>
+        <p class="mt-5">{contact.addressLine}, {contact.locality}, {contact.city} {contact.postalCode}.</p>
+        <p class="mt-3 text-[0.95rem]">{contact.hoursDisplay}. Call first, so a time is fixed and Pandit Ji is free to sit with you.</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a class="btn btn-call" href={telLink()} data-cta="call">Call before you come</a>
+          <a class="btn btn-ghost" href={contact.gbpUrl} target="_blank" rel="noopener">Directions</a>
+        </div>
+      </div>
+      <div class="overflow-hidden rounded-lg border border-line-light">
+        <iframe src={contact.mapEmbed} title={`Map showing ${brand.name}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="block h-72 w-full border-0 lg:h-full lg:min-h-80"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-white">
+    <div class="container-page py-8">
+      <p class="mx-auto max-w-3xl text-center text-[0.85rem] text-muted-light">{disclaimer}</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .call-hero { min-height: 4.5rem; padding: .6rem 2rem; border-radius: 1rem; gap: 1rem; }
+  .call-hero svg { width: 1.7rem; height: 1.7rem; }
+  .call-fact { display: flex; flex-direction: column; padding: .7rem .9rem; border: 1px solid rgb(255 255 255 / .12); border-radius: .6rem; background: rgb(255 255 255 / .03); }
+  .call-fact strong { color: var(--color-on-dark); font-weight: 600; }
+  @media (max-width: 639px) { .call-fact { flex-direction: row; gap: .4rem; align-items: baseline; } }
+  .topic-tile { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.15rem; background: #fff; border: 1px solid var(--color-line-light); border-radius: .75rem; transition: border-color .3s ease, transform .4s var(--ease-out-soft); }
+  .topic-tile:hover { border-color: var(--color-brass-500); transform: translateY(-2px); }
+  .topic-call { flex: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; background: var(--color-indigo-900); color: #fff; }
+  .topic-call svg { width: 1.15rem; height: 1.15rem; }
+</style>

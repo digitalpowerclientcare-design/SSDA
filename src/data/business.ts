@@ -59,8 +59,8 @@ export const contact = {
   mapEmbed:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.357397017888!2d78.43947627516619!3d17.442599983453988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb912fdda12d2b%3A0x9876c11387de0fe3!2sSri%20Sai%20Durga%20Astrology%20Centre!5e0!3m2!1sen!2sin!4v1792582213802!5m2!1sen!2sin',
   gbpUrl: 'https://maps.app.goo.gl/3hHZXUGGmFQWj5J18',
-  hoursDisplay: 'Open every day, 24 hours', // GBP shows "Open 24 hours"
-  hours: [{ days: 'Mo,Tu,We,Th,Fr,Sa,Su', opens: '00:00', closes: '23:59' }],
+  hoursDisplay: 'Open every day, 9 AM to 10 PM', // Pandit Ji's real answering hours (owner, 21 Nov 2026)
+  hours: [{ days: 'Mo,Tu,We,Th,Fr,Sa,Su', opens: '09:00', closes: '22:00' }],
   areasServed: [
     'Sanjeeva Reddy Nagar', 'Ameerpet', 'SR Nagar', 'Panjagutta', 'Somajiguda',
     'Erragadda', 'Balkampet', 'Kukatpally', 'Begumpet', 'Secunderabad', 'Banjara Hills', 'Madhapur',

@@ -18,7 +18,7 @@ const crumbs = [
 
 const faqs = [
   { question: 'Where exactly is the astrologer\'s centre in Sanjeeva Reddy Nagar?', answer: `${contact.addressLine}, ${contact.locality}, ${contact.city} ${contact.postalCode}. Find Andhra Bank first, with Royal College on the opposite side. We are on the 5th floor, Flat No. 502.` },
-  { question: 'Are you open at all hours?', answer: `Google lists us as ${contact.hoursDisplay.toLowerCase()}, but call or WhatsApp ${contact.phoneDisplay} before you come, so that a time is fixed for your consultation and Pandit Ji is free.` },
+  { question: 'What are your hours?', answer: `We are ${contact.hoursDisplay.toLowerCase()}. Call ${contact.phoneDisplay} before you come, so that a time is fixed for your consultation and Pandit Ji is free.` },
   { question: 'Is S.R. Nagar the same as Sanjeeva Reddy Nagar?', answer: 'Yes. S.R. Nagar and SR Nagar are the usual short forms of Sanjeeva Reddy Nagar. We are in this locality, in the 500038 postal area of Hyderabad.' },
   { question: 'I live elsewhere in Hyderabad. Do I have to come in person?', answer: 'No. You can consult by phone or video from wherever you are in Hyderabad, or outside it, and Pandit Ji prepares the chart in advance from the birth details you share.' },
 ];
@@ -47,7 +47,7 @@ const jsonLd = buildGraph(
   <PageHero
     eyebrow="Where we are"
     title="Astrologer in Sanjeeva Reddy Nagar (S.R. Nagar), Hyderabad"
-    intro={`${brand.name} is on the 5th floor of Ramakrishna Nivas in Sanjeeva Reddy Nagar, beside Andhra Bank and opposite Royal College, Bapu Nagar. Open every day, 24 hours.`}
+    intro={`${brand.name} is on the 5th floor of Ramakrishna Nivas in Sanjeeva Reddy Nagar, beside Andhra Bank and opposite Royal College, Bapu Nagar. Open every day, 9 AM to 10 PM.`}
     crumbs={crumbs}
     ctas
   />

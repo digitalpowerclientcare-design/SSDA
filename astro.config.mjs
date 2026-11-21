@@ -33,6 +33,7 @@ export default defineConfig({
       filter: (page) =>
         !page.includes('/privacy-policy/') &&
         !page.includes('/terms/') &&
+        !page.includes('/call-pandit-ji/') &&
         !page.includes('/404'),
     }),
   ],

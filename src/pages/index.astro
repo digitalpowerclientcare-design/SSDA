@@ -22,7 +22,7 @@ const otherAreas = contact.areasServed.filter((a) => !['Sanjeeva Reddy Nagar', '
 const faqs = [
   { question: 'Who is the best astrologer in Hyderabad?', answer: `There is no official ranking, so go by what you can check. Pandit Sri Santosh Sharma Ji has practised in Hyderabad for more than 35 years, and we hold a ${brand.reviews.rating.toFixed(1)} rating across ${reviewCount} Google reviews, which we cannot edit. Read them, then call and put your question to him.` },
   { question: 'Is Pandit Ji a famous astrologer in Hyderabad?', answer: `Fame is not something we can measure, so we do not claim it. What you can check is the record: 35+ years of practice and a ${brand.reviews.rating.toFixed(1)} rating on ${reviewCount} Google reviews. Read through them and decide for yourself.` },
-  { question: 'Is there a good astrologer near me in S.R. Nagar?', answer: `If you are in or around Sanjeeva Reddy Nagar, we are at Flat No. 502, 5th floor, Ramakrishna Nivas, ${contact.landmark.toLowerCase()}. Google lists us as open 24 hours, but call or WhatsApp ${contact.phoneDisplay} first so that a time is fixed and Pandit Ji is there to meet you.` },
+  { question: 'Is there a good astrologer near me in S.R. Nagar?', answer: `If you are in or around Sanjeeva Reddy Nagar, we are at Flat No. 502, 5th floor, Ramakrishna Nivas, ${contact.landmark.toLowerCase()}. We are open 9 AM to 10 PM every day. Call ${contact.phoneDisplay} first so that a time is fixed and Pandit Ji is there to meet you.` },
   { question: 'Can I consult an astrologer online from Hyderabad?', answer: 'Yes. You can consult by phone, video or WhatsApp from anywhere in Hyderabad, or from outside it. Pandit Ji prepares the chart from your birth details before the appointment, so an online session covers the same ground as a visit. For Vastu, send the floor plan and the direction the main door faces.' },
   { question: 'Can I consult a Telugu astrologer in Hyderabad in my own language?', answer: `Yes. Pandit Ji consults in ${pandit.languages.join(', ')}. Tell us which you prefer when you call or message, and bring along any family member who will be part of the decision.` },
   { question: 'How do I book an astrologer consultation in Hyderabad, and what does it cost?', answer: `Call or WhatsApp ${contact.phoneDisplay} and send your date, time and place of birth, if you know them. Ask the fee in the same conversation. We share it before you book, and a time is fixed after that, at our centre or online.` },
@@ -74,11 +74,11 @@ const ready = [
         <div class="hero-in hero-in-3 mt-6 flex flex-wrap gap-3">
           <a class="btn btn-call" href={telLink()} data-cta="call">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
-            Call Pandit Ji
+            Call {contact.phoneDisplay}
           </a>
-          <a class="btn btn-wa" href={whatsappLink()} data-cta="whatsapp">
+          <a class="btn btn-ghost btn-sm self-center" href={whatsappLink()} data-cta="whatsapp">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.4L3 21l4.8-1.2A9 9 0 1 0 12 3Z"/></svg>
-            Chat on WhatsApp
+            WhatsApp
           </a>
         </div>
         <p class="hero-in hero-in-3 mt-4 text-[0.9rem] font-semibold tracking-wide text-on-dark"><a class="underline decoration-brass-500/50 underline-offset-4 hover:text-brass-300" href="/telugu-hindi-kannada-astrologer-hyderabad/">Consult in {pandit.languages.join(' · ')}</a></p>
@@ -105,7 +105,7 @@ const ready = [
           <span aria-hidden="true">·</span>
           <a class="underline decoration-brass-500/50 underline-offset-4 hover:text-brass-300" href={reviewsUrl} target="_blank" rel="noopener">{reviewCount} reviews</a>
           <span aria-hidden="true">·</span>
-          <span>Open 24 hours</span>
+          <span>Open 9 AM to 10 PM</span>
         </p>
       </div>
 

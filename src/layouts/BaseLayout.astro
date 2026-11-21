@@ -14,6 +14,8 @@ interface Props {
   jsonLd?: string;
   ogImage?: string;
   noindex?: boolean;
+  /** ad landing pages: the sticky bar shows the call button only */
+  callOnly?: boolean;
   /** HTML <meta name="author">. Defaults to the site's one author (the Pandit). */
   author?: string;
   /** page is attributed to the Pandit: adds author + dates to WebPage schema */
@@ -22,7 +24,7 @@ interface Props {
 }
 const {
   title: titleProp, description: descriptionProp, canonicalPath, jsonLd,
-  ogImage = '/images/og-default.jpg', noindex = false,
+  ogImage = '/images/og-default.jpg', noindex = false, callOnly = false,
   author = pandit.name, authored = false, updated = contentDates.updated,
 } = Astro.props;
 const canonical = abs(canonicalPath);
@@ -111,7 +113,7 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID;
       <slot />
     </main>
     <Footer />
-    <StickyMobileCTA />
+    <StickyMobileCTA callOnly={callOnly} />
     <script src="/scripts/conversions.js" is:inline></script>
     <script src="/scripts/motion.js" is:inline></script>
   </body>
