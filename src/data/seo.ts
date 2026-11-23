@@ -25,7 +25,7 @@ export interface PageSeo {
 
 export const pageSeo: Record<string, PageSeo> = {
   '/': {
-    title: 'Best Astrologer in Hyderabad | Pandit Santosh Sharma Ji',
+    title: 'Best Astrologer in Hyderabad | Sri Sai Durga Astrology Centre',
     description: 'Best astrologer in Hyderabad: Pandit Santosh Sharma Ji (Guruji), 35+ years, 5.0 on Google. Vedic astrology and Vastu, S.R. Nagar. Call or WhatsApp.',
     keywords: ['best astrologer in hyderabad', 'astrologer near me', 'vedic astrology', 'vastu consultant in hyderabad', 'kundli matching', 'online astrologer'],
   },
