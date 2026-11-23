@@ -8,15 +8,15 @@
     var seg = p.split('/').filter(Boolean);
     return seg[0] || 'home';
   }
-  function emit(channel) {
+  function emit(channel, pos) {
     var key = channel;
     if (fired[key]) return;
     fired[key] = true;
-    var payload = { event: channel + '_click', channel: channel, page_path: location.pathname, page_type: pageType() };
+    var payload = { event: channel + '_click', channel: channel, page_path: location.pathname, page_type: pageType(), cta_position: pos || 'unlabelled' };
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(payload);
     if (typeof window.gtag === 'function') {
-      window.gtag('event', payload.event, { page_type: payload.page_type });
+      window.gtag('event', payload.event, { page_type: payload.page_type, cta_position: payload.cta_position });
       // Google Ads conversion (AW-18420139351): call + WhatsApp clicks.
       var sendTo = channel === 'call' ? 'AW-18420139351/2CJmCKCyqYEdENeKtM9E'
                  : channel === 'whatsapp' ? 'AW-18420139351/H968CNuTqoEdENeKtM9E' : null;
@@ -27,6 +27,7 @@
     if (typeof window.clarity === 'function') {
       try {
         window.clarity('set', 'lead_channel', channel);
+        window.clarity('set', 'cta_position', payload.cta_position);
         window.clarity('event', payload.event);
       } catch (e) {}
     }
@@ -35,7 +36,8 @@
     var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
     if (!a) return;
     var href = a.getAttribute('href') || '';
-    if (href.indexOf('tel:') === 0) emit('call');
-    else if (href.indexOf('wa.me/') !== -1 || href.indexOf('api.whatsapp.com') !== -1) emit('whatsapp');
+    var pos = a.getAttribute('data-cta-pos');
+    if (href.indexOf('tel:') === 0) emit('call', pos);
+    else if (href.indexOf('wa.me/') !== -1 || href.indexOf('api.whatsapp.com') !== -1) emit('whatsapp', pos);
   }, true);
 })();

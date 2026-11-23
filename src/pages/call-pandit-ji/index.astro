@@ -8,7 +8,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
 import durga from '@/assets/durga-tiger.webp';
-import { brand, pandit, contact, reviewsUrl, telLink, disclaimer } from '@/data/business';
+import { brand, pandit, contact, reviewsUrl, telLink } from '@/data/business';
 
 const rating = brand.reviews.rating.toFixed(1);
 const reviewCount = brand.reviews.count.toLocaleString('en-IN');
@@ -29,7 +29,7 @@ const steps = [
 ];
 ---
 <BaseLayout
-  title="Call Pandit Ji | Sri Sai Durga Astrology Centre, Hyderabad"
+  title="Astrologer in Hyderabad: Call Pandit Ji | Sri Sai Durga Astrology Centre"
   description={`Speak to ${pandit.name} directly. ${pandit.yearsExperience}+ years in Hyderabad, ${rating} on ${reviewCount} Google reviews. Open 9 AM to 10 PM.`}
   canonicalPath="/call-pandit-ji/"
   noindex
@@ -39,11 +39,12 @@ const steps = [
   <section class="band-dark relative overflow-hidden" style="background: radial-gradient(90% 80% at 50% 0%, #1C2658 0%, #0C1230 62%);">
     <div class="container-page relative grid items-center gap-10 py-9 md:py-16 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
       <div class="text-center lg:text-left">
-        <p class="eyebrow hero-in hero-in-1">{brand.name} · {contact.locality}</p>
-        <h1 class="hero-in hero-in-2 mt-4 text-[clamp(2.1rem,1.5rem+2.6vw,3.4rem)]">Speak to Pandit Ji today. He answers the phone himself.</h1>
-        <p class="hero-in hero-in-2 mt-3 text-[1.15rem] font-medium text-brass-300" lang="te">పండిట్ గారితో నేరుగా మాట్లాడండి</p>
+        <p class="eyebrow">{brand.name} · {contact.locality}</p>
+        <h1 class="mt-4 text-[clamp(2rem,1.5rem+2.6vw,3.4rem)]">Astrologer in Hyderabad: speak to Pandit Ji today</h1>
+        <p class="mt-3 text-[1.12rem] text-on-dark">He answers the phone himself.</p>
+        <p class="mt-3 text-[1.15rem] font-medium text-brass-300" lang="te">పండిట్ గారితో నేరుగా మాట్లాడండి</p>
 
-        <p class="hero-in hero-in-3 mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[0.98rem] text-on-dark lg:justify-start">
+        <p class="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[0.98rem] text-on-dark lg:justify-start">
           <span><span class="text-[#E8B923]" aria-hidden="true">★★★★★</span> <span class="sr-only">5 out of 5 stars,</span> <strong>{rating}</strong> on Google</span>
           <span aria-hidden="true">·</span>
           <a class="underline decoration-brass-500/50 underline-offset-4" href={reviewsUrl} target="_blank" rel="noopener">{reviewCount} reviews</a>
@@ -51,7 +52,7 @@ const steps = [
           <span>{pandit.yearsExperience}+ years</span>
         </p>
 
-        <a class="btn btn-call call-hero hero-in hero-in-3 mt-7 w-full sm:w-auto" href={telLink()} data-cta="call">
+        <a class="btn btn-call call-hero mt-7 w-full sm:w-auto" href={telLink()} data-cta="call" data-cta-pos="hero">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={phoneIcon}/></svg>
           <span class="flex flex-col items-start leading-tight">
             <span class="text-[0.78rem] font-semibold uppercase tracking-[0.14em] opacity-75">Call Pandit Ji now</span>
@@ -59,7 +60,7 @@ const steps = [
           </span>
         </a>
 
-        <ul class="hero-in hero-in-4 mt-6 grid gap-2.5 text-left text-[0.98rem] text-on-dark-body sm:grid-cols-3 sm:gap-4">
+        <ul class="mt-6 grid gap-2.5 text-left text-[0.98rem] text-on-dark-body sm:grid-cols-3 sm:gap-4">
           <li class="call-fact"><strong>9 AM to 10 PM</strong>every day</li>
           <li class="call-fact"><strong>Telugu, Hindi, English</strong>and Kannada</li>
           <li class="call-fact"><strong>Fee told first</strong>before you start</li>
@@ -81,7 +82,7 @@ const steps = [
       <h2 class="mt-3 max-w-2xl">Whatever is stuck, ask him directly</h2>
       <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {topics.map((x) => (
-          <a class="topic-tile" href={telLink()} data-cta="call">
+          <a class="topic-tile" href={telLink()} data-cta="call" data-cta-pos={`topic-${x.t.toLowerCase().replace(/[^a-z]+/g, '-')}`}>
             <span class="min-w-0">
               <span class="block text-[1.08rem] font-semibold text-ink">{x.t}</span>
               <span class="mt-0.5 block text-[0.9rem] text-brass-700" lang="te">{x.te}</span>
@@ -104,7 +105,7 @@ const steps = [
         <p class="eyebrow">When you call</p>
         <h2 class="mt-3">Three steps, no surprises</h2>
         <p class="mt-5 max-w-md">{pandit.name} has read charts in Hyderabad for more than {pandit.yearsExperience} years. He tells you what the chart shows, and says so when it shows nothing that needs fixing.</p>
-        <a class="btn btn-call mt-7" href={telLink()} data-cta="call">
+        <a class="btn btn-call mt-7" href={telLink()} data-cta="call" data-cta-pos="steps">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={phoneIcon}/></svg>
           Call {contact.phoneDisplay}
         </a>
@@ -132,7 +133,7 @@ const steps = [
         <p class="mt-5">{contact.addressLine}, {contact.locality}, {contact.city} {contact.postalCode}.</p>
         <p class="mt-3 text-[0.95rem]">{contact.hoursDisplay}. Call first, so a time is fixed and Pandit Ji is free to sit with you.</p>
         <div class="mt-6 flex flex-wrap gap-3">
-          <a class="btn btn-call" href={telLink()} data-cta="call">Call before you come</a>
+          <a class="btn btn-call" href={telLink()} data-cta="call" data-cta-pos="visit">Call before you come</a>
           <a class="btn btn-ghost" href={contact.gbpUrl} target="_blank" rel="noopener">Directions</a>
         </div>
       </div>
@@ -142,11 +143,6 @@ const steps = [
     </div>
   </section>
 
-  <section class="band-white">
-    <div class="container-page py-8">
-      <p class="mx-auto max-w-3xl text-center text-[0.85rem] text-muted-light">{disclaimer}</p>
-    </div>
-  </section>
 </BaseLayout>
 
 <style>

@@ -1,11 +1,14 @@
 ---
 import { brand, contact, services, extraServices, vastuFacingPages, nav, telLink, whatsappLink, disclaimer, pandit } from '@/data/business';
 import Logo from '@/components/Logo.astro';
+interface Props { callOnly?: boolean }
+const { callOnly = false } = Astro.props;
 const year = new Date().getFullYear();
 // Pages that already carry their own full-size map keep the footer to the address card only.
 const ownMap = /^\/(contact|areas\/sanjeeva-reddy-nagar)\//.test(Astro.url.pathname);
 ---
 <footer class="band-deep">
+  {!callOnly && <Fragment>
   <div class="container-page pt-14 md:pt-16">
     <p class="eyebrow">Find the centre</p>
     <h2 class="mt-3 text-[clamp(1.5rem,1.1rem+1.6vw,2.1rem)]">Visit {brand.name} in Sanjeeva Reddy Nagar</h2>
@@ -31,7 +34,7 @@ const ownMap = /^\/(contact|areas\/sanjeeva-reddy-nagar)\//.test(Astro.url.pathn
         <p class="mt-3 text-[0.9rem] text-on-dark-muted">{contact.landmark}</p>
         <p class="mt-3 text-[0.9rem] text-on-dark-muted">{contact.hoursDisplay}</p>
         <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-          <a class="btn btn-call" href={telLink()} data-cta="call">Call {contact.phoneDisplay}</a>
+          <a class="btn btn-call" href={telLink()} data-cta="call" data-cta-pos="footer-map">Call {contact.phoneDisplay}</a>
           <a class="btn btn-ghost" href={contact.gbpUrl} target="_blank" rel="noopener">Get directions</a>
         </div>
       </div>
@@ -43,7 +46,7 @@ const ownMap = /^\/(contact|areas\/sanjeeva-reddy-nagar)\//.test(Astro.url.pathn
       <p class="mt-5 max-w-sm text-[0.95rem] leading-relaxed">{brand.tagline}</p>
       <p class="mt-4 text-[0.9rem] text-on-dark-muted">Consultations in {pandit.languages.join(', ')}.</p>
       <div class="mt-6 flex flex-wrap gap-3">
-        <a class="btn btn-call btn-sm" href={telLink()} data-cta="call">Call Pandit Ji</a>
+        <a class="btn btn-call btn-sm !min-h-12" href={telLink()} data-cta="call" data-cta-pos="footer">Call Pandit Ji</a>
         <a class="btn btn-wa btn-sm" href={whatsappLink()} data-cta="whatsapp">WhatsApp</a>
       </div>
     </div>
@@ -71,8 +74,9 @@ const ownMap = /^\/(contact|areas\/sanjeeva-reddy-nagar)\//.test(Astro.url.pathn
     </nav>
 
   </div>
+  </Fragment>}
 
-  <div class="border-t border-white/10">
+  <div class:list={[!callOnly && 'border-t border-white/10']}>
     <div class="container-page py-6 text-[0.8125rem] text-on-dark-muted">
       <p class="max-w-3xl">{disclaimer}</p>
       <p class="mt-3">© {year} {brand.name}. All rights reserved. ·

@@ -1,14 +1,18 @@
 ---
 import { brand, contact, nav, services, vastuPages, vastuFacingPages, extraServices, telLink, whatsappLink } from '@/data/business';
 import Logo from '@/components/Logo.astro';
+interface Props { callOnly?: boolean }
+const { callOnly = false } = Astro.props;
 const path = Astro.url.pathname;
 const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 <header class="site-header sticky top-0 z-50">
   <div class="container-page flex h-[5.25rem] items-center justify-between gap-6">
-    <a href="/" class="shrink-0" aria-label={`${brand.name} - home`}><Logo /></a>
+    {callOnly
+      ? <span class="shrink-0"><Logo /></span>
+      : <a href="/" class="shrink-0" aria-label={`${brand.name} - home`}><Logo /></a>}
 
-    <nav class="hidden items-center gap-7 xl:gap-9 lg:flex" aria-label="Primary">
+    {!callOnly && <nav class="hidden items-center gap-7 xl:gap-9 lg:flex" aria-label="Primary">
       {nav.main.map((item) => (
         <div class:list={['dd', item.children && 'dd']}>
           <a class="nav-link" href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>
@@ -33,16 +37,16 @@ const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(
           )}
         </div>
       ))}
-    </nav>
+    </nav>}
 
     <div class="flex items-center gap-3">
-      <a class="btn btn-ghost btn-sm hidden xl:inline-flex" href={whatsappLink()} data-cta="whatsapp">WhatsApp</a>
-      <a class="btn btn-call btn-sm !px-3.5 sm:!px-[1.15rem]" href={telLink()} data-cta="call" aria-label={`Call ${contact.phoneDisplay}`}>
+      {!callOnly && <a class="btn btn-ghost btn-sm hidden xl:inline-flex" href={whatsappLink()} data-cta="whatsapp">WhatsApp</a>}
+      <a class="btn btn-call btn-sm !min-h-12 !px-3.5 sm:!px-[1.15rem]" href={telLink()} data-cta="call" data-cta-pos="header" aria-label={`Call ${contact.phoneDisplay}`}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
         <span class="sm:hidden">Call</span><span class="hidden sm:inline">{contact.phoneDisplay}</span>
       </a>
 
-      <details class="mobile-nav lg:hidden">
+      {!callOnly && <details class="mobile-nav lg:hidden">
         <summary class="grid h-11 w-11 place-items-center rounded-full border border-white/20 text-on-dark" aria-label="Open menu">
           <svg class="mn-icon-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
           <svg class="mn-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -64,7 +68,7 @@ const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(
             </>
           ))}
         </div>
-      </details>
+      </details>}
     </div>
   </div>
 </header>
